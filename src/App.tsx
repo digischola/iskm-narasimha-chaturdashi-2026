@@ -249,7 +249,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 <option value="yes">Yes, I'd love to help!</option>
               </select>
             </div>
-            <button type="submit" className="btn-register cta-glow">
+            <button type="submit" className="btn-register cta-glow btn-register-navy">
               {isVolunteer ? "Next — Volunteer Details" : "Register Now — It's Free"}
             </button>
             <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
