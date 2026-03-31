@@ -351,9 +351,12 @@ footer a:hover{text-decoration:underline}
   .hero-meta-item{font-size:13px}
   .hero-eyebrow{font-size:10px}
   .hero-painting{width:200px}
-  .ribbon{font-size:10px}
-  .sticky-nav{top:30px}
-  .scroll-progress{top:30px}
-  .hero{margin-top:80px}
+  .ribbon{font-size:9px;padding:5px 10px}
+  .sticky-nav{top:26px;height:44px}
+  .scroll-progress{top:26px}
+  .hero{margin-top:70px}
   .stats-inner{grid-template-columns:repeat(2,1fr);gap:16px}
+  .editorial-visual{aspect-ratio:3/4}
+  .editorial-overlay .mantra{font-size:14px}
+  .editorial-overlay .mantra-meaning{font-size:10px}
 }

@@ -483,11 +483,9 @@ function Schedule() {
 
 /* ═══ SEVA ═══ */
 const SEVA_CARDS = [
-  { img: "/images/abhisheka-seva.jpg", alt: "Abhiṣeka Sevā", title: "Abhiṣeka Sevā", desc: "Sponsor the grand bathing ceremony with milk, ghee, yogurt & sacred waters" },
-  { img: "/images/annadanam-seva.jpg", alt: "Annadānam Sevā", title: "Annadānam Sevā", desc: "Feed the community — sponsor the special Nṛsiṁha Caturdaśī prasādam feast" },
-  { img: "/images/mandira-pushpa-seva.jpg", alt: "Mandira Puṣpa Sevā", title: "Mandira Puṣpa Sevā", desc: "Help adorn the temple with flowers, mango leaves, and festive decorations" },
-  { img: "/images/pushpa-alankara.jpg", alt: "Puṣpa-Alaṅkāra", title: "Puṣpa-Alaṅkāra", desc: "Contribute to exquisite flower garland decorations for the deities" },
-  { img: "/images/Charity.jpg", alt: "General Donation", title: "General Donation", desc: "Support the festival in any way that feels right for you" },
+  { img: "/images/patron-program.jpg", alt: "Join As a Patron", title: "Join As a Patron", desc: "Become a patron and support the temple's spiritual mission with your generous contribution", link: "https://srikrishnamandir.org/join-as-a-patron/" },
+  { img: "/images/annadanam-seva.jpg", alt: "Annadānam Sevā", title: "Annadānam Sevā", desc: "Feed the community — sponsor the special Nṛsiṁha Caturdaśī prasādam feast", link: "https://srikrishnamandir.org/product/annadanam-seva/" },
+  { img: "/images/Charity.jpg", alt: "Charity Donation", title: "Charity Donation", desc: "Support the festival in any way that feels right for you", link: "https://srikrishnamandir.org/product/outright-donation/" },
 ];
 
 function Seva() {
@@ -498,7 +496,7 @@ function Seva() {
         {SEVA_CARDS.map((c) => (
           <div key={c.title} className="seva-card animate-in">
             <img className="seva-card-img" src={c.img} alt={c.alt} loading="lazy" />
-            <div className="seva-card-body"><h4>{c.title}</h4><p>{c.desc}</p><a href="#" className="seva-btn">Contribute</a></div>
+            <div className="seva-card-body"><h4>{c.title}</h4><p>{c.desc}</p><a href={c.link} target="_blank" rel="noopener noreferrer" className="seva-btn">Contribute</a></div>
           </div>
         ))}
       </div>
