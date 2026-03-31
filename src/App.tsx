@@ -582,10 +582,9 @@ function Share() {
       setTimeout(() => setCopyText("Copy Link"), 2000);
     });
   };
-  const downloadICS = () => {
-    const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART:20260430T103000Z\nDTEND:20260430T134500Z\nSUMMARY:Śrī Nṛsiṁha Caturdaśī 2026 at ISKM Singapore\nDESCRIPTION:Grand celebration with Abhisheka, Kirtana, Cultural Programme & free Prasadam.\nLOCATION:No.9 Lorong 29 Geylang #03-02 Singapore 388065\nURL:https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/\nEND:VEVENT\nEND:VCALENDAR`;
-    const blob = new Blob([ics], { type: "text/calendar" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "nrsimha-caturdasi-2026.ics"; a.click();
+  const openGoogleCalendar = () => {
+    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Śrī+Nṛsiṁha+Caturdaśī+2026+at+ISKM+Singapore&dates=20260430T103000Z/20260430T134500Z&details=Grand+celebration+with+Abhisheka,+Kirtana,+Cultural+Programme+%26+free+Prasadam.+Register:+https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&location=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065";
+    window.open(url, "_blank");
   };
 
   return (
