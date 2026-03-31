@@ -356,9 +356,9 @@ footer a:hover{text-decoration:underline}
   .hero-eyebrow{font-size:10px}
   .hero-painting{width:200px}
   .ribbon{font-size:9px;padding:5px 10px}
-  .sticky-nav{top:26px;height:44px}
-  .scroll-progress{top:26px}
-  .hero{margin-top:70px}
+  .sticky-nav{top:46px;height:44px}
+  .scroll-progress{top:46px}
+  .hero{margin-top:90px}
   .stats-inner{grid-template-columns:repeat(2,1fr);gap:16px}
   .editorial-visual{aspect-ratio:3/4}
   .editorial-overlay .mantra{font-size:14px}
