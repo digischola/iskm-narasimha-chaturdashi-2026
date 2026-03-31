@@ -513,7 +513,7 @@ function Volunteer() {
         <div className="volunteer-text">
           <h2>Serve &amp; Be Blessed</h2>
           <p>Volunteer for decorations, prasādam distribution, guest welcome, and more. Experience the joy of selfless service.</p>
-          <a href="#register" className="btn-volunteer cta-glow"><i className="fas fa-hands-helping"></i> &nbsp;Register &amp; Volunteer</a>
+          <a href="#register" className="btn-volunteer cta-glow btn-volunteer-navy"><i className="fas fa-hands-helping"></i> &nbsp;Register &amp; Volunteer</a>
         </div>
       </div>
     </div>
