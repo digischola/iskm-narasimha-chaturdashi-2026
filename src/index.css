@@ -303,10 +303,10 @@ footer a:hover{text-decoration:underline}
   .hamburger{display:block}
 }
 @media(max-width:768px){
-  .ribbon{font-size:11px;padding:8px 12px;line-height:1.4}
-  .sticky-nav{top:33px;height:50px;padding:0 15px}
-  .scroll-progress{top:33px}
-  .hero{margin-top:83px}
+  .ribbon{font-size:11px;padding:6px 12px;line-height:1.3}
+  .sticky-nav{top:30px;height:48px;padding:0 12px}
+  .scroll-progress{top:30px}
+  .hero{margin-top:78px}
   .hero-top{padding:30px 20px 30px}
   .hero h1{font-size:1.85rem}
   .hero-desc{font-size:14px}
@@ -315,8 +315,15 @@ footer a:hover{text-decoration:underline}
   .expect-grid{grid-template-columns:1fr}
   .seva-grid{grid-template-columns:1fr}
   .timeline-section{padding:28px 22px}
-  .editorial-inner{grid-template-columns:1fr;gap:30px}
-  .editorial-visual{aspect-ratio:auto;min-height:300px}
+  .editorial-inner{grid-template-columns:1fr;gap:24px}
+  .editorial-text{text-align:center}
+  .editorial-text h2{text-align:center}
+  .editorial-visual{aspect-ratio:3/4;width:100%;min-height:unset}
+  .editorial-visual img{width:100%;height:100%;object-fit:cover}
+  .editorial-overlay{padding:20px 16px}
+  .editorial-overlay .mantra{font-size:16px}
+  .editorial-overlay .mantra-meaning{font-size:11px}
+  .editorial-overlay .decorative-text{font-size:50px}
   .location-wrap{grid-template-columns:1fr}
   .loc-map iframe{min-height:240px}
   .loc-info{padding:28px 22px}
