@@ -1,31 +1,57 @@
 
 
-## Plan: Seva Cards, Sticky Bar, Significance Section Fixes
+## Plan: Fix Header Gap, Add Backend, and Hero Effects
 
-### Changes Overview
+### 1. Fix Ribbon-to-Nav Gap on Mobile
 
-**1. Seva Cards Updates** (`src/App.tsx`, lines 485-506)
-- Remove "Puṣpa-Alaṅkāra" and "Mandira Puṣpa Sevā" cards from `SEVA_CARDS`
-- Rename "General Donation" → "Charity Donation", link to `https://srikrishnamandir.org/product/outright-donation/`
-- Link "Annadānam Sevā" to `https://srikrishnamandir.org/product/annadanam-seva/`
-- Rename "Abhiṣeka Sevā" → "Join As a Patron", update description to something like "Become a patron and support the temple's spiritual mission", link to `https://srikrishnamandir.org/join-as-a-patron/`
-- Copy uploaded patron image (`user-uploads://Patron-Program-img.jpg`) to `public/images/patron-program.jpg` and use it for the patron card
-- Update Seva component to use `<a>` tags with `target="_blank"` for each card's contribute button
+The ribbon uses `flex-direction: column` on mobile, making it taller than the hardcoded `top` offset on `.sticky-nav`. Fix by dynamically measuring ribbon height or adjusting the CSS offsets so nav sits flush below the ribbon with no gap.
 
-**2. Sticky Ribbon & Nav Bar Fixes** (`src/index.css`)
-- Fix ribbon overlapping header on mobile: reduce ribbon padding, ensure proper `top` offset for `.sticky-nav`
-- Fix "Register Free" button contrast: change `.nav-cta` to use `color: var(--navy)` or darker text on the pink background for better readability
-- Ensure ribbon + nav don't overlap content by adjusting `hero` margin-top values across breakpoints
+**Changes:**
+- `src/index.css`: Adjust `.sticky-nav` top values at 768px and 480px breakpoints to match actual ribbon height. Remove gap by fine-tuning `top` from `52px`/`46px` to the correct measured values (ribbon on mobile is ~50px with column layout). Also adjust `.hero` margin-top accordingly.
 
-**3. Significance Section Mobile Fixes** (`src/index.css`)
-- Center-align `.editorial-text` on mobile (text-align: center)
-- Fix `.editorial-visual` on mobile: ensure image fills the card properly with `width: 100%`, `object-fit: cover`, and appropriate `aspect-ratio`
-- Adjust `.editorial-overlay` padding and text sizing for mobile so mantra text is readable and properly positioned within the image card
+---
+
+### 2. Backend — Save Registration Data with Lovable Cloud
+
+Enable Lovable Cloud to get a Supabase-backed database. Create a `registrations` table and an edge function to store form submissions.
+
+**Changes:**
+- **Database table** `registrations`: columns for `id`, `name`, `email`, `phone`, `attendees`, `is_volunteer`, `age`, `gender`, `remarks`, `volunteer_categories` (text array), `created_at`
+- **Edge function** `submit-registration`: Validates input with Zod, inserts into `registrations` table, returns success
+- **`src/App.tsx`**: Update `completeRegistration()` to call the edge function via `supabase.functions.invoke('submit-registration', ...)` before opening WhatsApp
+- **`src/integrations/supabase/client.ts`**: Standard Supabase client setup (created automatically by Lovable Cloud)
+
+**Admin Dashboard:**
+- New route `/admin` with a simple dashboard page
+- Fetches registration data from `registrations` table
+- Shows: total registrations, total attendees, volunteer count, registrations over time chart, and a data table with search/filter
+- Protected by a basic check (can discuss auth approach separately)
+
+---
+
+### 3. Hero Section Dynamic Effects
+
+Add three visual effects to make the hero feel alive:
+
+**a) Animated gradient background** — Slowly shifting gradient using CSS `@keyframes` on the `.hero` background, cycling between navy/deep-blue/purple tones.
+
+**b) Parallax scrolling** — The hero image (`hero-painting`) moves at a slower rate than the content as the user scrolls, using a lightweight `useEffect` with `transform: translateY()` based on scroll position.
+
+**c) Golden particle/sparkle effects** — A canvas-based particle system rendered behind the hero content showing floating golden particles that drift upward, giving a divine/celestial feel. Implemented as a React component `<GoldenParticles />` using `<canvas>` with `requestAnimationFrame`.
+
+**Changes:**
+- `src/App.tsx`: Add `<GoldenParticles />` component in the hero section, add parallax scroll handler to hero painting
+- `src/index.css`: Add `@keyframes gradient-shift` animation on `.hero`, ensure canvas is positioned absolutely behind content
+
+---
 
 ### Technical Details
 
 **Files modified:**
-- `src/App.tsx` — Update `SEVA_CARDS` array and `Seva` component
-- `src/index.css` — Mobile responsive fixes for ribbon, nav, and editorial section
-- `public/images/patron-program.jpg` — New asset copied from upload
+- `src/index.css` — Gap fix, animated gradient keyframes
+- `src/App.tsx` — Supabase integration in form, parallax hook, GoldenParticles canvas component
+- `supabase/functions/submit-registration/index.ts` — New edge function
+- `src/pages/Admin.tsx` — New admin dashboard page
+- `src/App.tsx` or routing setup — Add `/admin` route
+- Database migration for `registrations` table
 
