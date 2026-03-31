@@ -60,8 +60,8 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
     <>
       <a href="#main-content" className="skip-link">Skip to content</a>
       <div className="ribbon">
-        <span className="hl"><span className="urgency-dot"></span><i className="fas fa-fire"></i> Limited Seats</span> — Register free for Śrī Nṛsiṁha Caturdaśī 2026
-        <a href="#register">Secure Your Spot &rarr;</a>
+        <span className="ribbon-text"><span className="hl"><span className="urgency-dot"></span><i className="fas fa-fire"></i> Limited Seats</span> — Register free for Śrī Nṛsiṁha Caturdaśī 2026</span>
+        <a href="#register" className="ribbon-cta">Secure Your Spot &rarr;</a>
       </div>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
         <a href="#" className="nav-brand"><img src="/images/logo.jpeg" alt="ISKM" /><span>ISKM Singapore</span></a>
@@ -249,7 +249,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 <option value="yes">Yes, I'd love to help!</option>
               </select>
             </div>
-            <button type="submit" className="btn-register cta-glow">
+            <button type="submit" className="btn-register cta-glow btn-register-navy">
               {isVolunteer ? "Next — Volunteer Details" : "Register Now — It's Free"}
             </button>
             <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
@@ -513,7 +513,7 @@ function Volunteer() {
         <div className="volunteer-text">
           <h2>Serve &amp; Be Blessed</h2>
           <p>Volunteer for decorations, prasādam distribution, guest welcome, and more. Experience the joy of selfless service.</p>
-          <a href="#register" className="btn-volunteer cta-glow"><i className="fas fa-hands-helping"></i> &nbsp;Register &amp; Volunteer</a>
+          <a href="#register" className="btn-volunteer cta-glow btn-volunteer-navy"><i className="fas fa-hands-helping"></i> &nbsp;Register &amp; Volunteer</a>
         </div>
       </div>
     </div>
@@ -582,10 +582,9 @@ function Share() {
       setTimeout(() => setCopyText("Copy Link"), 2000);
     });
   };
-  const downloadICS = () => {
-    const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART:20260430T103000Z\nDTEND:20260430T134500Z\nSUMMARY:Śrī Nṛsiṁha Caturdaśī 2026 at ISKM Singapore\nDESCRIPTION:Grand celebration with Abhisheka, Kirtana, Cultural Programme & free Prasadam.\nLOCATION:No.9 Lorong 29 Geylang #03-02 Singapore 388065\nURL:https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/\nEND:VEVENT\nEND:VCALENDAR`;
-    const blob = new Blob([ics], { type: "text/calendar" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "nrsimha-caturdasi-2026.ics"; a.click();
+  const openGoogleCalendar = () => {
+    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Śrī+Nṛsiṁha+Caturdaśī+2026+at+ISKM+Singapore&dates=20260430T103000Z/20260430T134500Z&details=Grand+celebration+with+Abhisheka,+Kirtana,+Cultural+Programme+%26+free+Prasadam.+Register:+https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&location=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065";
+    window.open(url, "_blank");
   };
 
   return (
@@ -594,7 +593,7 @@ function Share() {
       <div className="share-row animate-in">
         <a href="https://wa.me/?text=Join%20me%20for%20Sri%20Nrsimha%20Caturdasi%202026%20at%20ISKM%20Singapore%20on%20April%2030!%20Free%20entry%2C%20prasadam%20%26%20more.%20Register%3A%20https%3A%2F%2Fsrikrishnamandir.org%2Ffestival%2Fsri-nrsimha-caturdasi-2026%2F" target="_blank" rel="noopener noreferrer" className="share-pill pill-wa"><i className="fab fa-whatsapp"></i> WhatsApp</a>
         <a href="https://t.me/share/url?url=https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&text=Join+Sri+Nrsimha+Caturdasi+2026+at+ISKM+Singapore!" target="_blank" rel="noopener noreferrer" className="share-pill pill-tg"><i className="fab fa-telegram"></i> Telegram</a>
-        <a href="#" onClick={(e) => { e.preventDefault(); downloadICS(); }} className="share-pill pill-cal"><i className="fas fa-calendar-plus"></i> Add to Calendar</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); openGoogleCalendar(); }} className="share-pill pill-cal"><i className="fas fa-calendar-plus"></i> Add to Calendar</a>
         <a href="#" onClick={(e) => { e.preventDefault(); copyLink(); }} className="share-pill pill-copy"><i className="fas fa-link"></i> <span>{copyText}</span></a>
       </div>
     </div>
@@ -608,7 +607,7 @@ function FinalCTA() {
       <div className="final-cta-bg"><img src="/images/the-significance.jpg" alt="" loading="lazy" /></div>
       <h2>Don't Miss This Sacred Celebration</h2>
       <p>Thursday, 30 April 2026 · 6:30 PM · ISKM Singapore</p>
-      <a href="#register" className="btn-final cta-glow"><i className="fas fa-arrow-up"></i> &nbsp;Register Now — Free</a>
+      <a href="#register" className="btn-final cta-glow">Register Now — Free</a>
     </div>
   );
 }
@@ -629,7 +628,7 @@ function MobileSticky({ progress }: { progress: number }) {
     <>
       <div className="mobile-sticky">
         <div className="mobile-progress" style={{ transform: `scaleX(${progress})` }}></div>
-        <a href="#register"><i className="fas fa-arrow-up"></i> &nbsp;Register Free — Apr 30</a>
+        <a href="#register">Register Free — Apr 30</a>
       </div>
       <div style={{ height: "70px" }} className="mobile-spacer"></div>
       <style>{`.mobile-spacer{display:none}@media(max-width:768px){.mobile-spacer{display:block}}`}</style>
