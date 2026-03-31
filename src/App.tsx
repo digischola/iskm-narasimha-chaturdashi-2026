@@ -1,4 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import GoldenParticles from "@/components/GoldenParticles";
 
 /* ═══ HOOKS ═══ */
 function useCountdown(targetDate: string) {
@@ -54,6 +57,20 @@ function useAnimateOnScroll() {
   }, []);
 }
 
+function useParallax() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handler = () => {
+      if (!ref.current) return;
+      const y = window.scrollY * 0.15;
+      ref.current.style.transform = `translateY(${y}px)`;
+    };
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+  return ref;
+}
+
 /* ═══ NAVBAR ═══ */
 function Navbar({ scrolled }: { scrolled: boolean }) {
   return (
@@ -80,9 +97,11 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
 /* ═══ HERO ═══ */
 function Hero({ spotsCount }: { spotsCount: number }) {
   const { d, h, m, s, done, digitChange } = useCountdown("2026-04-30T18:30:00+08:00");
+  const parallaxRef = useParallax();
 
   return (
-    <section className="hero" id="main-content">
+    <section className="hero hero-animated" id="main-content">
+      <GoldenParticles />
       <div className="hero-top">
         <div className="hero-content">
           <div className="hero-eyebrow">ISKM Singapore Presents</div>
@@ -105,7 +124,7 @@ function Hero({ spotsCount }: { spotsCount: number }) {
           )}
           <p className="hero-spots"><strong><span>{spotsCount}</span> people</strong> have registered so far</p>
         </div>
-        <div className="hero-painting">
+        <div className="hero-painting" ref={parallaxRef}>
           <img src="/images/hero-image.jpg" alt="Lord Śrī Nṛsiṁhadeva with Prahlāda Mahārāja" />
         </div>
       </div>
@@ -123,6 +142,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const [step, setStep] = useState(1);
   const [isVolunteer, setIsVolunteer] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -141,10 +161,32 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
     setVolCats((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]);
   };
 
-  const completeRegistration = (volunteer: boolean) => {
+  const completeRegistration = async (volunteer: boolean) => {
+    setSubmitting(true);
     const numAtt = attendees === "5" ? 5 : parseInt(attendees);
+
+    // Save to backend
+    try {
+      await supabase.functions.invoke("submit-registration", {
+        body: {
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim() || null,
+          attendees: numAtt,
+          is_volunteer: volunteer,
+          age: age || null,
+          gender: gender || null,
+          remarks: remarks || null,
+          volunteer_categories: volunteer ? volCats : null,
+        },
+      });
+    } catch (err) {
+      console.error("Registration save error:", err);
+    }
+
     onRegister(numAtt);
     setSuccess(true);
+    setSubmitting(false);
 
     const ph = "6562502280";
     const numAttStr = attendees === "5" ? "5+" : attendees;
@@ -249,8 +291,8 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 <option value="yes">Yes, I'd love to help!</option>
               </select>
             </div>
-            <button type="submit" className="btn-register cta-glow btn-register-navy">
-              {isVolunteer ? "Next — Volunteer Details" : "Register Now — It's Free"}
+            <button type="submit" className="btn-register cta-glow btn-register-navy" disabled={submitting}>
+              {submitting ? "Submitting..." : isVolunteer ? "Next — Volunteer Details" : "Register Now — It's Free"}
             </button>
             <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
           </form>
@@ -281,7 +323,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
             </div>
             <div className="form-buttons">
               <button type="button" className="btn-back" onClick={() => setStep(1)}><i className="fas fa-arrow-left"></i> Back</button>
-              <button type="submit" className="btn-register cta-glow">Submit Registration</button>
+              <button type="submit" className="btn-register cta-glow" disabled={submitting}>{submitting ? "Submitting..." : "Submit Registration"}</button>
             </div>
           </form>
         )}
@@ -636,8 +678,8 @@ function MobileSticky({ progress }: { progress: number }) {
   );
 }
 
-/* ═══ APP ═══ */
-export default function App() {
+/* ═══ LANDING PAGE ═══ */
+function LandingPage() {
   const { progress, scrolled } = useScrollProgress();
   const [spotsCount, setSpotsCount] = useState(84);
   useAnimateOnScroll();
@@ -667,5 +709,19 @@ export default function App() {
       <Footer />
       <MobileSticky progress={progress} />
     </>
+  );
+}
+
+/* ═══ APP WITH ROUTING ═══ */
+import Admin from "@/pages/Admin";
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
