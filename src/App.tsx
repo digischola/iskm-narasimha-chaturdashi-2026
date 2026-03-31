@@ -593,7 +593,7 @@ function Share() {
       <div className="share-row animate-in">
         <a href="https://wa.me/?text=Join%20me%20for%20Sri%20Nrsimha%20Caturdasi%202026%20at%20ISKM%20Singapore%20on%20April%2030!%20Free%20entry%2C%20prasadam%20%26%20more.%20Register%3A%20https%3A%2F%2Fsrikrishnamandir.org%2Ffestival%2Fsri-nrsimha-caturdasi-2026%2F" target="_blank" rel="noopener noreferrer" className="share-pill pill-wa"><i className="fab fa-whatsapp"></i> WhatsApp</a>
         <a href="https://t.me/share/url?url=https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&text=Join+Sri+Nrsimha+Caturdasi+2026+at+ISKM+Singapore!" target="_blank" rel="noopener noreferrer" className="share-pill pill-tg"><i className="fab fa-telegram"></i> Telegram</a>
-        <a href="#" onClick={(e) => { e.preventDefault(); downloadICS(); }} className="share-pill pill-cal"><i className="fas fa-calendar-plus"></i> Add to Calendar</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); openGoogleCalendar(); }} className="share-pill pill-cal"><i className="fas fa-calendar-plus"></i> Add to Calendar</a>
         <a href="#" onClick={(e) => { e.preventDefault(); copyLink(); }} className="share-pill pill-copy"><i className="fas fa-link"></i> <span>{copyText}</span></a>
       </div>
     </div>
