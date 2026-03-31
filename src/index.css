@@ -24,9 +24,9 @@ a{text-decoration:none}
 .scroll-progress{position:fixed;top:37px;left:0;right:0;height:3px;z-index:1002;transform-origin:left;transition:transform .1s linear;background:var(--pink)}
 
 /* ═══ RIBBON ═══ */
-.ribbon{position:fixed;top:0;left:0;right:0;z-index:1001;background:linear-gradient(135deg,var(--navy),var(--navy-deep));color:var(--white);text-align:center;padding:10px 20px;font-size:13px;font-weight:600;letter-spacing:.3px}
+.ribbon{position:fixed;top:0;left:0;right:0;z-index:1001;background:linear-gradient(135deg,var(--navy),var(--navy-deep));color:var(--white);text-align:center;padding:10px 20px;font-size:13px;font-weight:600;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
 .ribbon .hl{color:var(--gold)}
-.ribbon a{color:var(--pink-light);text-decoration:underline;font-weight:700;margin-left:8px}
+.ribbon .ribbon-cta{color:var(--pink-light);text-decoration:underline;font-weight:700;white-space:nowrap}
 
 @keyframes urgency-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.6)}}
 .urgency-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:6px;animation:urgency-pulse 1.8s ease-in-out infinite}
