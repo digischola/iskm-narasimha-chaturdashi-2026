@@ -608,7 +608,7 @@ function FinalCTA() {
       <div className="final-cta-bg"><img src="/images/the-significance.jpg" alt="" loading="lazy" /></div>
       <h2>Don't Miss This Sacred Celebration</h2>
       <p>Thursday, 30 April 2026 · 6:30 PM · ISKM Singapore</p>
-      <a href="#register" className="btn-final cta-glow"><i className="fas fa-arrow-up"></i> &nbsp;Register Now — Free</a>
+      <a href="#register" className="btn-final cta-glow">Register Now — Free</a>
     </div>
   );
 }
