@@ -629,7 +629,7 @@ function MobileSticky({ progress }: { progress: number }) {
     <>
       <div className="mobile-sticky">
         <div className="mobile-progress" style={{ transform: `scaleX(${progress})` }}></div>
-        <a href="#register"><i className="fas fa-arrow-up"></i> &nbsp;Register Free — Apr 30</a>
+        <a href="#register">Register Free — Apr 30</a>
       </div>
       <div style={{ height: "70px" }} className="mobile-spacer"></div>
       <style>{`.mobile-spacer{display:none}@media(max-width:768px){.mobile-spacer{display:block}}`}</style>
