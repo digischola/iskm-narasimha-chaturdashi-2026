@@ -231,6 +231,7 @@ a{text-decoration:none}
 .volunteer-text h2{font-size:26px;color:var(--white);margin-bottom:10px}
 .volunteer-text p{font-size:15px;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:22px}
 .btn-volunteer{display:inline-block;background:var(--pink);color:var(--white);padding:14px 32px;border-radius:8px;font-weight:700;font-size:15px;transition:all .3s}
+.btn-volunteer-navy{color:var(--navy)!important}
 .btn-volunteer:hover{background:var(--pink-light);transform:translateY(-2px)}
 .btn-volunteer.cta-glow:hover{animation:none}
 
