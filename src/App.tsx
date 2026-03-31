@@ -1,0 +1,674 @@
+import { useEffect, useState, useCallback } from "react";
+
+/* ═══ HOOKS ═══ */
+function useCountdown(targetDate: string) {
+  const target = new Date(targetDate).getTime();
+  const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0, done: false });
+  const [prevS, setPrevS] = useState(-1);
+  const [digitChange, setDigitChange] = useState(false);
+
+  useEffect(() => {
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) { setTime({ d: 0, h: 0, m: 0, s: 0, done: true }); return; }
+      const d = Math.floor(diff / 864e5);
+      const h = Math.floor((diff % 864e5) / 36e5);
+      const m = Math.floor((diff % 36e5) / 6e4);
+      const s = Math.floor((diff % 6e4) / 1e3);
+      setTime({ d, h, m, s, done: false });
+      if (s !== prevS) { setDigitChange(true); setPrevS(s); setTimeout(() => setDigitChange(false), 300); }
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [target, prevS]);
+
+  return { ...time, digitChange };
+}
+
+function useScrollProgress() {
+  const [progress, setProgress] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handler = () => {
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(docH > 0 ? window.scrollY / docH : 0);
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  return { progress, scrolled };
+}
+
+function useAnimateOnScroll() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("visible"); }),
+      { threshold: 0.15 }
+    );
+    document.querySelectorAll(".animate-in").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+}
+
+/* ═══ NAVBAR ═══ */
+function Navbar({ scrolled }: { scrolled: boolean }) {
+  return (
+    <>
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      <div className="ribbon">
+        <span className="hl"><span className="urgency-dot"></span><i className="fas fa-fire"></i> Limited Seats</span> — Register free for Śrī Nṛsiṁha Caturdaśī 2026
+        <a href="#register">Secure Your Spot &rarr;</a>
+      </div>
+      <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
+        <a href="#" className="nav-brand"><img src="/images/logo.jpeg" alt="ISKM" /><span>ISKM Singapore</span></a>
+        <div className="nav-links">
+          <a href="#expect" className="desk-link">What's On</a>
+          <a href="#schedule" className="desk-link">Schedule</a>
+          <a href="#about" className="desk-link">About</a>
+          <a href="#location" className="desk-link">Venue</a>
+          <a href="#register" className="nav-cta cta-glow">Register Free</a>
+        </div>
+      </nav>
+    </>
+  );
+}
+
+/* ═══ HERO ═══ */
+function Hero({ spotsCount }: { spotsCount: number }) {
+  const { d, h, m, s, done, digitChange } = useCountdown("2026-04-30T18:30:00+08:00");
+
+  return (
+    <section className="hero" id="main-content">
+      <div className="hero-top">
+        <div className="hero-content">
+          <div className="hero-eyebrow">ISKM Singapore Presents</div>
+          <h1>Śrī Nṛsiṁha Caturdaśī <span className="accent">2026</span></h1>
+          <p className="hero-desc">Celebrate the divine appearance of Lord Nṛsiṁhadeva — an evening of grand Abhiṣeka, soul-stirring Kīrtana, cultural programme, and blessed Prasādam.</p>
+          <div className="hero-meta">
+            <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-calendar"></i></div><span>Thursday, 30th April 2026</span></div>
+            <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-clock"></i></div><span>6:30 PM – 9:45 PM</span></div>
+            <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-map-marker-alt"></i></div><span>No.9 Lorong 29 Geylang, #03-02</span></div>
+          </div>
+          {done ? (
+            <div style={{ color: "var(--gold)", fontSize: "17px", fontWeight: 600 }}>The celebration is happening now!</div>
+          ) : (
+            <div className="countdown-row">
+              <div className="cd-pill"><div className="num">{d}</div><div className="lbl">Days</div></div>
+              <div className="cd-pill"><div className="num">{h}</div><div className="lbl">Hours</div></div>
+              <div className="cd-pill"><div className="num">{m}</div><div className="lbl">Mins</div></div>
+              <div className="cd-pill"><div className={`num${digitChange ? " digit-change" : ""}`}>{s}</div><div className="lbl">Secs</div></div>
+            </div>
+          )}
+          <p className="hero-spots"><strong><span>{spotsCount}</span> people</strong> have registered so far</p>
+        </div>
+        <div className="hero-painting">
+          <img src="/images/hero-image.jpg" alt="Lord Śrī Nṛsiṁhadeva with Prahlāda Mahārāja" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══ REGISTRATION FORM ═══ */
+const VOLUNTEER_CATEGORIES = [
+  "Cutting vegetables", "Washing dishes", "Sweeping & mopping", "Decorating temple hall",
+  "Setting up crew", "Packing up crew", "Temple cleaning", "Photography and Videography",
+];
+
+function RegistrationForm({ onRegister }: { onRegister: (count: number) => void }) {
+  const [step, setStep] = useState(1);
+  const [isVolunteer, setIsVolunteer] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [attendees, setAttendees] = useState("2");
+  const [nameValid, setNameValid] = useState(false);
+  const [emailValid, setEmailValid] = useState(false);
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [remarks, setRemarks] = useState("");
+  const [volCats, setVolCats] = useState<string[]>([]);
+
+  const handleNameChange = (v: string) => { setName(v); setNameValid(v.trim().length >= 2); };
+  const handleEmailChange = (v: string) => { setEmail(v); setEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)); };
+
+  const toggleCat = (cat: string) => {
+    setVolCats((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]);
+  };
+
+  const completeRegistration = (volunteer: boolean) => {
+    const numAtt = attendees === "5" ? 5 : parseInt(attendees);
+    onRegister(numAtt);
+    setSuccess(true);
+
+    const ph = "6562502280";
+    const numAttStr = attendees === "5" ? "5+" : attendees;
+    let msg: string;
+    if (volunteer) {
+      const cats = volCats.join(", ") || "Not specified";
+      msg = `Hare Kṛṣṇa! 🙏\n\nI've registered as a *volunteer* for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n*Volunteer Categories:* ${cats}\n\nI'm excited to serve! Please coordinate with me before the event.\n\nJai Śrī Nṛsiṁhadeva! 🦁`;
+    } else {
+      msg = `Hare Kṛṣṇa! 🙏\n\nI've registered for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n\n📅 Thursday, 30th April 2026\n🕡 6:30 PM – 9:45 PM\n📍 No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nLooking forward to it!\nJai Śrī Nṛsiṁhadeva! 🦁`;
+    }
+    setTimeout(() => window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`, "_blank"), 800);
+  };
+
+  const handleStep1 = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isVolunteer) { setStep(2); } else { completeRegistration(false); }
+  };
+
+  const handleStep2 = (e: React.FormEvent) => {
+    e.preventDefault();
+    completeRegistration(true);
+  };
+
+  const stepCount = isVolunteer ? 2 : 1;
+
+  if (success) {
+    return (
+      <div className="reg-section" id="register">
+        <div className="reg-card">
+          <div className="form-success" style={{ display: "block" }}>
+            <div className="confetti-container">
+              {Array.from({ length: 30 }).map((_, i) => {
+                const colors = ["#f4c96b", "#f8a4c0", "#ffb6c1", "#f5d78e", "#1e3a6e"];
+                return (
+                  <div key={i} className="confetti-piece" style={{
+                    left: `${Math.random() * 100}%`, top: `${Math.random() * 40}%`,
+                    background: colors[i % 5], animationDelay: `${Math.random() * 0.8}s`,
+                    animationDuration: `${1 + Math.random()}s`,
+                  }} />
+                );
+              })}
+            </div>
+            <div className="check-icon"><i className="fas fa-check"></i></div>
+            <h3>You're Registered!</h3>
+            <p>We've saved your spot for Śrī Nṛsiṁha Caturdaśī 2026. A WhatsApp message is being opened so you can confirm directly with the temple.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="reg-section" id="register">
+      <div className="reg-card">
+        <div className="reg-card-header">
+          <div className="reg-badge"><i className="fas fa-ticket-alt"></i> &nbsp;Free Entry</div>
+          <h3>Confirm Your Attendance</h3>
+          <p>Fill in below to register for the celebration</p>
+          <div className="step-dots">
+            <span className={`step-dot${step >= 1 ? " active" : ""}`}></span>
+            {stepCount === 2 && <span className={`step-dot${step >= 2 ? " active" : ""}`}></span>}
+            <span className="step-text">Step {step} of {stepCount}</span>
+          </div>
+        </div>
+
+        {step === 1 ? (
+          <form onSubmit={handleStep1}>
+            <div className="form-group">
+              <label>Full Name *</label>
+              <div className="input-wrap">
+                <input type="text" placeholder="Your full name" required value={name} onChange={(e) => handleNameChange(e.target.value)} className={nameValid ? "input-valid" : ""} />
+                {nameValid && <i className="fas fa-check check-inline"></i>}
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Email *</label>
+                <div className="input-wrap">
+                  <input type="email" placeholder="you@email.com" required value={email} onChange={(e) => handleEmailChange(e.target.value)} className={emailValid ? "input-valid" : ""} />
+                  {emailValid && <i className="fas fa-check check-inline"></i>}
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Phone</label>
+                <input type="tel" placeholder="+65 XXXX XXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Number of Attendees</label>
+              <select value={attendees} onChange={(e) => setAttendees(e.target.value)}>
+                <option value="1">1 Person</option>
+                <option value="2">2 People</option>
+                <option value="3">3 People</option>
+                <option value="4">4 People</option>
+                <option value="5">5+ People</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Would you like to volunteer?</label>
+              <select value={isVolunteer ? "yes" : "no"} onChange={(e) => setIsVolunteer(e.target.value === "yes")}>
+                <option value="no">No, just attending</option>
+                <option value="yes">Yes, I'd love to help!</option>
+              </select>
+            </div>
+            <button type="submit" className="btn-register cta-glow">
+              {isVolunteer ? "Next — Volunteer Details" : "Register Now — It's Free"}
+            </button>
+            <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
+          </form>
+        ) : (
+          <form onSubmit={handleStep2}>
+            <div className="form-row">
+              <div className="form-group"><label>Age *</label><input type="number" placeholder="Your age" required min={1} max={120} value={age} onChange={(e) => setAge(e.target.value)} /></div>
+              <div className="form-group">
+                <label>Gender *</label>
+                <select required value={gender} onChange={(e) => setGender(e.target.value)}>
+                  <option value="" disabled>Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="prefer-not">Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group"><label>Remarks</label><textarea placeholder="If you are skilled in photography or videography, please let us know here" value={remarks} onChange={(e) => setRemarks(e.target.value)}></textarea></div>
+            <div className="form-group">
+              <label>Volunteering Categories</label>
+              <div className="vol-categories">
+                {VOLUNTEER_CATEGORIES.map((cat) => (
+                  <label key={cat} className="vol-cat-label">
+                    <input type="checkbox" checked={volCats.includes(cat)} onChange={() => toggleCat(cat)} /> {cat}
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="form-buttons">
+              <button type="button" className="btn-back" onClick={() => setStep(1)}><i className="fas fa-arrow-left"></i> Back</button>
+              <button type="submit" className="btn-register cta-glow">Submit Registration</button>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ═══ SOCIAL PROOF ═══ */
+const TESTIMONIALS = [
+  { text: '"The Nṛsiṁha Caturdaśī celebration was deeply moving. The Abhisheka filled the temple with such powerful energy."', author: "— Priya M., attended 2025" },
+  { text: '"The prasādam was incredible and the kīrtana was soul-stirring. We come back every year."', author: "— Ravi K., attended 2024" },
+  { text: '"My children loved the cultural programme. It\'s become our family tradition."', author: "— Lakshmi S., attended 2025" },
+];
+
+function SocialProof() {
+  const [tIdx, setTIdx] = useState(0);
+  useEffect(() => { const id = setInterval(() => setTIdx((i) => (i + 1) % TESTIMONIALS.length), 5000); return () => clearInterval(id); }, []);
+
+  return (
+    <div className="proof-strip">
+      <div className="proof-inner">
+        <div className="proof-chip"><i className="fas fa-users ico-gold"></i><span><strong>500+</strong> expected this year</span></div>
+        <div className="proof-chip"><i className="fas fa-utensils ico-pink"></i><span><strong>Free Prasādam</strong> for everyone</span></div>
+        <div className="proof-chip"><i className="fas fa-child ico-green"></i><span><strong>Family-friendly</strong> all ages welcome</span></div>
+      </div>
+      <div className="testimonial-wrap">
+        <div className="testimonial-item" key={tIdx}>
+          <p className="quote">{TESTIMONIALS[tIdx].text}</p>
+          <p className="author">{TESTIMONIALS[tIdx].author}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══ STATS ═══ */
+function Stats() {
+  const [animated, setAnimated] = useState(false);
+  const [values, setValues] = useState([0, 0, 0, 0]);
+  const targets = [14, 500, 50, 30];
+  const labels = ["Years of Service", "Expected Attendees", "Dedicated Volunteers", "Festivals Celebrated"];
+
+  useEffect(() => {
+    if (!animated) return;
+    targets.forEach((target, idx) => {
+      const step = Math.ceil(target / 60);
+      let cur = 0;
+      const timer = setInterval(() => {
+        cur += step;
+        if (cur >= target) { cur = target; clearInterval(timer); }
+        setValues((prev) => { const n = [...prev]; n[idx] = cur; return n; });
+      }, 25);
+    });
+  }, [animated]);
+
+  useEffect(() => {
+    const el = document.querySelector(".stats-section");
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setAnimated(true); obs.disconnect(); } }, { threshold: 0.15 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div className="stats-section">
+      <div className="stats-inner">
+        {targets.map((_, i) => (
+          <div key={i} className="animate-in">
+            <div className="stat-number">{values[i]}+</div>
+            <div className="stat-label">{labels[i]}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══ ABOUT ═══ */
+function About() {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div className="editorial-section" id="about">
+      <div className="editorial-inner">
+        <div className="animate-in">
+          <div className="editorial-visual">
+            <img src="/images/the-significance.jpg" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" />
+            <div className="editorial-overlay">
+              <div className="decorative-text">नृसिंह</div>
+              <div className="mantra">ॐ उग्रं वीरं महाविष्णुं ज्वलन्तं सर्वतोमुखम्।<br />नृसिंहं भीषणं भद्रं मृत्यु मृत्युं नमाम्यहम्॥</div>
+              <p className="mantra-meaning">I bow down to Lord Nṛsiṁha who is highly ferocious, brave, the great Lord Viṣṇu, blazing in all directions, terrifying yet auspicious — the death of death itself.</p>
+            </div>
+          </div>
+        </div>
+        <div className="animate-in">
+          <div className="editorial-text">
+            <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--navy-2)", marginBottom: "12px" }}>The Significance</div>
+            <h2>Who is Lord Nṛsiṁhadeva?</h2>
+            <p>Śrī Nṛsiṁha Caturdaśī celebrates the divine appearance of Lord Nṛsiṁhadeva — the half-man, half-lion incarnation of the Supreme Lord Viṣṇu. He appeared from a pillar in the palace of the demon king Hiraṇyakaśipu to protect His dear devotee Prahlāda Mahārāja.</p>
+            <p>Lord Nṛsiṁhadeva is worshipped as the supreme protector of devotees. His appearance demonstrates that the Lord will go to any extent to safeguard those who take shelter of Him, even manifesting in an extraordinary form never seen before.</p>
+            <button className="read-more-btn" onClick={() => setExpanded(!expanded)}>
+              {expanded ? "Show less ↑" : "Read more about the festival ↓"}
+            </button>
+            <div className={`read-more-content${expanded ? " open" : ""}`}>
+              <p>Nṛsiṁha Caturdaśī falls on the fourteenth day (caturdaśī) of the bright fortnight (Śukla Pakṣa) of the month of Vaiśākha. According to the Vedic scriptures, Lord Nṛsiṁhadeva appeared at twilight — neither day nor night — to fulfil the conditions of the boon granted to Hiraṇyakaśipu by Lord Brahmā.</p>
+              <p>The story of Prahlāda Mahārāja is one of the most beloved in the Vedic tradition. Despite being the son of the greatest demon, young Prahlāda was an unwavering devotee of Lord Viṣṇu from birth. When Hiraṇyakaśipu tried every means to kill his own son, the Lord appeared in the extraordinary form of Nṛsiṁha — half-man, half-lion — to destroy the demon and embrace His devotee.</p>
+              <p>Srila Prabhupada, the founder-ācārya, taught that Lord Nṛsiṁhadeva's appearance carries the supreme assurance: the Lord is always ready to protect His devotees from all dangers, material and spiritual.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══ WHAT TO EXPECT ═══ */
+const EXPECT_CARDS = [
+  { img: "/images/sacred-abhisheka.jpg", alt: "Sacred Abhiṣeka", title: "Sacred Abhiṣeka", desc: "Witness the grand bathing ceremony of the deities with milk, ghee, yogurt, and sanctified waters." },
+  { img: "/images/divine-kirtana.jpg", alt: "Divine Kīrtana", title: "Divine Kīrtana", desc: "Join heart-stirring congregational chanting that fills the temple with spiritual vibrations." },
+  { img: "/images/cultural-programme.jpg", alt: "Cultural Programme", title: "Cultural Programme", desc: "Enjoy a captivating cultural performance celebrating the glories of Lord Nṛsiṁhadeva's pastimes." },
+  { img: "/images/blessed-prasadam.jpg", alt: "Blessed Prasādam", title: "Blessed Prasādam", desc: "Relish sanctified vegetarian food offered to the Lord — served free to all attendees." },
+  { img: "/images/arati-worship.jpg", alt: "Ārati & Worship", title: "Ārati & Worship", desc: "Begin the evening with the sacred ārati ceremony and offerings to the deities in the temple." },
+  { img: "/images/community-family.jpg", alt: "Community & Family", title: "Community & Family", desc: "Bring the whole family for an uplifting atmosphere, book stalls, and warm community spirit." },
+];
+
+function WhatToExpect() {
+  return (
+    <div className="section" id="expect">
+      <div className="sec-header animate-in"><div className="overline">What Awaits You</div><h2>An Evening of Devotion &amp; Joy</h2><div className="divider"></div><p>Experience the spiritual grandeur of Lord Nṛsiṁhadeva's appearance celebration</p></div>
+      <div className="expect-grid">
+        {EXPECT_CARDS.map((c) => (
+          <div key={c.title} className="expect-card animate-in">
+            <img className="expect-card-img" src={c.img} alt={c.alt} loading="lazy" />
+            <div className="expect-card-body"><h3>{c.title}</h3><p>{c.desc}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══ GALLERY ═══ */
+function Gallery() {
+  const [idx, setIdx] = useState(0);
+  const total = 12;
+
+  const getPerView = useCallback(() => (window.innerWidth <= 768 ? 1 : 3), []);
+  const [perView, setPerView] = useState(3);
+
+  useEffect(() => {
+    const handler = () => setPerView(getPerView());
+    handler();
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [getPerView]);
+
+  useEffect(() => {
+    const id = setInterval(() => setIdx((i) => (i + 1) % (total - perView + 1)), 3500);
+    return () => clearInterval(id);
+  }, [perView]);
+
+  const scroll = (dir: number) => setIdx((i) => Math.max(0, Math.min(i + dir, total - perView)));
+
+  return (
+    <div className="section" style={{ paddingTop: 0 }}>
+      <div className="sec-header animate-in"><div className="overline">Past Celebrations</div><h2>Glimpses from Our Temple</h2><div className="divider"></div><p>Real moments from ISKM Singapore celebrations</p></div>
+      <div className="gallery-wrap">
+        <button className="gallery-btn prev" onClick={() => scroll(-1)} aria-label="Previous"><i className="fas fa-chevron-left"></i></button>
+        <div className="gallery-viewport">
+          <div className="gallery-track" style={{ transform: `translateX(-${idx * (100 / perView)}%)` }}>
+            {Array.from({ length: total }).map((_, i) => (
+              <div key={i} className="gallery-slide"><img src={`/images/${i + 1}.jpg`} alt={`Gallery ${i + 1}`} loading="lazy" /></div>
+            ))}
+          </div>
+        </div>
+        <button className="gallery-btn next" onClick={() => scroll(1)} aria-label="Next"><i className="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+  );
+}
+
+/* ═══ SCHEDULE ═══ */
+function Schedule() {
+  return (
+    <div className="section" id="schedule">
+      <div className="sec-header animate-in"><div className="overline">Program Schedule</div><h2>Thursday, 30 April 2026</h2><div className="divider"></div><p>6:30 PM onwards · All timings are approximate</p></div>
+      <div className="timeline-section animate-in">
+        <div className="timeline">
+          <div className="tl-item"><div className="tl-dot"></div><div className="tl-time">6:30 – 7:00 PM</div><h4 className="tl-title">Ārati &amp; Kīrtana</h4><p className="tl-desc">Evening worship ceremony with congregational chanting to set the devotional atmosphere</p></div>
+          <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">7:00 – 8:00 PM</div><h4 className="tl-title">Grand Abhiṣeka <span className="tl-tag">Highlight</span></h4><p className="tl-desc">The sacred bathing ceremony of the deities — the centrepiece of the evening celebration</p></div>
+          <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">8:00 – 8:45 PM</div><h4 className="tl-title">Cultural Programme <span className="tl-tag">Special</span></h4><p className="tl-desc">A captivating cultural performance celebrating the glories of Lord Nṛsiṁhadeva</p></div>
+          <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">8:45 PM</div><h4 className="tl-title">Prasādam is Served <span className="tl-tag">Free Feast</span></h4><p className="tl-desc">Sanctified vegetarian feast for all attendees — come hungry, leave blessed</p></div>
+        </div>
+      </div>
+      <div className="fasting-card animate-in"><i className="fas fa-info-circle"></i><p><strong>Fasting Guidance:</strong> Devotees traditionally observe a complete fast from sunrise to sunset on Nṛsiṁha Caturdaśī. After sunset, the fast may be broken with Ekādaśī-style prasādam. If you're new to this, simply come and enjoy — no fasting is required to attend.</p></div>
+    </div>
+  );
+}
+
+/* ═══ SEVA ═══ */
+const SEVA_CARDS = [
+  { img: "/images/abhisheka-seva.jpg", alt: "Abhiṣeka Sevā", title: "Abhiṣeka Sevā", desc: "Sponsor the grand bathing ceremony with milk, ghee, yogurt & sacred waters" },
+  { img: "/images/annadanam-seva.jpg", alt: "Annadānam Sevā", title: "Annadānam Sevā", desc: "Feed the community — sponsor the special Nṛsiṁha Caturdaśī prasādam feast" },
+  { img: "/images/mandira-pushpa-seva.jpg", alt: "Mandira Puṣpa Sevā", title: "Mandira Puṣpa Sevā", desc: "Help adorn the temple with flowers, mango leaves, and festive decorations" },
+  { img: "/images/pushpa-alankara.jpg", alt: "Puṣpa-Alaṅkāra", title: "Puṣpa-Alaṅkāra", desc: "Contribute to exquisite flower garland decorations for the deities" },
+  { img: "/images/Charity.jpg", alt: "General Donation", title: "General Donation", desc: "Support the festival in any way that feels right for you" },
+];
+
+function Seva() {
+  return (
+    <div className="section" id="donate">
+      <div className="sec-header animate-in"><div className="overline">Support the Festival</div><h2>Sevā Opportunities</h2><div className="divider"></div><p>Contribute to making this celebration possible for everyone</p></div>
+      <div className="seva-grid">
+        {SEVA_CARDS.map((c) => (
+          <div key={c.title} className="seva-card animate-in">
+            <img className="seva-card-img" src={c.img} alt={c.alt} loading="lazy" />
+            <div className="seva-card-body"><h4>{c.title}</h4><p>{c.desc}</p><a href="#" className="seva-btn">Contribute</a></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══ VOLUNTEER ═══ */
+function Volunteer() {
+  return (
+    <div className="volunteer-banner animate-in" style={{ paddingBottom: "70px" }}>
+      <div className="volunteer-inner">
+        <div className="volunteer-img"><img src="/images/11.jpg" alt="Young volunteers helping at ISKM" loading="lazy" /></div>
+        <div className="volunteer-text">
+          <h2>Serve &amp; Be Blessed</h2>
+          <p>Volunteer for decorations, prasādam distribution, guest welcome, and more. Experience the joy of selfless service.</p>
+          <a href="#register" className="btn-volunteer cta-glow"><i className="fas fa-hands-helping"></i> &nbsp;Register &amp; Volunteer</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══ FAQ ═══ */
+const FAQ_DATA = [
+  { q: "Is there parking available at the venue?", a: "Limited parking is available along Lorong 29 Geylang. We recommend using public transport — Aljunied MRT (EW9) and Paya Lebar MRT (CC9/EW9) are both within walking distance. Several bus services also stop nearby along Sims Avenue." },
+  { q: "Is there a dress code?", a: "There is no strict dress code. We recommend modest, comfortable clothing. Traditional Indian attire is welcome but not required. Please remove shoes before entering the temple hall." },
+  { q: "Will food be provided?", a: "Yes! A sumptuous vegetarian prasādam feast will be served free of charge to all attendees at 8:45 PM. The food is sanctified, freshly prepared, and absolutely delicious." },
+  { q: "Can I bring my children?", a: "Absolutely! The celebration is family-friendly and suitable for all ages. Children will enjoy the cultural programme and prasādam. The atmosphere is welcoming and inclusive for families." },
+  { q: "Do I need to register to attend?", a: "Registration is free and helps us plan for seating and prasādam. Walk-ins are welcome on a first-come, first-served basis, but we recommend registering in advance." },
+  { q: "How long is the event?", a: "The programme runs from 6:30 PM to approximately 9:45 PM (about 3 hours 15 minutes). You're welcome to arrive at any point and stay as long as you'd like." },
+];
+
+function FAQ() {
+  const [active, setActive] = useState<number | null>(null);
+  return (
+    <div className="faq-section" id="faq">
+      <div className="sec-header animate-in"><div className="overline">Have Questions?</div><h2>Frequently Asked Questions</h2><div className="divider"></div><p>Everything you need to know before attending</p></div>
+      <div className="faq-list animate-in">
+        {FAQ_DATA.map((item, i) => (
+          <div key={i} className="faq-item">
+            <button className={`faq-question${active === i ? " active" : ""}`} onClick={() => setActive(active === i ? null : i)}>
+              {item.q} <i className="fas fa-chevron-down"></i>
+            </button>
+            <div className={`faq-answer${active === i ? " open" : ""}`}><p>{item.a}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══ LOCATION ═══ */
+function Location() {
+  return (
+    <div className="section" id="location">
+      <div className="sec-header animate-in"><div className="overline">Venue</div><h2>How to Get Here</h2><div className="divider"></div></div>
+      <div className="location-wrap animate-in">
+        <div className="loc-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7843!2d103.8873!3d1.3137!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTgnNDkuMyJOIDEwM8KwNTMnMTQuMyJF!5e0!3m2!1sen!2ssg!4v1" allowFullScreen loading="lazy" title="ISKM Singapore Map"></iframe></div>
+        <div className="loc-info">
+          <img src="/images/logo.jpeg" alt="ISKM" />
+          <h3>International Sri Krishna Mandir</h3>
+          <div className="loc-detail"><i className="fas fa-map-marker-alt"></i><span>No. 9 Lorong 29 Geylang, #03-02<br />Singapore 388065</span></div>
+          <div className="loc-detail"><i className="fas fa-clock"></i><span>Thursday, 30 April 2026<br />6:30 PM – 9:45 PM</span></div>
+          <div className="loc-detail"><i className="fas fa-phone"></i><span>+(65) 6250 2280</span></div>
+          <div className="loc-transport"><h4>Getting Here</h4>
+            <p className="loc-transport-item"><i className="fas fa-train"></i> Aljunied MRT (EW9) or Paya Lebar MRT (CC9/EW9)</p>
+            <p className="loc-transport-item"><i className="fas fa-bus"></i> Bus 2, 13, 21, 26, 40, 51, 67 — Sims Ave (B10)</p>
+          </div>
+          <a href="https://maps.google.com/?q=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065" target="_blank" rel="noopener noreferrer" className="directions-btn"><i className="fas fa-directions"></i> Get Directions</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══ SHARE ═══ */
+function Share() {
+  const [copyText, setCopyText] = useState("Copy Link");
+  const copyLink = () => {
+    navigator.clipboard.writeText("https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/").then(() => {
+      setCopyText("Copied!");
+      setTimeout(() => setCopyText("Copy Link"), 2000);
+    });
+  };
+  const downloadICS = () => {
+    const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART:20260430T103000Z\nDTEND:20260430T134500Z\nSUMMARY:Śrī Nṛsiṁha Caturdaśī 2026 at ISKM Singapore\nDESCRIPTION:Grand celebration with Abhisheka, Kirtana, Cultural Programme & free Prasadam.\nLOCATION:No.9 Lorong 29 Geylang #03-02 Singapore 388065\nURL:https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/\nEND:VEVENT\nEND:VCALENDAR`;
+    const blob = new Blob([ics], { type: "text/calendar" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "nrsimha-caturdasi-2026.ics"; a.click();
+  };
+
+  return (
+    <div className="share-section">
+      <div className="sec-header animate-in" style={{ marginBottom: 0 }}><div className="overline">Spread the Word</div><h2>Invite Friends &amp; Family</h2><div className="divider"></div></div>
+      <div className="share-row animate-in">
+        <a href="https://wa.me/?text=Join%20me%20for%20Sri%20Nrsimha%20Caturdasi%202026%20at%20ISKM%20Singapore%20on%20April%2030!%20Free%20entry%2C%20prasadam%20%26%20more.%20Register%3A%20https%3A%2F%2Fsrikrishnamandir.org%2Ffestival%2Fsri-nrsimha-caturdasi-2026%2F" target="_blank" rel="noopener noreferrer" className="share-pill pill-wa"><i className="fab fa-whatsapp"></i> WhatsApp</a>
+        <a href="https://t.me/share/url?url=https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&text=Join+Sri+Nrsimha+Caturdasi+2026+at+ISKM+Singapore!" target="_blank" rel="noopener noreferrer" className="share-pill pill-tg"><i className="fab fa-telegram"></i> Telegram</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); downloadICS(); }} className="share-pill pill-cal"><i className="fas fa-calendar-plus"></i> Add to Calendar</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); copyLink(); }} className="share-pill pill-copy"><i className="fas fa-link"></i> <span>{copyText}</span></a>
+      </div>
+    </div>
+  );
+}
+
+/* ═══ FINAL CTA ═══ */
+function FinalCTA() {
+  return (
+    <div className="final-cta animate-in">
+      <div className="final-cta-bg"><img src="/images/the-significance.jpg" alt="" loading="lazy" /></div>
+      <h2>Don't Miss This Sacred Celebration</h2>
+      <p>Thursday, 30 April 2026 · 6:30 PM · ISKM Singapore</p>
+      <a href="#register" className="btn-final cta-glow"><i className="fas fa-arrow-up"></i> &nbsp;Register Now — Free</a>
+    </div>
+  );
+}
+
+/* ═══ FOOTER ═══ */
+function Footer() {
+  return (
+    <footer>
+      <img src="/images/logo.jpeg" alt="ISKM" />
+      <p>&copy; 2026 International Sri Krishna Mandir &middot; <a href="https://srikrishnamandir.org">srikrishnamandir.org</a> &middot; <a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a></p>
+    </footer>
+  );
+}
+
+/* ═══ MOBILE STICKY ═══ */
+function MobileSticky({ progress }: { progress: number }) {
+  return (
+    <>
+      <div className="mobile-sticky">
+        <div className="mobile-progress" style={{ transform: `scaleX(${progress})` }}></div>
+        <a href="#register"><i className="fas fa-arrow-up"></i> &nbsp;Register Free — Apr 30</a>
+      </div>
+      <div style={{ height: "70px" }} className="mobile-spacer"></div>
+      <style>{`.mobile-spacer{display:none}@media(max-width:768px){.mobile-spacer{display:block}}`}</style>
+    </>
+  );
+}
+
+/* ═══ APP ═══ */
+export default function App() {
+  const { progress, scrolled } = useScrollProgress();
+  const [spotsCount, setSpotsCount] = useState(84);
+  useAnimateOnScroll();
+
+  const handleRegister = (count: number) => {
+    setSpotsCount((prev) => prev + count);
+  };
+
+  return (
+    <>
+      <div className="scroll-progress" style={{ transform: `scaleX(${progress})` }}></div>
+      <Navbar scrolled={scrolled} />
+      <Hero spotsCount={spotsCount} />
+      <RegistrationForm onRegister={handleRegister} />
+      <SocialProof />
+      <Stats />
+      <About />
+      <WhatToExpect />
+      <Gallery />
+      <Schedule />
+      <Seva />
+      <Volunteer />
+      <FAQ />
+      <Location />
+      <Share />
+      <FinalCTA />
+      <Footer />
+      <MobileSticky progress={progress} />
+    </>
+  );
+}
