@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      registrations: {
+        Row: {
+          age: string | null
+          attendees: number
+          created_at: string
+          email: string
+          gender: string | null
+          id: string
+          is_volunteer: boolean
+          name: string
+          phone: string | null
+          remarks: string | null
+          volunteer_categories: string[] | null
+        }
+        Insert: {
+          age?: string | null
+          attendees?: number
+          created_at?: string
+          email: string
+          gender?: string | null
+          id?: string
+          is_volunteer?: boolean
+          name: string
+          phone?: string | null
+          remarks?: string | null
+          volunteer_categories?: string[] | null
+        }
+        Update: {
+          age?: string | null
+          attendees?: number
+          created_at?: string
+          email?: string
+          gender?: string | null
+          id?: string
+          is_volunteer?: boolean
+          name?: string
+          phone?: string | null
+          remarks?: string | null
+          volunteer_categories?: string[] | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
