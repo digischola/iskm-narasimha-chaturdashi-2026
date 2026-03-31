@@ -60,8 +60,8 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
     <>
       <a href="#main-content" className="skip-link">Skip to content</a>
       <div className="ribbon">
-        <span className="hl"><span className="urgency-dot"></span><i className="fas fa-fire"></i> Limited Seats</span> — Register free for Śrī Nṛsiṁha Caturdaśī 2026
-        <a href="#register">Secure Your Spot &rarr;</a>
+        <span className="ribbon-text"><span className="hl"><span className="urgency-dot"></span><i className="fas fa-fire"></i> Limited Seats</span> — Register free for Śrī Nṛsiṁha Caturdaśī 2026</span>
+        <a href="#register" className="ribbon-cta">Secure Your Spot &rarr;</a>
       </div>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
         <a href="#" className="nav-brand"><img src="/images/logo.jpeg" alt="ISKM" /><span>ISKM Singapore</span></a>
