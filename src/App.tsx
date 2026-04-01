@@ -720,6 +720,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/nrsimha-caturdasi-2026" element={<LandingPage />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
