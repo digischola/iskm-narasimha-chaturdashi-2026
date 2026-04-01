@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import GoldenParticles from "@/components/GoldenParticles";
+
 
 /* ═══ HOOKS ═══ */
 function useCountdown(targetDate: string) {
@@ -101,7 +101,7 @@ function Hero({ spotsCount }: { spotsCount: number }) {
 
   return (
     <section className="hero hero-animated" id="main-content">
-      <GoldenParticles />
+      
       <div className="hero-top">
         <div className="hero-content">
           <div className="hero-eyebrow">ISKM Singapore Presents</div>
