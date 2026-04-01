@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import GoldenParticles from "@/components/GoldenParticles";
+
 
 /* ═══ HOOKS ═══ */
 function useCountdown(targetDate: string) {
