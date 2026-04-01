@@ -111,9 +111,9 @@ a{text-decoration:none}
 .form-trust{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;font-size:11px;color:var(--text-muted)}
 .form-trust i{color:var(--green);font-size:12px}
 
-.vol-categories{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-.vol-cat-label{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-dark);cursor:pointer}
-.vol-cat-label input{margin-top:2px;accent-color:var(--navy)}
+.vol-categories{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin-top:6px}
+.vol-cat-label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-dark);cursor:pointer;min-height:32px}
+.vol-cat-label input{flex-shrink:0;width:16px;height:16px;accent-color:var(--navy);margin:0}
 
 @keyframes confetti-fall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100px) rotate(720deg);opacity:0}}
 .confetti-container{position:absolute;inset:0;pointer-events:none;overflow:hidden}

@@ -101,7 +101,7 @@ function Hero({ spotsCount }: { spotsCount: number }) {
 
   return (
     <section className="hero hero-animated" id="main-content">
-      <GoldenParticles />
+      
       <div className="hero-top">
         <div className="hero-content">
           <div className="hero-eyebrow">ISKM Singapore Presents</div>
