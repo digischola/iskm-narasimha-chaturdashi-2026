@@ -411,11 +411,6 @@ function About() {
         <div className="animate-in">
           <div className="editorial-visual">
             <img src="/images/sacred-protection.jpg" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" />
-            <div className="editorial-overlay">
-              <div className="decorative-text">नृसिंह</div>
-              <div className="mantra">ॐ उग्रं वीरं महाविष्णुं ज्वलन्तं सर्वतोमुखम्।<br />नृसिंहं भीषणं भद्रं मृत्यु मृत्युं नमाम्यहम्॥</div>
-              <p className="mantra-meaning">I bow down to Lord Nṛsiṁha who is highly ferocious, brave, the great Lord Viṣṇu, blazing in all directions, terrifying yet auspicious — the death of death itself.</p>
-            </div>
           </div>
         </div>
         <div className="animate-in">
@@ -434,6 +429,10 @@ function About() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="mantra-block animate-in">
+        <div className="mantra">ॐ उग्रं वीरं महाविष्णुं ज्वलन्तं सर्वतोमुखम्।<br />नृसिंहं भीषणं भद्रं मृत्यु मृत्युं नमाम्यहम्॥</div>
+        <p className="mantra-meaning">I bow down to Lord Nṛsiṁha who is highly ferocious, brave, the great Lord Viṣṇu, blazing in all directions, terrifying yet auspicious — the death of death itself.</p>
       </div>
     </div>
   );
@@ -547,12 +546,22 @@ function Seva() {
 }
 
 /* ═══ KAVACHA SECTION ═══ */
+const KAVACHA_IMAGES = ["/images/kavacha-1.jpg", "/images/kavacha-2.jpg", "/images/kavacha-3.jpg"];
+
 function KavachaSection() {
+  const [imgIdx, setImgIdx] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setImgIdx((i) => (i + 1) % KAVACHA_IMAGES.length), 3000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <div className="kavacha-section">
       <div className="kavacha-inner animate-in">
-        <div className="kavacha-image">
-          <img src="/images/sacred-protection.jpg" alt="Silver Nṛsiṁha Kavacha" loading="lazy" />
+        <div className="kavacha-image kavacha-carousel">
+          {KAVACHA_IMAGES.map((src, i) => (
+            <img key={src} src={src} alt={`Silver Nṛsiṁha Kavacha view ${i + 1}`} loading="lazy" className={i === imgIdx ? "kavacha-slide active" : "kavacha-slide"} />
+          ))}
         </div>
         <div className="kavacha-content">
           <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--navy-2)", marginBottom: "12px" }}>Sacred Protection</div>
