@@ -546,6 +546,31 @@ function Seva() {
   );
 }
 
+/* ═══ KAVACHA SECTION ═══ */
+function KavachaSection() {
+  return (
+    <div className="kavacha-section">
+      <div className="kavacha-inner animate-in">
+        <div className="kavacha-image">
+          <img src="/images/the-significance.jpg" alt="Silver Nṛsiṁha Kavacha" loading="lazy" />
+        </div>
+        <div className="kavacha-content">
+          <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--gold)", marginBottom: "12px" }}>Sacred Protection</div>
+          <h2 style={{ color: "var(--white)", marginBottom: "14px" }}>Silver Nṛsiṁha Kavacha</h2>
+          <p>Protect yourself and your loved ones with the Nṛsiṁha Kavacha. Specially made in Mayapur by the Vedic priest of the Gauḍīya Vaiṣṇava Sampradāya, this Kavacha contains Nṛsiṁha Yantra which holds a mantra that is the king of all mantras.</p>
+          <p>One attains by it what would be attained by anointing oneself with ashes and chanting all other mantras.</p>
+          <div className="kavacha-pricing">
+            <span className="kavacha-original">$351</span>
+            <span className="kavacha-sale">$281.80</span>
+            <span className="kavacha-badge">Śrī Nṛsiṁha Caturdaśī Special</span>
+          </div>
+          <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="btn-kavacha cta-glow"><i className="fas fa-shopping-cart"></i> &nbsp;Shop Now</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ═══ VOLUNTEER ═══ */
 function Volunteer() {
   return (
