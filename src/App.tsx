@@ -125,7 +125,7 @@ function Hero({ spotsCount }: { spotsCount: number }) {
           <p className="hero-spots"><strong><span>{spotsCount}</span> people</strong> have registered so far</p>
         </div>
         <div className="hero-painting" ref={parallaxRef}>
-          <img src="/images/hero-image.jpg" alt="Lord Śrī Nṛsiṁhadeva with Prahlāda Mahārāja" />
+          <img src="/images/hero-image.webp" alt="Lord Śrī Nṛsiṁhadeva with Prahlāda Mahārāja" width="680" height="850" fetchPriority="high" decoding="async" />
         </div>
       </div>
     </section>
