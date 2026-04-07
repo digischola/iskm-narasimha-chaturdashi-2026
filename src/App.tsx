@@ -411,11 +411,6 @@ function About() {
         <div className="animate-in">
           <div className="editorial-visual">
             <img src="/images/sacred-protection.jpg" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" />
-            <div className="editorial-overlay">
-              <div className="decorative-text">नृसिंह</div>
-              <div className="mantra">ॐ उग्रं वीरं महाविष्णुं ज्वलन्तं सर्वतोमुखम्।<br />नृसिंहं भीषणं भद्रं मृत्यु मृत्युं नमाम्यहम्॥</div>
-              <p className="mantra-meaning">I bow down to Lord Nṛsiṁha who is highly ferocious, brave, the great Lord Viṣṇu, blazing in all directions, terrifying yet auspicious — the death of death itself.</p>
-            </div>
           </div>
         </div>
         <div className="animate-in">
@@ -434,6 +429,10 @@ function About() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="mantra-block animate-in">
+        <div className="mantra">ॐ उग्रं वीरं महाविष्णुं ज्वलन्तं सर्वतोमुखम्।<br />नृसिंहं भीषणं भद्रं मृत्यु मृत्युं नमाम्यहम्॥</div>
+        <p className="mantra-meaning">I bow down to Lord Nṛsiṁha who is highly ferocious, brave, the great Lord Viṣṇu, blazing in all directions, terrifying yet auspicious — the death of death itself.</p>
       </div>
     </div>
   );
