@@ -410,7 +410,7 @@ function About() {
       <div className="editorial-inner">
         <div className="animate-in">
           <div className="editorial-visual">
-            <img src="/images/sacred-protection.jpg" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" />
+            <img src="/images/sacred-protection.webp" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" decoding="async" width="800" height="500" />
           </div>
         </div>
         <div className="animate-in">
