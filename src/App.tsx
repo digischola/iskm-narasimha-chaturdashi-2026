@@ -81,7 +81,7 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
         <a href="#register" className="ribbon-cta">Secure Your Spot &rarr;</a>
       </div>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
-        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand"><img src="/images/logo.jpeg" alt="ISKM" /><span>ISKM Singapore</span></a>
+        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand"><img src="/images/logo.webp" alt="ISKM" width="32" height="32" /><span>ISKM Singapore</span></a>
         <div className="nav-links">
           <a href="#expect" className="desk-link">What's On</a>
           <a href="#schedule" className="desk-link">Schedule</a>
@@ -125,7 +125,7 @@ function Hero({ spotsCount }: { spotsCount: number }) {
           <p className="hero-spots"><strong><span>{spotsCount}</span> people</strong> have registered so far</p>
         </div>
         <div className="hero-painting" ref={parallaxRef}>
-          <img src="/images/hero-image.jpg" alt="Lord Śrī Nṛsiṁhadeva with Prahlāda Mahārāja" />
+          <img src="/images/hero-image.webp" alt="Lord Śrī Nṛsiṁhadeva with Prahlāda Mahārāja" width="680" height="850" fetchPriority="high" decoding="async" />
         </div>
       </div>
     </section>
@@ -410,7 +410,7 @@ function About() {
       <div className="editorial-inner">
         <div className="animate-in">
           <div className="editorial-visual">
-            <img src="/images/sacred-protection.jpg" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" />
+            <img src="/images/sacred-protection.webp" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" decoding="async" width="800" height="500" />
           </div>
         </div>
         <div className="animate-in">
@@ -440,12 +440,12 @@ function About() {
 
 /* ═══ WHAT TO EXPECT ═══ */
 const EXPECT_CARDS = [
-  { img: "/images/sacred-abhisheka.jpg", alt: "Sacred Abhiṣeka", title: "Sacred Abhiṣeka", desc: "Witness the grand bathing ceremony of the deities with milk, ghee, yogurt, and sanctified waters." },
-  { img: "/images/divine-kirtana.jpg", alt: "Divine Kīrtana", title: "Divine Kīrtana", desc: "Join heart-stirring congregational chanting that fills the temple with spiritual vibrations." },
-  { img: "/images/cultural-programme.jpg", alt: "Cultural Programme", title: "Cultural Programme", desc: "Enjoy a captivating cultural performance celebrating the glories of Lord Nṛsiṁhadeva's pastimes." },
-  { img: "/images/blessed-prasadam.jpg", alt: "Blessed Prasādam", title: "Blessed Prasādam", desc: "Relish sanctified vegetarian food offered to the Lord — served free to all attendees." },
-  { img: "/images/arati-worship.jpg", alt: "Ārati & Worship", title: "Ārati & Worship", desc: "Begin the evening with the sacred ārati ceremony and offerings to the deities in the temple." },
-  { img: "/images/community-family.jpg", alt: "Community & Family", title: "Community & Family", desc: "Bring the whole family for an uplifting atmosphere, book stalls, and warm community spirit." },
+  { img: "/images/sacred-abhisheka.webp", alt: "Sacred Abhiṣeka", title: "Sacred Abhiṣeka", desc: "Witness the grand bathing ceremony of the deities with milk, ghee, yogurt, and sanctified waters." },
+  { img: "/images/divine-kirtana.webp", alt: "Divine Kīrtana", title: "Divine Kīrtana", desc: "Join heart-stirring congregational chanting that fills the temple with spiritual vibrations." },
+  { img: "/images/cultural-programme.webp", alt: "Cultural Programme", title: "Cultural Programme", desc: "Enjoy a captivating cultural performance celebrating the glories of Lord Nṛsiṁhadeva's pastimes." },
+  { img: "/images/blessed-prasadam.webp", alt: "Blessed Prasādam", title: "Blessed Prasādam", desc: "Relish sanctified vegetarian food offered to the Lord — served free to all attendees." },
+  { img: "/images/arati-worship.webp", alt: "Ārati & Worship", title: "Ārati & Worship", desc: "Begin the evening with the sacred ārati ceremony and offerings to the deities in the temple." },
+  { img: "/images/community-family.webp", alt: "Community & Family", title: "Community & Family", desc: "Bring the whole family for an uplifting atmosphere, book stalls, and warm community spirit." },
 ];
 
 function WhatToExpect() {
@@ -455,7 +455,7 @@ function WhatToExpect() {
       <div className="expect-grid">
         {EXPECT_CARDS.map((c) => (
           <div key={c.title} className="expect-card animate-in">
-            <img className="expect-card-img" src={c.img} alt={c.alt} loading="lazy" />
+            <img className="expect-card-img" src={c.img} alt={c.alt} loading="lazy" decoding="async" width="400" height="190" />
             <div className="expect-card-body"><h3>{c.title}</h3><p>{c.desc}</p></div>
           </div>
         ))}
@@ -494,7 +494,7 @@ function Gallery() {
         <div className="gallery-viewport">
           <div className="gallery-track" style={{ transform: `translateX(-${idx * (100 / perView)}%)` }}>
             {Array.from({ length: total }).map((_, i) => (
-              <div key={i} className="gallery-slide"><img src={`/images/${i + 1}.jpg`} alt={`Gallery ${i + 1}`} loading="lazy" /></div>
+              <div key={i} className="gallery-slide"><img src={`/images/${i + 1}.webp`} alt={`Gallery ${i + 1}`} loading="lazy" decoding="async" width="400" height="280" /></div>
             ))}
           </div>
         </div>
@@ -524,9 +524,9 @@ function Schedule() {
 
 /* ═══ SEVA ═══ */
 const SEVA_CARDS = [
-  { img: "/images/patron-program.jpg", alt: "Join As a Patron", title: "Join As a Patron", desc: "Become a patron and support the temple's spiritual mission with your generous contribution", link: "https://srikrishnamandir.org/join-as-a-patron/" },
-  { img: "/images/annadanam-seva.jpg", alt: "Annadānam Sevā", title: "Annadānam Sevā", desc: "Feed the community — sponsor the special Nṛsiṁha Caturdaśī prasādam feast", link: "https://srikrishnamandir.org/product/annadanam-seva/" },
-  { img: "/images/Charity.jpg", alt: "Charity Donation", title: "Charity Donation", desc: "Support the festival in any way that feels right for you", link: "https://srikrishnamandir.org/product/outright-donation/" },
+  { img: "/images/patron-program.webp", alt: "Join As a Patron", title: "Join As a Patron", desc: "Become a patron and support the temple's spiritual mission with your generous contribution", link: "https://srikrishnamandir.org/join-as-a-patron/" },
+  { img: "/images/annadanam-seva.webp", alt: "Annadānam Sevā", title: "Annadānam Sevā", desc: "Feed the community — sponsor the special Nṛsiṁha Caturdaśī prasādam feast", link: "https://srikrishnamandir.org/product/annadanam-seva/" },
+  { img: "/images/Charity.webp", alt: "Charity Donation", title: "Charity Donation", desc: "Support the festival in any way that feels right for you", link: "https://srikrishnamandir.org/product/outright-donation/" },
 ];
 
 function Seva() {
@@ -536,7 +536,7 @@ function Seva() {
       <div className="seva-grid">
         {SEVA_CARDS.map((c) => (
           <div key={c.title} className="seva-card animate-in">
-            <img className="seva-card-img" src={c.img} alt={c.alt} loading="lazy" />
+            <img className="seva-card-img" src={c.img} alt={c.alt} loading="lazy" decoding="async" width="400" height="180" />
             <div className="seva-card-body"><h4>{c.title}</h4><p>{c.desc}</p><a href={c.link} target="_blank" rel="noopener noreferrer" className="seva-btn">Contribute</a></div>
           </div>
         ))}
@@ -546,7 +546,7 @@ function Seva() {
 }
 
 /* ═══ KAVACHA SECTION ═══ */
-const KAVACHA_IMAGES = ["/images/kavacha-1.jpg", "/images/kavacha-2.jpg", "/images/kavacha-3.jpg"];
+const KAVACHA_IMAGES = ["/images/kavacha-1.webp", "/images/kavacha-2.webp", "/images/kavacha-3.webp"];
 
 function KavachaSection() {
   const [imgIdx, setImgIdx] = useState(0);
@@ -560,7 +560,7 @@ function KavachaSection() {
       <div className="kavacha-inner animate-in">
         <div className="kavacha-image kavacha-carousel">
           {KAVACHA_IMAGES.map((src, i) => (
-            <img key={src} src={src} alt={`Silver Nṛsiṁha Kavacha view ${i + 1}`} loading="lazy" className={i === imgIdx ? "kavacha-slide active" : "kavacha-slide"} />
+            <img key={src} src={src} alt={`Silver Nṛsiṁha Kavacha view ${i + 1}`} loading="lazy" decoding="async" width="400" height="400" className={i === imgIdx ? "kavacha-slide active" : "kavacha-slide"} />
           ))}
         </div>
         <div className="kavacha-content">
@@ -585,7 +585,7 @@ function Volunteer() {
   return (
     <div className="volunteer-banner animate-in" style={{ paddingBottom: "70px" }}>
       <div className="volunteer-inner">
-        <div className="volunteer-img"><img src="/images/11.jpg" alt="Young volunteers helping at ISKM" loading="lazy" /></div>
+        <div className="volunteer-img"><img src="/images/11.webp" alt="Young volunteers helping at ISKM" loading="lazy" decoding="async" width="600" height="300" /></div>
         <div className="volunteer-text">
           <h2>Serve &amp; Be Blessed</h2>
           <p>Volunteer for decorations, prasādam distribution, guest welcome, and more. Experience the joy of selfless service.</p>
@@ -633,7 +633,7 @@ function Location() {
       <div className="location-wrap animate-in">
         <div className="loc-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7843!2d103.8873!3d1.3137!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTgnNDkuMyJOIDEwM8KwNTMnMTQuMyJF!5e0!3m2!1sen!2ssg!4v1" allowFullScreen loading="lazy" title="ISKM Singapore Map"></iframe></div>
         <div className="loc-info">
-          <img src="/images/logo.jpeg" alt="ISKM" />
+          <img src="/images/logo.webp" alt="ISKM" width="45" height="45" />
           <h3>International Sri Krishna Mandir</h3>
           <div className="loc-detail"><i className="fas fa-map-marker-alt"></i><span>No. 9 Lorong 29 Geylang, #03-02<br />Singapore 388065</span></div>
           <div className="loc-detail"><i className="fas fa-clock"></i><span>Thursday, 30 April 2026<br />6:30 PM – 9:45 PM</span></div>
@@ -680,7 +680,7 @@ function Share() {
 function FinalCTA() {
   return (
     <div className="final-cta animate-in">
-      <div className="final-cta-bg"><img src="/images/the-significance.jpg" alt="" loading="lazy" /></div>
+      <div className="final-cta-bg"><img src="/images/the-significance.webp" alt="" loading="lazy" decoding="async" /></div>
       <h2>Don't Miss This Sacred Celebration</h2>
       <p>Thursday, 30 April 2026 · 6:30 PM · ISKM Singapore</p>
       <a href="#register" className="btn-final cta-glow">Register Now — Free</a>
@@ -692,7 +692,7 @@ function FinalCTA() {
 function Footer() {
   return (
     <footer>
-      <img src="/images/logo.jpeg" alt="ISKM" />
+      <img src="/images/logo.webp" alt="ISKM" width="38" height="38" />
       <p>&copy; 2026 International Sri Krishna Mandir &middot; <a href="https://srikrishnamandir.org">srikrishnamandir.org</a> &middot; <a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a></p>
     </footer>
   );
