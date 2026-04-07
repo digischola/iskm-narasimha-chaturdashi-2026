@@ -230,7 +230,7 @@ a{text-decoration:none}
 .seva-btn:hover{background:var(--pink);color:var(--white)}
 
 /* ═══ KAVACHA SECTION ═══ */
-.kavacha-section{background:linear-gradient(180deg,var(--cream-warm),var(--cream));padding:70px 20px}
+.kavacha-section{background:#fdf4ec;padding:70px 20px}
 .kavacha-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
 .kavacha-image{border-radius:16px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.1)}
 .kavacha-carousel{position:relative;aspect-ratio:1/1}
@@ -243,8 +243,8 @@ a{text-decoration:none}
 .kavacha-original{font-size:20px;color:rgba(22,45,88,.4);text-decoration:line-through;font-family:'Playfair Display',serif}
 .kavacha-sale{font-size:32px;font-weight:700;color:var(--saffron);font-family:'Playfair Display',serif}
 .kavacha-badge{background:rgba(200,120,50,.12);color:var(--saffron);font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
-.btn-kavacha{display:inline-block;background:var(--saffron);color:var(--white);padding:14px 36px;border-radius:8px;font-size:15px;font-weight:700;transition:all .3s;box-shadow:0 4px 20px rgba(200,120,50,.3)}
-.btn-kavacha:hover{background:var(--gold);color:var(--navy-deep);transform:translateY(-2px)}
+.btn-kavacha{display:inline-block;background:var(--pink);color:var(--navy);padding:14px 36px;border-radius:8px;font-size:15px;font-weight:700;transition:all .3s;box-shadow:0 4px 20px rgba(248,164,192,.3)}
+.btn-kavacha:hover{background:var(--pink-light);color:var(--navy-deep);transform:translateY(-2px)}
 .btn-kavacha.cta-glow:hover{animation:none}
 @media(max-width:768px){.kavacha-inner{grid-template-columns:1fr;gap:24px;text-align:center}.kavacha-pricing{justify-content:center}}
 
