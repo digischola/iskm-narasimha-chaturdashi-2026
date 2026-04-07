@@ -410,7 +410,7 @@ function About() {
       <div className="editorial-inner">
         <div className="animate-in">
           <div className="editorial-visual">
-            <img src="/images/the-significance.jpg" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" />
+            <img src="/images/sacred-protection.jpg" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" />
             <div className="editorial-overlay">
               <div className="decorative-text">नृसिंह</div>
               <div className="mantra">ॐ उग्रं वीरं महाविष्णुं ज्वलन्तं सर्वतोमुखम्।<br />नृसिंहं भीषणं भद्रं मृत्यु मृत्युं नमाम्यहम्॥</div>
@@ -552,11 +552,11 @@ function KavachaSection() {
     <div className="kavacha-section">
       <div className="kavacha-inner animate-in">
         <div className="kavacha-image">
-          <img src="/images/the-significance.jpg" alt="Silver Nṛsiṁha Kavacha" loading="lazy" />
+          <img src="/images/sacred-protection.jpg" alt="Silver Nṛsiṁha Kavacha" loading="lazy" />
         </div>
         <div className="kavacha-content">
-          <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--gold)", marginBottom: "12px" }}>Sacred Protection</div>
-          <h2 style={{ color: "var(--white)", marginBottom: "14px" }}>Silver Nṛsiṁha Kavacha</h2>
+          <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--navy-2)", marginBottom: "12px" }}>Sacred Protection</div>
+          <h2 style={{ color: "var(--navy-deep)", marginBottom: "14px" }}>Silver Nṛsiṁha Kavacha</h2>
           <p>Protect yourself and your loved ones with the Nṛsiṁha Kavacha. Specially made in Mayapur by the Vedic priest of the Gauḍīya Vaiṣṇava Sampradāya, this Kavacha contains Nṛsiṁha Yantra which holds a mantra that is the king of all mantras.</p>
           <p>One attains by it what would be attained by anointing oneself with ashes and chanting all other mantras.</p>
           <div className="kavacha-pricing">
