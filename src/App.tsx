@@ -455,7 +455,7 @@ function WhatToExpect() {
       <div className="expect-grid">
         {EXPECT_CARDS.map((c) => (
           <div key={c.title} className="expect-card animate-in">
-            <img className="expect-card-img" src={c.img} alt={c.alt} loading="lazy" />
+            <img className="expect-card-img" src={c.img} alt={c.alt} loading="lazy" decoding="async" width="400" height="190" />
             <div className="expect-card-body"><h3>{c.title}</h3><p>{c.desc}</p></div>
           </div>
         ))}
