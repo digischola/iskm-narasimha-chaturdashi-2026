@@ -362,7 +362,7 @@ footer a:hover{text-decoration:underline}
   .scroll-progress{top:40px}
   .hero{margin-top:84px}
   .stats-inner{grid-template-columns:repeat(2,1fr);gap:16px}
-  .editorial-visual{aspect-ratio:3/4}
+  .editorial-visual{aspect-ratio:16/10}
   .editorial-overlay .mantra{font-size:14px}
   .editorial-overlay .mantra-meaning{font-size:10px}
 }

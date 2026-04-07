@@ -726,6 +726,7 @@ function LandingPage() {
       <Gallery />
       <Schedule />
       <Seva />
+      <KavachaSection />
       <Volunteer />
       <FAQ />
       <Location />
