@@ -552,7 +552,7 @@ function KavachaSection() {
     <div className="kavacha-section">
       <div className="kavacha-inner animate-in">
         <div className="kavacha-image">
-          <img src="/images/the-significance.jpg" alt="Silver Nṛsiṁha Kavacha" loading="lazy" />
+          <img src="/images/sacred-protection.jpg" alt="Silver Nṛsiṁha Kavacha" loading="lazy" />
         </div>
         <div className="kavacha-content">
           <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--gold)", marginBottom: "12px" }}>Sacred Protection</div>
