@@ -81,7 +81,7 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
         <a href="#register" className="ribbon-cta">Secure Your Spot &rarr;</a>
       </div>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
-        <a href="#" className="nav-brand"><img src="/images/logo.jpeg" alt="ISKM" /><span>ISKM Singapore</span></a>
+        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand"><img src="/images/logo.jpeg" alt="ISKM" /><span>ISKM Singapore</span></a>
         <div className="nav-links">
           <a href="#expect" className="desk-link">What's On</a>
           <a href="#schedule" className="desk-link">Schedule</a>
@@ -364,8 +364,8 @@ function SocialProof() {
 function Stats() {
   const [animated, setAnimated] = useState(false);
   const [values, setValues] = useState([0, 0, 0, 0]);
-  const targets = [14, 500, 50, 30];
-  const labels = ["Years of Service", "Expected Attendees", "Dedicated Volunteers", "Festivals Celebrated"];
+  const targets = [50, 500, 50, 30];
+  const labels = ["Years of Service", "Expected Attendees", "Dedicated Volunteers", "Festivals Celebrated Yearly"];
 
   useEffect(() => {
     if (!animated) return;
@@ -514,8 +514,8 @@ function Schedule() {
         <div className="timeline">
           <div className="tl-item"><div className="tl-dot"></div><div className="tl-time">6:30 – 7:00 PM</div><h4 className="tl-title">Ārati &amp; Kīrtana</h4><p className="tl-desc">Evening worship ceremony with congregational chanting to set the devotional atmosphere</p></div>
           <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">7:00 – 8:00 PM</div><h4 className="tl-title">Grand Abhiṣeka <span className="tl-tag">Highlight</span></h4><p className="tl-desc">The sacred bathing ceremony of the deities — the centrepiece of the evening celebration</p></div>
-          <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">8:00 – 8:45 PM</div><h4 className="tl-title">Cultural Programme <span className="tl-tag">Special</span></h4><p className="tl-desc">A captivating cultural performance celebrating the glories of Lord Nṛsiṁhadeva</p></div>
-          <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">8:45 PM</div><h4 className="tl-title">Prasādam is Served <span className="tl-tag">Free Feast</span></h4><p className="tl-desc">Sanctified vegetarian feast for all attendees — come hungry, leave blessed</p></div>
+          <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">8:00 – 10:00 PM</div><h4 className="tl-title">Cultural Programme <span className="tl-tag">Special</span></h4><p className="tl-desc">A captivating cultural performance celebrating the glories of Lord Nṛsiṁhadeva</p></div>
+          <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">8:30 PM</div><h4 className="tl-title">Prasādam is Served <span className="tl-tag">Free Feast</span></h4><p className="tl-desc">Sanctified vegetarian feast for all attendees — come hungry, leave blessed</p></div>
         </div>
       </div>
       <div className="fasting-card animate-in"><i className="fas fa-info-circle"></i><p><strong>Fasting Guidance:</strong> Devotees traditionally observe a complete fast from sunrise to sunset on Nṛsiṁha Caturdaśī. After sunset, the fast may be broken with Ekādaśī-style prasādam. If you're new to this, simply come and enjoy — no fasting is required to attend.</p></div>
@@ -541,6 +541,31 @@ function Seva() {
             <div className="seva-card-body"><h4>{c.title}</h4><p>{c.desc}</p><a href={c.link} target="_blank" rel="noopener noreferrer" className="seva-btn">Contribute</a></div>
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══ KAVACHA SECTION ═══ */
+function KavachaSection() {
+  return (
+    <div className="kavacha-section">
+      <div className="kavacha-inner animate-in">
+        <div className="kavacha-image">
+          <img src="/images/the-significance.jpg" alt="Silver Nṛsiṁha Kavacha" loading="lazy" />
+        </div>
+        <div className="kavacha-content">
+          <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--gold)", marginBottom: "12px" }}>Sacred Protection</div>
+          <h2 style={{ color: "var(--white)", marginBottom: "14px" }}>Silver Nṛsiṁha Kavacha</h2>
+          <p>Protect yourself and your loved ones with the Nṛsiṁha Kavacha. Specially made in Mayapur by the Vedic priest of the Gauḍīya Vaiṣṇava Sampradāya, this Kavacha contains Nṛsiṁha Yantra which holds a mantra that is the king of all mantras.</p>
+          <p>One attains by it what would be attained by anointing oneself with ashes and chanting all other mantras.</p>
+          <div className="kavacha-pricing">
+            <span className="kavacha-original">$351</span>
+            <span className="kavacha-sale">$281.80</span>
+            <span className="kavacha-badge">Śrī Nṛsiṁha Caturdaśī Special</span>
+          </div>
+          <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="btn-kavacha cta-glow"><i className="fas fa-shopping-cart"></i> &nbsp;Shop Now</a>
+        </div>
       </div>
     </div>
   );
@@ -701,6 +726,7 @@ function LandingPage() {
       <Gallery />
       <Schedule />
       <Seva />
+      <KavachaSection />
       <Volunteer />
       <FAQ />
       <Location />
