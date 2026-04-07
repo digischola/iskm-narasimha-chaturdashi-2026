@@ -546,7 +546,7 @@ function Seva() {
 }
 
 /* ═══ KAVACHA SECTION ═══ */
-const KAVACHA_IMAGES = ["/images/kavacha-1.jpg", "/images/kavacha-2.jpg", "/images/kavacha-3.jpg"];
+const KAVACHA_IMAGES = ["/images/kavacha-1.webp", "/images/kavacha-2.webp", "/images/kavacha-3.webp"];
 
 function KavachaSection() {
   const [imgIdx, setImgIdx] = useState(0);
