@@ -1,57 +1,32 @@
 
 
-## Plan: Fix Header Gap, Add Backend, and Hero Effects
+## Plan: Kavacha Section, Stats Fix, Significance Image, Schedule Update, Logo Link
 
-### 1. Fix Ribbon-to-Nav Gap on Mobile
+### 1. Add Nṛsiṁha Kavacha sales section
+New `KavachaSection` component placed after `Seva` and before `Volunteer` in the LandingPage. Styled as a product highlight card with:
+- Title: "Silver Nṛsiṁha Kavacha"
+- Description text as provided
+- Pricing: ~~$351~~ **$281.80** (special price)
+- "Shop Now" button linking to `https://srikrishnamandir.org`
+- Styled consistently with the existing seva/editorial sections
 
-The ribbon uses `flex-direction: column` on mobile, making it taller than the hardcoded `top` offset on `.sticky-nav`. Fix by dynamically measuring ribbon height or adjusting the CSS offsets so nav sits flush below the ribbon with no gap.
+### 2. Link logo and brand name to srikrishnamandir.org
+Update the `Navbar` component (line 84): change the `<a href="#">` on `.nav-brand` to `<a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">`.
 
-**Changes:**
-- `src/index.css`: Adjust `.sticky-nav` top values at 768px and 480px breakpoints to match actual ribbon height. Remove gap by fine-tuning `top` from `52px`/`46px` to the correct measured values (ribbon on mobile is ~50px with column layout). Also adjust `.hero` margin-top accordingly.
+### 3. Fix Stats data (line 367-368)
+- Targets: `[14, 500, 50, 30]` → `[50, 500, 50, 30]`
+- Labels: `"Years of Service"` stays, `"Festivals Celebrated"` → `"Festivals Celebrated Yearly"`
 
----
+### 4. Update Significance section image
+- Copy uploaded `user-uploads://The_Significance-2.jpg` to `public/images/the-significance.jpg`
+- Update `.editorial-visual` CSS in `src/index.css`: change from portrait/vertical aspect ratio to landscape/rectangular (e.g. `aspect-ratio: 16/10`, `max-height` adjustment)
 
-### 2. Backend — Save Registration Data with Lovable Cloud
+### 5. Update Schedule timings (lines 517-518)
+- Cultural Programme: `8:00 – 8:45 PM` → `8:00 – 10:00 PM`
+- Prasādam: `8:45 PM` → `8:30 PM`
 
-Enable Lovable Cloud to get a Supabase-backed database. Create a `registrations` table and an edge function to store form submissions.
-
-**Changes:**
-- **Database table** `registrations`: columns for `id`, `name`, `email`, `phone`, `attendees`, `is_volunteer`, `age`, `gender`, `remarks`, `volunteer_categories` (text array), `created_at`
-- **Edge function** `submit-registration`: Validates input with Zod, inserts into `registrations` table, returns success
-- **`src/App.tsx`**: Update `completeRegistration()` to call the edge function via `supabase.functions.invoke('submit-registration', ...)` before opening WhatsApp
-- **`src/integrations/supabase/client.ts`**: Standard Supabase client setup (created automatically by Lovable Cloud)
-
-**Admin Dashboard:**
-- New route `/admin` with a simple dashboard page
-- Fetches registration data from `registrations` table
-- Shows: total registrations, total attendees, volunteer count, registrations over time chart, and a data table with search/filter
-- Protected by a basic check (can discuss auth approach separately)
-
----
-
-### 3. Hero Section Dynamic Effects
-
-Add three visual effects to make the hero feel alive:
-
-**a) Animated gradient background** — Slowly shifting gradient using CSS `@keyframes` on the `.hero` background, cycling between navy/deep-blue/purple tones.
-
-**b) Parallax scrolling** — The hero image (`hero-painting`) moves at a slower rate than the content as the user scrolls, using a lightweight `useEffect` with `transform: translateY()` based on scroll position.
-
-**c) Golden particle/sparkle effects** — A canvas-based particle system rendered behind the hero content showing floating golden particles that drift upward, giving a divine/celestial feel. Implemented as a React component `<GoldenParticles />` using `<canvas>` with `requestAnimationFrame`.
-
-**Changes:**
-- `src/App.tsx`: Add `<GoldenParticles />` component in the hero section, add parallax scroll handler to hero painting
-- `src/index.css`: Add `@keyframes gradient-shift` animation on `.hero`, ensure canvas is positioned absolutely behind content
-
----
-
-### Technical Details
-
-**Files modified:**
-- `src/index.css` — Gap fix, animated gradient keyframes
-- `src/App.tsx` — Supabase integration in form, parallax hook, GoldenParticles canvas component
-- `supabase/functions/submit-registration/index.ts` — New edge function
-- `src/pages/Admin.tsx` — New admin dashboard page
-- `src/App.tsx` or routing setup — Add `/admin` route
-- Database migration for `registrations` table
+### Files Modified
+- `src/App.tsx` — new KavachaSection component, navbar link, stats fix, schedule times
+- `src/index.css` — kavacha section styles, editorial-visual landscape orientation
+- `public/images/the-significance.jpg` — replaced with uploaded image
 
