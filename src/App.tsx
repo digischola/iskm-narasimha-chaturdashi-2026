@@ -692,7 +692,7 @@ function FinalCTA() {
 function Footer() {
   return (
     <footer>
-      <img src="/images/logo.jpeg" alt="ISKM" />
+      <img src="/images/logo.webp" alt="ISKM" width="38" height="38" />
       <p>&copy; 2026 International Sri Krishna Mandir &middot; <a href="https://srikrishnamandir.org">srikrishnamandir.org</a> &middot; <a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a></p>
     </footer>
   );
