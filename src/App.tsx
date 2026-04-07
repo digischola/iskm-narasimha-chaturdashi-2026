@@ -440,12 +440,12 @@ function About() {
 
 /* ═══ WHAT TO EXPECT ═══ */
 const EXPECT_CARDS = [
-  { img: "/images/sacred-abhisheka.jpg", alt: "Sacred Abhiṣeka", title: "Sacred Abhiṣeka", desc: "Witness the grand bathing ceremony of the deities with milk, ghee, yogurt, and sanctified waters." },
-  { img: "/images/divine-kirtana.jpg", alt: "Divine Kīrtana", title: "Divine Kīrtana", desc: "Join heart-stirring congregational chanting that fills the temple with spiritual vibrations." },
-  { img: "/images/cultural-programme.jpg", alt: "Cultural Programme", title: "Cultural Programme", desc: "Enjoy a captivating cultural performance celebrating the glories of Lord Nṛsiṁhadeva's pastimes." },
-  { img: "/images/blessed-prasadam.jpg", alt: "Blessed Prasādam", title: "Blessed Prasādam", desc: "Relish sanctified vegetarian food offered to the Lord — served free to all attendees." },
-  { img: "/images/arati-worship.jpg", alt: "Ārati & Worship", title: "Ārati & Worship", desc: "Begin the evening with the sacred ārati ceremony and offerings to the deities in the temple." },
-  { img: "/images/community-family.jpg", alt: "Community & Family", title: "Community & Family", desc: "Bring the whole family for an uplifting atmosphere, book stalls, and warm community spirit." },
+  { img: "/images/sacred-abhisheka.webp", alt: "Sacred Abhiṣeka", title: "Sacred Abhiṣeka", desc: "Witness the grand bathing ceremony of the deities with milk, ghee, yogurt, and sanctified waters." },
+  { img: "/images/divine-kirtana.webp", alt: "Divine Kīrtana", title: "Divine Kīrtana", desc: "Join heart-stirring congregational chanting that fills the temple with spiritual vibrations." },
+  { img: "/images/cultural-programme.webp", alt: "Cultural Programme", title: "Cultural Programme", desc: "Enjoy a captivating cultural performance celebrating the glories of Lord Nṛsiṁhadeva's pastimes." },
+  { img: "/images/blessed-prasadam.webp", alt: "Blessed Prasādam", title: "Blessed Prasādam", desc: "Relish sanctified vegetarian food offered to the Lord — served free to all attendees." },
+  { img: "/images/arati-worship.webp", alt: "Ārati & Worship", title: "Ārati & Worship", desc: "Begin the evening with the sacred ārati ceremony and offerings to the deities in the temple." },
+  { img: "/images/community-family.webp", alt: "Community & Family", title: "Community & Family", desc: "Bring the whole family for an uplifting atmosphere, book stalls, and warm community spirit." },
 ];
 
 function WhatToExpect() {
