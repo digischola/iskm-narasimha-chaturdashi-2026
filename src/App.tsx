@@ -514,7 +514,7 @@ function Schedule() {
           <div className="tl-item"><div className="tl-dot"></div><div className="tl-time">6:30 – 7:00 PM</div><h4 className="tl-title">Ārati &amp; Kīrtana</h4><p className="tl-desc">Evening worship ceremony with congregational chanting to set the devotional atmosphere</p></div>
           <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">7:00 – 8:00 PM</div><h4 className="tl-title">Grand Abhiṣeka <span className="tl-tag">Highlight</span></h4><p className="tl-desc">The sacred bathing ceremony of the deities — the centrepiece of the evening celebration</p></div>
           <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">8:00 – 10:00 PM</div><h4 className="tl-title">Cultural Programme <span className="tl-tag">Special</span></h4><p className="tl-desc">A captivating cultural performance celebrating the glories of Lord Nṛsiṁhadeva</p></div>
-          <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">8:30 PM</div><h4 className="tl-title">Prasādam is Served <span className="tl-tag">Free Feast</span></h4><p className="tl-desc">Sanctified vegetarian feast for all attendees — come hungry, leave blessed</p></div>
+          <div className="tl-item highlight"><div className="tl-dot"></div><div className="tl-time">8:30 PM</div><h4 className="tl-title">Prasādam is Served <span className="tl-tag">Free Prasādam</span></h4><p className="tl-desc">Sanctified vegetarian Prasādam for all attendees — come hungry, leave blessed</p></div>
         </div>
       </div>
       <div className="fasting-card animate-in"><i className="fas fa-info-circle"></i><p><strong>Fasting Guidance:</strong> Devotees traditionally observe a complete fast from sunrise to sunset on Nṛsiṁha Caturdaśī. After sunset, the fast may be broken with Ekādaśī-style prasādam. If you're new to this, simply come and enjoy — no fasting is required to attend.</p></div>
@@ -525,7 +525,7 @@ function Schedule() {
 /* ═══ SEVA ═══ */
 const SEVA_CARDS = [
   { img: "/images/patron-program.webp", alt: "Join As a Patron", title: "Join As a Patron", desc: "Become a patron and support the temple's spiritual mission with your generous contribution", link: "https://srikrishnamandir.org/join-as-a-patron/" },
-  { img: "/images/annadanam-seva.webp", alt: "Annadānam Sevā", title: "Annadānam Sevā", desc: "Feed the community — sponsor the special Nṛsiṁha Caturdaśī prasādam feast", link: "https://srikrishnamandir.org/product/annadanam-seva/" },
+  { img: "/images/annadanam-seva.webp", alt: "Annadānam Sevā", title: "Annadānam Sevā", desc: "Feed the community — sponsor the special Nṛsiṁha Caturdaśī prasādam", link: "https://srikrishnamandir.org/product/annadanam-seva/" },
   { img: "/images/Charity.webp", alt: "Charity Donation", title: "Charity Donation", desc: "Support the festival in any way that feels right for you", link: "https://srikrishnamandir.org/product/outright-donation/" },
 ];
 
