@@ -633,7 +633,7 @@ function Location() {
       <div className="location-wrap animate-in">
         <div className="loc-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7843!2d103.8873!3d1.3137!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTgnNDkuMyJOIDEwM8KwNTMnMTQuMyJF!5e0!3m2!1sen!2ssg!4v1" allowFullScreen loading="lazy" title="ISKM Singapore Map"></iframe></div>
         <div className="loc-info">
-          <img src="/images/logo.jpeg" alt="ISKM" />
+          <img src="/images/logo.webp" alt="ISKM" width="45" height="45" />
           <h3>International Sri Krishna Mandir</h3>
           <div className="loc-detail"><i className="fas fa-map-marker-alt"></i><span>No. 9 Lorong 29 Geylang, #03-02<br />Singapore 388065</span></div>
           <div className="loc-detail"><i className="fas fa-clock"></i><span>Thursday, 30 April 2026<br />6:30 PM – 9:45 PM</span></div>
