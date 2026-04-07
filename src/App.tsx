@@ -560,7 +560,7 @@ function KavachaSection() {
       <div className="kavacha-inner animate-in">
         <div className="kavacha-image kavacha-carousel">
           {KAVACHA_IMAGES.map((src, i) => (
-            <img key={src} src={src} alt={`Silver Nṛsiṁha Kavacha view ${i + 1}`} loading="lazy" className={i === imgIdx ? "kavacha-slide active" : "kavacha-slide"} />
+            <img key={src} src={src} alt={`Silver Nṛsiṁha Kavacha view ${i + 1}`} loading="lazy" decoding="async" width="400" height="400" className={i === imgIdx ? "kavacha-slide active" : "kavacha-slide"} />
           ))}
         </div>
         <div className="kavacha-content">
