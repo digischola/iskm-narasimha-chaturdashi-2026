@@ -546,12 +546,22 @@ function Seva() {
 }
 
 /* ═══ KAVACHA SECTION ═══ */
+const KAVACHA_IMAGES = ["/images/kavacha-1.jpg", "/images/kavacha-2.jpg", "/images/kavacha-3.jpg"];
+
 function KavachaSection() {
+  const [imgIdx, setImgIdx] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setImgIdx((i) => (i + 1) % KAVACHA_IMAGES.length), 3000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <div className="kavacha-section">
       <div className="kavacha-inner animate-in">
-        <div className="kavacha-image">
-          <img src="/images/sacred-protection.jpg" alt="Silver Nṛsiṁha Kavacha" loading="lazy" />
+        <div className="kavacha-image kavacha-carousel">
+          {KAVACHA_IMAGES.map((src, i) => (
+            <img key={src} src={src} alt={`Silver Nṛsiṁha Kavacha view ${i + 1}`} loading="lazy" className={i === imgIdx ? "kavacha-slide active" : "kavacha-slide"} />
+          ))}
         </div>
         <div className="kavacha-content">
           <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--navy-2)", marginBottom: "12px" }}>Sacred Protection</div>
