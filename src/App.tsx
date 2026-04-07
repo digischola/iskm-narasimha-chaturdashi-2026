@@ -410,7 +410,7 @@ function About() {
       <div className="editorial-inner">
         <div className="animate-in">
           <div className="editorial-visual">
-            <img src="/images/the-significance.jpg" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" />
+            <img src="/images/sacred-protection.jpg" alt="Lord Nrsimhadeva deity beautifully decorated" loading="lazy" />
             <div className="editorial-overlay">
               <div className="decorative-text">नृसिंह</div>
               <div className="mantra">ॐ उग्रं वीरं महाविष्णुं ज्वलन्तं सर्वतोमुखम्।<br />नृसिंहं भीषणं भद्रं मृत्यु मृत्युं नमाम्यहम्॥</div>
