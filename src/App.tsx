@@ -524,9 +524,9 @@ function Schedule() {
 
 /* ═══ SEVA ═══ */
 const SEVA_CARDS = [
-  { img: "/images/patron-program.jpg", alt: "Join As a Patron", title: "Join As a Patron", desc: "Become a patron and support the temple's spiritual mission with your generous contribution", link: "https://srikrishnamandir.org/join-as-a-patron/" },
-  { img: "/images/annadanam-seva.jpg", alt: "Annadānam Sevā", title: "Annadānam Sevā", desc: "Feed the community — sponsor the special Nṛsiṁha Caturdaśī prasādam feast", link: "https://srikrishnamandir.org/product/annadanam-seva/" },
-  { img: "/images/Charity.jpg", alt: "Charity Donation", title: "Charity Donation", desc: "Support the festival in any way that feels right for you", link: "https://srikrishnamandir.org/product/outright-donation/" },
+  { img: "/images/patron-program.webp", alt: "Join As a Patron", title: "Join As a Patron", desc: "Become a patron and support the temple's spiritual mission with your generous contribution", link: "https://srikrishnamandir.org/join-as-a-patron/" },
+  { img: "/images/annadanam-seva.webp", alt: "Annadānam Sevā", title: "Annadānam Sevā", desc: "Feed the community — sponsor the special Nṛsiṁha Caturdaśī prasādam feast", link: "https://srikrishnamandir.org/product/annadanam-seva/" },
+  { img: "/images/Charity.webp", alt: "Charity Donation", title: "Charity Donation", desc: "Support the festival in any way that feels right for you", link: "https://srikrishnamandir.org/product/outright-donation/" },
 ];
 
 function Seva() {
