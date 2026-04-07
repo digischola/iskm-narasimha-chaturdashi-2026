@@ -1,32 +1,26 @@
 
 
-## Plan: Kavacha Section, Stats Fix, Significance Image, Schedule Update, Logo Link
+## Plan: Kavacha Styling Fix + Page Performance Optimization
 
-### 1. Add Nṛsiṁha Kavacha sales section
-New `KavachaSection` component placed after `Seva` and before `Volunteer` in the LandingPage. Styled as a product highlight card with:
-- Title: "Silver Nṛsiṁha Kavacha"
-- Description text as provided
-- Pricing: ~~$351~~ **$281.80** (special price)
-- "Shop Now" button linking to `https://srikrishnamandir.org`
-- Styled consistently with the existing seva/editorial sections
+### 1. Kavacha section background color
+Change `.kavacha-section` background from `linear-gradient(180deg, var(--cream-warm), var(--cream))` to `#fdf4ec`.
 
-### 2. Link logo and brand name to srikrishnamandir.org
-Update the `Navbar` component (line 84): change the `<a href="#">` on `.nav-brand` to `<a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">`.
+### 2. Shop Now button → pink (matching other CTAs)
+Change `.btn-kavacha` background from `var(--saffron)` to `var(--pink)` (`#f8a4c0`), and hover to `var(--pink-light)`. Update text color to `var(--navy)` to match `.nav-cta` style.
 
-### 3. Fix Stats data (line 367-368)
-- Targets: `[14, 500, 50, 30]` → `[50, 500, 50, 30]`
-- Labels: `"Years of Service"` stays, `"Festivals Celebrated"` → `"Festivals Celebrated Yearly"`
+### 3. Page performance — image optimization
+Images are the bottleneck. Changes:
 
-### 4. Update Significance section image
-- Copy uploaded `user-uploads://The_Significance-2.jpg` to `public/images/the-significance.jpg`
-- Update `.editorial-visual` CSS in `src/index.css`: change from portrait/vertical aspect ratio to landscape/rectangular (e.g. `aspect-ratio: 16/10`, `max-height` adjustment)
-
-### 5. Update Schedule timings (lines 517-518)
-- Cultural Programme: `8:00 – 8:45 PM` → `8:00 – 10:00 PM`
-- Prasādam: `8:45 PM` → `8:30 PM`
+- **Convert all JPG/JPEG images to WebP** using a build script, reducing file sizes by ~30-50%. Place optimized versions in `public/images/` replacing originals (or add `.webp` variants and update `src` references).
+- **Add `width` and `height` attributes** to all `<img>` tags to prevent layout shift (CLS).
+- **Add `loading="lazy"`** to any images missing it (hero image currently lacks it — but hero should use `loading="eager"` since it's above the fold; others should be lazy).
+- **Add `fetchpriority="high"`** to the hero image for LCP improvement.
+- **Preload hero image** via `<link rel="preload">` in `index.html`.
+- **Use `decoding="async"`** on all non-critical images.
 
 ### Files Modified
-- `src/App.tsx` — new KavachaSection component, navbar link, stats fix, schedule times
-- `src/index.css` — kavacha section styles, editorial-visual landscape orientation
-- `public/images/the-significance.jpg` — replaced with uploaded image
+- `src/index.css` — kavacha background + button color
+- `src/App.tsx` — image attributes (width/height, decoding, fetchpriority)
+- `index.html` — preload hero image
+- `public/images/` — convert JPGs to WebP via build script
 
