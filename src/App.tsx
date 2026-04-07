@@ -494,7 +494,7 @@ function Gallery() {
         <div className="gallery-viewport">
           <div className="gallery-track" style={{ transform: `translateX(-${idx * (100 / perView)}%)` }}>
             {Array.from({ length: total }).map((_, i) => (
-              <div key={i} className="gallery-slide"><img src={`/images/${i + 1}.jpg`} alt={`Gallery ${i + 1}`} loading="lazy" /></div>
+              <div key={i} className="gallery-slide"><img src={`/images/${i + 1}.webp`} alt={`Gallery ${i + 1}`} loading="lazy" decoding="async" width="400" height="280" /></div>
             ))}
           </div>
         </div>
