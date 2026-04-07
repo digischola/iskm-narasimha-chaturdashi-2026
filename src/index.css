@@ -175,6 +175,11 @@ a{text-decoration:none}
 .read-more-content{max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .4s ease;opacity:0}
 .read-more-content.open{max-height:600px;opacity:1}
 
+/* Mantra block below image */
+.mantra-block{text-align:center;padding:30px 20px 10px;max-width:700px;margin:0 auto}
+.mantra-block .mantra{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;line-height:1.5;margin-bottom:12px;color:var(--gold)}
+.mantra-block .mantra-meaning{font-size:14px;color:var(--text-muted);line-height:1.7;font-family:'Source Sans Pro',sans-serif;font-style:italic}
+
 /* ═══ WHAT TO EXPECT ═══ */
 .expect-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .expect-card{background:var(--white);border-radius:12px;overflow:hidden;transition:all .3s;border:1.5px solid transparent}
