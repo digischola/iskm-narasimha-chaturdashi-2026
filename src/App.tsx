@@ -198,10 +198,21 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
         },
       });
 
-      // supabase.functions.invoke returns non-2xx body in data when there's an error status
-      if (fnError || (data && data.error)) {
-        const msg = data?.error || "Registration failed. Please try again.";
+      if (fnError) {
+        // For non-2xx responses, the error context contains the response body
+        let msg = "Registration failed. Please try again.";
+        try {
+          const errBody = fnError.context ? await fnError.context.json() : null;
+          if (errBody?.error) msg = errBody.error;
+        } catch {
+          // fallback to generic message
+        }
         alert(msg);
+        setSubmitting(false);
+        return;
+      }
+      if (data && data.error) {
+        alert(data.error);
         setSubmitting(false);
         return;
       }
