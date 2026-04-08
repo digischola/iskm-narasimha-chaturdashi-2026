@@ -217,6 +217,14 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   };
 
   const completeRegistration = async (volunteer: boolean) => {
+    if (emailDupStatus === "duplicate") {
+      alert("This email is already registered. Please use a different email.");
+      return;
+    }
+    if (phoneDupStatus === "duplicate") {
+      alert("This phone number is already registered. Please use a different number.");
+      return;
+    }
     if (!isPhoneValid()) {
       alert("Please enter a valid phone number (8–15 digits).");
       return;
