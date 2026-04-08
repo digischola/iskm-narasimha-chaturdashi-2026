@@ -133,14 +133,8 @@ function Hero({ spotsCount }: { spotsCount: number }) {
 }
 
 /* ═══ REGISTRATION FORM ═══ */
-const VOLUNTEER_CATEGORIES = [
-  "Cutting vegetables", "Washing dishes", "Sweeping & mopping", "Decorating temple hall",
-  "Setting up crew", "Packing up crew", "Temple cleaning", "Photography and Videography",
-];
 
 function RegistrationForm({ onRegister }: { onRegister: (count: number) => void }) {
-  const [step, setStep] = useState(1);
-  const [isVolunteer, setIsVolunteer] = useState(false);
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState("");
@@ -150,10 +144,6 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const [attendees, setAttendees] = useState("2");
   const [nameValid, setNameValid] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [remarks, setRemarks] = useState("");
-  const [volCats, setVolCats] = useState<string[]>([]);
 
   // Duplicate check states
   const [emailDupStatus, setEmailDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
@@ -212,11 +202,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
     setPhoneDupStatus("idle");
   };
 
-  const toggleCat = (cat: string) => {
-    setVolCats((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]);
-  };
-
-  const completeRegistration = async (volunteer: boolean) => {
+  const completeRegistration = async () => {
     if (emailDupStatus === "duplicate") {
       alert("This email is already registered. Please use a different email.");
       return;
@@ -240,11 +226,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           email: email.trim(),
           phone: getFullPhone() || null,
           attendees: numAtt,
-          is_volunteer: volunteer,
-          age: age || null,
-          gender: gender || null,
-          remarks: remarks || null,
-          volunteer_categories: volunteer ? volCats : null,
+          is_volunteer: false,
         },
       });
 
@@ -271,27 +253,14 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
 
     const ph = "6562502280";
     const numAttStr = attendees === "5" ? "5+" : attendees;
-    let msg: string;
-    if (volunteer) {
-      const cats = volCats.join(", ") || "Not specified";
-      msg = `Hare Kṛṣṇa! 🙏\n\nI've registered as a *volunteer* for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n*Volunteer Categories:* ${cats}\n\nI'm excited to serve! Please coordinate with me before the event.\n\nJai Śrī Nṛsiṁhadeva! 🦁`;
-    } else {
-      msg = `Hare Kṛṣṇa! 🙏\n\nI've registered for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n\n📅 Thursday, 30th April 2026\n🕡 6:30 PM – 10:00 PM\n📍 No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nLooking forward to it!\nJai Śrī Nṛsiṁhadeva! 🦁`;
-    }
+    const msg = `Hare Kṛṣṇa! 🙏\n\nI've registered for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n\n📅 Thursday, 30th April 2026\n🕡 6:30 PM – 10:00 PM\n📍 No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nLooking forward to it!\nJai Śrī Nṛsiṁhadeva! 🦁`;
     setTimeout(() => window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`, "_blank"), 3000);
   };
 
-  const handleStep1 = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isVolunteer) { setStep(2); } else { completeRegistration(false); }
+    completeRegistration();
   };
-
-  const handleStep2 = (e: React.FormEvent) => {
-    e.preventDefault();
-    completeRegistration(true);
-  };
-
-  const stepCount = isVolunteer ? 2 : 1;
 
   if (success) {
     const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Śrī Nṛsiṁha Caturdaśī 2026 – ISKM Singapore")}&dates=20260430T103000Z/20260430T140000Z&details=${encodeURIComponent("Grand Abhisheka, Kirtana, Cultural Programme & Prasādam\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://narasimha-caturdasi-2026.lovable.app")}&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
@@ -332,15 +301,9 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           <div className="reg-badge"><i className="fas fa-ticket-alt"></i> &nbsp;Free Entry</div>
           <h3>Confirm Your Attendance</h3>
           <p>Fill in below to register for the celebration</p>
-          <div className="step-dots">
-            <span className={`step-dot${step >= 1 ? " active" : ""}`}></span>
-            {stepCount === 2 && <span className={`step-dot${step >= 2 ? " active" : ""}`}></span>}
-            <span className="step-text">Step {step} of {stepCount}</span>
-          </div>
         </div>
 
-        {step === 1 ? (
-          <form onSubmit={handleStep1}>
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Full Name *</label>
               <div className="input-wrap">
@@ -398,49 +361,11 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 <option value="5">5+ People</option>
               </select>
             </div>
-            <div className="form-group">
-              <label>Would you like to volunteer?</label>
-              <select value={isVolunteer ? "yes" : "no"} onChange={(e) => setIsVolunteer(e.target.value === "yes")}>
-                <option value="no">No, just attending</option>
-                <option value="yes">Yes, I'd love to help!</option>
-              </select>
-            </div>
             <button type="submit" className="btn-register cta-glow btn-register-navy" disabled={submitting}>
-              {submitting ? "Submitting..." : isVolunteer ? "Next — Volunteer Details" : "Register Now — It's Free"}
+              {submitting ? "Submitting..." : "Register Now — It's Free"}
             </button>
             <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
           </form>
-        ) : (
-          <form onSubmit={handleStep2}>
-            <div className="form-row">
-              <div className="form-group"><label>Age *</label><input type="number" placeholder="Your age" required min={1} max={120} value={age} onChange={(e) => setAge(e.target.value)} /></div>
-              <div className="form-group">
-                <label>Gender *</label>
-                <select required value={gender} onChange={(e) => setGender(e.target.value)}>
-                  <option value="" disabled>Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="prefer-not">Prefer not to say</option>
-                </select>
-              </div>
-            </div>
-            <div className="form-group"><label>Remarks</label><textarea placeholder="If you are skilled in photography or videography, please let us know here" value={remarks} onChange={(e) => setRemarks(e.target.value)}></textarea></div>
-            <div className="form-group">
-              <label>Volunteering Categories</label>
-              <div className="vol-categories">
-                {VOLUNTEER_CATEGORIES.map((cat) => (
-                  <label key={cat} className="vol-cat-label">
-                    <input type="checkbox" checked={volCats.includes(cat)} onChange={() => toggleCat(cat)} /> {cat}
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div className="form-buttons">
-              <button type="button" className="btn-back" onClick={() => setStep(1)}><i className="fas fa-arrow-left"></i> Back</button>
-              <button type="submit" className="btn-register cta-glow" disabled={submitting}>{submitting ? "Submitting..." : "Submit Registration"}</button>
-            </div>
-          </form>
-        )}
       </div>
     </div>
   );
@@ -478,8 +403,8 @@ function SocialProof() {
 function Stats() {
   const [animated, setAnimated] = useState(false);
   const [values, setValues] = useState([0, 0, 0, 0]);
-  const targets = [50, 500, 50, 30];
-  const labels = ["Years of Service", "Expected Attendees", "Dedicated Volunteers", "Festivals Celebrated Yearly"];
+  const targets = [50, 500, 10, 30];
+  const labels = ["Years of Service", "Expected Attendees", "Cultural Programmes", "Festivals Celebrated Yearly"];
 
   useEffect(() => {
     if (!animated) return;
@@ -694,21 +619,6 @@ function KavachaSection() {
   );
 }
 
-/* ═══ VOLUNTEER ═══ */
-function Volunteer() {
-  return (
-    <div className="volunteer-banner animate-in" style={{ paddingBottom: "70px" }}>
-      <div className="volunteer-inner">
-        <div className="volunteer-img"><img src="/images/11.webp" alt="Young volunteers helping at ISKM" loading="lazy" decoding="async" width="600" height="300" /></div>
-        <div className="volunteer-text">
-          <h2>Serve &amp; Be Blessed</h2>
-          <p>Volunteer for decorations, prasādam distribution, guest welcome, and more. Experience the joy of selfless service.</p>
-          <a href="#register" className="btn-volunteer cta-glow btn-volunteer-navy"><i className="fas fa-hands-helping"></i> &nbsp;Register &amp; Volunteer</a>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ═══ FAQ ═══ */
 const FAQ_DATA = [
@@ -850,7 +760,6 @@ function LandingPage() {
       <Schedule />
       <Seva />
       <KavachaSection />
-      <Volunteer />
       <FAQ />
       <Location />
       <Share />

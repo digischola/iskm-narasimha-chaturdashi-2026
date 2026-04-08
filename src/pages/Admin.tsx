@@ -87,7 +87,7 @@ export default function Admin() {
 
   const totalRegistrations = data.length;
   const totalAttendees = data.reduce((s, r) => s + r.attendees, 0);
-  const volunteerCount = data.filter((r) => r.is_volunteer).length;
+
 
   // Chart data: registrations per day
   const dayMap: Record<string, number> = {};
@@ -108,17 +108,12 @@ export default function Admin() {
   };
 
   const handleDownloadCSV = () => {
-    const headers = ["Name", "Email", "Phone", "Attendees", "Age", "Gender", "Volunteer", "Volunteer Categories", "Remarks", "Registered At"];
+    const headers = ["Name", "Email", "Phone", "Attendees", "Registered At"];
     const rows = data.map(r => [
       r.name,
       r.email,
       r.phone || "",
       r.attendees,
-      r.age || "",
-      r.gender || "",
-      r.is_volunteer ? "Yes" : "No",
-      r.volunteer_categories?.join("; ") || "",
-      r.remarks || "",
       new Date(r.created_at).toLocaleString("en-SG"),
     ]);
     const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -147,7 +142,6 @@ export default function Admin() {
           {[
             { label: "Total Registrations", value: totalRegistrations, color: "var(--navy)" },
             { label: "Total Attendees", value: totalAttendees, color: "var(--gold)" },
-            { label: "Volunteers", value: volunteerCount, color: "var(--pink)" },
           ].map((s) => (
             <div key={s.label} style={{ background: "white", borderRadius: "12px", padding: "20px 24px", boxShadow: "0 2px 12px rgba(0,0,0,.04)" }}>
               <p style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "4px" }}>{s.label}</p>
@@ -192,8 +186,6 @@ export default function Admin() {
                   <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Email</th>
                   <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Phone</th>
                   <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Attendees</th>
-                  <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Volunteer</th>
-                  <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Categories</th>
                   <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Date</th>
                 </tr>
               </thead>
@@ -204,13 +196,11 @@ export default function Admin() {
                     <td style={{ padding: "10px 8px" }}>{r.email}</td>
                     <td style={{ padding: "10px 8px" }}>{r.phone || "—"}</td>
                     <td style={{ padding: "10px 8px" }}>{r.attendees}</td>
-                    <td style={{ padding: "10px 8px" }}>{r.is_volunteer ? "✅" : "—"}</td>
-                    <td style={{ padding: "10px 8px", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis" }}>{r.volunteer_categories?.join(", ") || "—"}</td>
                     <td style={{ padding: "10px 8px", whiteSpace: "nowrap" }}>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={7} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>No registrations found</td></tr>
+                  <tr><td colSpan={5} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>No registrations found</td></tr>
                 )}
               </tbody>
             </table>

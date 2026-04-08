@@ -26,7 +26,6 @@ Deno.serve(async (req) => {
     }
 
     const attendees = Math.min(Math.max(parseInt(body.attendees) || 1, 1), 20);
-    const is_volunteer = body.is_volunteer === true;
     const rawPhone = typeof body.phone === "string" ? body.phone.trim().slice(0, 30) : null;
     // Validate phone: must be + followed by 8-15 digits
     const phone = rawPhone && /^\+\d{8,15}$/.test(rawPhone.replace(/[\s\-().]/g, "")) ? rawPhone.replace(/[\s\-().]/g, "") : (rawPhone ? null : null);
@@ -36,12 +35,6 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const age = typeof body.age === "string" ? body.age.trim().slice(0, 5) : null;
-    const gender = typeof body.gender === "string" ? body.gender.trim().slice(0, 20) : null;
-    const remarks = typeof body.remarks === "string" ? body.remarks.trim().slice(0, 1000) : null;
-    const volunteer_categories = Array.isArray(body.volunteer_categories)
-      ? body.volunteer_categories.filter((c: unknown) => typeof c === "string").slice(0, 10)
-      : null;
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -83,11 +76,6 @@ Deno.serve(async (req) => {
       email,
       phone,
       attendees,
-      is_volunteer,
-      age,
-      gender,
-      remarks,
-      volunteer_categories,
     });
 
     if (error) {
