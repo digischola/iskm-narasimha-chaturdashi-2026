@@ -135,8 +135,6 @@ function Hero({ spotsCount }: { spotsCount: number }) {
 /* ═══ REGISTRATION FORM ═══ */
 
 function RegistrationForm({ onRegister }: { onRegister: (count: number) => void }) {
-  const [step, setStep] = useState(1);
-  const [isVolunteer, setIsVolunteer] = useState(false);
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState("");
@@ -146,10 +144,6 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const [attendees, setAttendees] = useState("2");
   const [nameValid, setNameValid] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [remarks, setRemarks] = useState("");
-  const [volCats, setVolCats] = useState<string[]>([]);
 
   // Duplicate check states
   const [emailDupStatus, setEmailDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
