@@ -362,7 +362,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 <option value="5">5+ People</option>
               </select>
             </div>
-            <button type="submit" className="btn-register cta-glow btn-register-navy" disabled={submitting}>
+            <button type="submit" className="btn-register cta-glow btn-register-navy" disabled={submitting || !nameValid || !emailValid || !attendees || emailDupStatus === "duplicate" || phoneDupStatus === "duplicate" || (phoneNum !== "" && !isPhoneValid())}>
               {submitting ? "Submitting..." : "Register Now — It's Free"}
             </button>
             <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
