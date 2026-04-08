@@ -107,12 +107,39 @@ export default function Admin() {
     await supabase.auth.signOut();
   };
 
+  const handleDownloadCSV = () => {
+    const headers = ["Name", "Email", "Phone", "Attendees", "Age", "Gender", "Volunteer", "Volunteer Categories", "Remarks", "Registered At"];
+    const rows = data.map(r => [
+      r.name,
+      r.email,
+      r.phone || "",
+      r.attendees,
+      r.age || "",
+      r.gender || "",
+      r.is_volunteer ? "Yes" : "No",
+      r.volunteer_categories?.join("; ") || "",
+      r.remarks || "",
+      new Date(r.created_at).toLocaleString("en-SG"),
+    ]);
+    const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `registrations_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div style={{ minHeight: "100vh", background: "var(--cream)", fontFamily: "'Source Sans Pro', sans-serif", padding: "24px" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--navy)", fontSize: "28px" }}>Registration Dashboard</h1>
-          <button onClick={handleLogout} style={{ background: "var(--cream-warm)", border: "1px solid #e5ded5", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", fontWeight: 600, color: "var(--navy)" }}>Sign Out</button>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <button onClick={handleDownloadCSV} style={{ background: "var(--navy)", color: "white", border: "none", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", fontWeight: 600, fontSize: "13px" }}>⬇ Download CSV</button>
+            <button onClick={handleLogout} style={{ background: "var(--cream-warm)", border: "1px solid #e5ded5", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", fontWeight: 600, color: "var(--navy)" }}>Sign Out</button>
+          </div>
         </div>
 
         {/* Stats cards */}
