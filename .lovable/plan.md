@@ -1,23 +1,23 @@
 
 
-## Fix: FAQ food timing + full page timing audit
+## Prevent duplicate registrations by email or phone
 
-### Audit Results
+### Approach
+Add a duplicate check in the edge function before inserting. Query the `registrations` table for existing rows matching the submitted email OR phone number (if provided). Return a user-friendly error if a match is found. Also add a unique constraint on `email` at the database level as a safety net.
 
-| Location | Line | Current | Correct | Status |
-|----------|------|---------|---------|--------|
-| Hero meta | 112 | 6:30 PM – 10:00 PM | ✅ | OK |
-| WhatsApp message | 198 | 6:30 PM – 10:00 PM | ✅ | OK |
-| Schedule timeline | 520–523 | Prasādam at 8:30 PM | ✅ | OK |
-| FAQ – food | 609 | **8:45 PM** | 8:30 PM | ❌ FIX |
-| FAQ – duration | 612 | 6:30 PM to 10:00 PM | ✅ | OK |
-| **Location section** | **645** | **6:30 PM – 9:45 PM** | **6:30 PM – 10:00 PM** | **❌ FIX** |
-| Google Calendar URL (hero) | ~216 | ends 140000Z (10 PM SGT) | ✅ | OK |
+### Changes
 
-### Changes — `src/App.tsx`
+**1. Database migration** — Add unique index on `email` column:
+```sql
+CREATE UNIQUE INDEX IF NOT EXISTS registrations_email_unique ON public.registrations (email);
+```
 
-1. **Line 609** — FAQ food answer: change `8:45 PM` → `8:30 PM`
-2. **Line 645** — Location/venue section: change `9:45 PM` → `10:00 PM`
+**2. Edge function (`supabase/functions/submit-registration/index.ts`)** — Add duplicate check before insert (after validation, before insert):
+- Query `registrations` table for rows where `email = $email` OR (phone is not null AND `phone = $phone`)
+- If match found on email → return 409 with message "This email has already been registered"
+- If match found on phone → return 409 with message "This phone number has already been registered"
 
-Two remaining discrepancies, both one-line fixes.
+**3. Frontend (`src/App.tsx`)** — Handle the 409 response in the form submission handler:
+- Parse the error message from the response
+- Display it in the existing error UI (toast or inline) instead of a generic failure message
 
