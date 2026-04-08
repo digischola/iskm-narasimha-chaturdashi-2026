@@ -1,26 +1,20 @@
 
 
-## Plan: Kavacha Styling Fix + Page Performance Optimization
+## Fix: Standardize event time to 6:30 PM – 10:00 PM SGT
 
-### 1. Kavacha section background color
-Change `.kavacha-section` background from `linear-gradient(180deg, var(--cream-warm), var(--cream))` to `#fdf4ec`.
+### Issues Found (all in `src/App.tsx`)
 
-### 2. Shop Now button → pink (matching other CTAs)
-Change `.btn-kavacha` background from `var(--saffron)` to `var(--pink)` (`#f8a4c0`), and hover to `var(--pink-light)`. Update text color to `var(--navy)` to match `.nav-cta` style.
+| Location | Current | Fix |
+|----------|---------|-----|
+| **Line 112** – Hero meta | `6:30 PM – 9:45 PM` | `6:30 PM – 10:00 PM` |
+| **Line 198** – WhatsApp message | `6:30 PM – 9:45 PM` | `6:30 PM – 10:00 PM` |
+| **Line 216** – Google Calendar URL | `dates=20260430T103000Z/20260430T134500Z` (ends 9:45 PM SGT) | `dates=20260430T103000Z/20260430T140000Z` (ends 10:00 PM SGT) |
 
-### 3. Page performance — image optimization
-Images are the bottleneck. Changes:
+The schedule timeline (lines 516–519) already correctly ends at 10:00 PM — no change needed there.
 
-- **Convert all JPG/JPEG images to WebP** using a build script, reducing file sizes by ~30-50%. Place optimized versions in `public/images/` replacing originals (or add `.webp` variants and update `src` references).
-- **Add `width` and `height` attributes** to all `<img>` tags to prevent layout shift (CLS).
-- **Add `loading="lazy"`** to any images missing it (hero image currently lacks it — but hero should use `loading="eager"` since it's above the fold; others should be lazy).
-- **Add `fetchpriority="high"`** to the hero image for LCP improvement.
-- **Preload hero image** via `<link rel="preload">` in `index.html`.
-- **Use `decoding="async"`** on all non-critical images.
-
-### Files Modified
-- `src/index.css` — kavacha background + button color
-- `src/App.tsx` — image attributes (width/height, decoding, fetchpriority)
-- `index.html` — preload hero image
-- `public/images/` — convert JPGs to WebP via build script
+### Changes
+**File: `src/App.tsx`** — 3 edits:
+1. Line 112: Replace `9:45 PM` with `10:00 PM`
+2. Line 198: Replace `9:45 PM` with `10:00 PM` in WhatsApp template
+3. Line 216: Change calendar end time from `T134500Z` to `T140000Z` (13:45 UTC → 14:00 UTC = 10:00 PM SGT)
 
