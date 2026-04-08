@@ -155,8 +155,30 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const [remarks, setRemarks] = useState("");
   const [volCats, setVolCats] = useState<string[]>([]);
 
+  // Duplicate check states
+  const [emailDupStatus, setEmailDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+  const [phoneDupStatus, setPhoneDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+
   const handleNameChange = (v: string) => { setName(v); setNameValid(v.trim().length >= 2); };
-  const handleEmailChange = (v: string) => { setEmail(v); setEmailValid(/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)); };
+  const handleEmailChange = (v: string) => {
+    setEmail(v);
+    const valid = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v);
+    setEmailValid(valid);
+    if (!valid) setEmailDupStatus("idle");
+  };
+
+  const checkEmailDuplicate = async () => {
+    if (!emailValid) return;
+    setEmailDupStatus("checking");
+    try {
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "email", value: email.trim() },
+      });
+      setEmailDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setEmailDupStatus("idle");
+    }
+  };
 
   const stripPhoneFormatting = (v: string) => v.replace(/[\s\-().]/g, "");
   const getFullPhone = () => {
@@ -168,6 +190,26 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
     if (!digits) return true; // phone is optional
     const total = stripPhoneFormatting(phoneCode).replace("+", "").length + digits.length;
     return /^\d+$/.test(digits) && total >= 8 && total <= 15;
+  };
+
+  const checkPhoneDuplicate = async () => {
+    const digits = stripPhoneFormatting(phoneNum);
+    if (!digits || !isPhoneValid()) return;
+    setPhoneDupStatus("checking");
+    try {
+      const fullPhone = getFullPhone();
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "phone", value: fullPhone },
+      });
+      setPhoneDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setPhoneDupStatus("idle");
+    }
+  };
+
+  const handlePhoneChange = (v: string) => {
+    setPhoneNum(v);
+    setPhoneDupStatus("idle");
   };
 
   const toggleCat = (cat: string) => {
