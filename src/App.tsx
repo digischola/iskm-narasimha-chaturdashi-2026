@@ -199,15 +199,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
       });
 
       if (fnError) {
-        // For non-2xx responses, the error context contains the response body
-        let msg = "Registration failed. Please try again.";
-        try {
-          const errBody = fnError.context ? await fnError.context.json() : null;
-          if (errBody?.error) msg = errBody.error;
-        } catch {
-          // fallback to generic message
-        }
-        alert(msg);
+        alert("Registration failed. Please try again.");
         setSubmitting(false);
         return;
       }
