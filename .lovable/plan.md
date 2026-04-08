@@ -1,20 +1,23 @@
 
 
-## Fix: Standardize event time to 6:30 PM – 10:00 PM SGT
+## Fix: FAQ food timing + full page timing audit
 
-### Issues Found (all in `src/App.tsx`)
+### Audit Results
 
-| Location | Current | Fix |
-|----------|---------|-----|
-| **Line 112** – Hero meta | `6:30 PM – 9:45 PM` | `6:30 PM – 10:00 PM` |
-| **Line 198** – WhatsApp message | `6:30 PM – 9:45 PM` | `6:30 PM – 10:00 PM` |
-| **Line 216** – Google Calendar URL | `dates=20260430T103000Z/20260430T134500Z` (ends 9:45 PM SGT) | `dates=20260430T103000Z/20260430T140000Z` (ends 10:00 PM SGT) |
+| Location | Line | Current | Correct | Status |
+|----------|------|---------|---------|--------|
+| Hero meta | 112 | 6:30 PM – 10:00 PM | ✅ | OK |
+| WhatsApp message | 198 | 6:30 PM – 10:00 PM | ✅ | OK |
+| Schedule timeline | 520–523 | Prasādam at 8:30 PM | ✅ | OK |
+| FAQ – food | 609 | **8:45 PM** | 8:30 PM | ❌ FIX |
+| FAQ – duration | 612 | 6:30 PM to 10:00 PM | ✅ | OK |
+| **Location section** | **645** | **6:30 PM – 9:45 PM** | **6:30 PM – 10:00 PM** | **❌ FIX** |
+| Google Calendar URL (hero) | ~216 | ends 140000Z (10 PM SGT) | ✅ | OK |
 
-The schedule timeline (lines 516–519) already correctly ends at 10:00 PM — no change needed there.
+### Changes — `src/App.tsx`
 
-### Changes
-**File: `src/App.tsx`** — 3 edits:
-1. Line 112: Replace `9:45 PM` with `10:00 PM`
-2. Line 198: Replace `9:45 PM` with `10:00 PM` in WhatsApp template
-3. Line 216: Change calendar end time from `T134500Z` to `T140000Z` (13:45 UTC → 14:00 UTC = 10:00 PM SGT)
+1. **Line 609** — FAQ food answer: change `8:45 PM` → `8:30 PM`
+2. **Line 645** — Location/venue section: change `9:45 PM` → `10:00 PM`
+
+Two remaining discrepancies, both one-line fixes.
 
