@@ -122,7 +122,7 @@ function Hero({ spotsCount }: { spotsCount: number }) {
               <div className="cd-pill"><div className={`num${digitChange ? " digit-change" : ""}`}>{s}</div><div className="lbl">Secs</div></div>
             </div>
           )}
-          <p className="hero-spots"><strong><span>{spotsCount}</span> people</strong> have registered so far</p>
+          <p className="hero-spots"><strong>100+ people</strong> already registered</p>
         </div>
         <div className="hero-painting" ref={parallaxRef}>
           <img src="/images/hero-image.webp" alt="Lord Śrī Nṛsiṁhadeva with Prahlāda Mahārāja" width="680" height="850" fetchPriority="high" decoding="async" />
@@ -213,6 +213,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const stepCount = isVolunteer ? 2 : 1;
 
   if (success) {
+    const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Śrī Nṛsiṁha Caturdaśī 2026 – ISKM Singapore")}&dates=20260430T103000Z/20260430T134500Z&details=${encodeURIComponent("Grand Abhisheka, Kirtana, Cultural Programme & Prasādam\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://narasimha-caturdasi-2026.lovable.app")}&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
     return (
       <div className="reg-section" id="register">
         <div className="reg-card">
@@ -232,6 +233,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
             <div className="check-icon"><i className="fas fa-check"></i></div>
             <h3>You're Registered!</h3>
             <p>We've saved your spot for Śrī Nṛsiṁha Caturdaśī 2026. A WhatsApp message is being opened so you can confirm directly with the temple.</p>
+            <a href={calendarUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginTop: "20px", padding: "12px 24px", background: "var(--navy)", color: "white", borderRadius: "8px", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "opacity 0.2s" }} onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={e => (e.currentTarget.style.opacity = "1")}><i className="fas fa-calendar-plus"></i> Add to Google Calendar</a>
           </div>
         </div>
       </div>
@@ -573,7 +575,7 @@ function KavachaSection() {
             <span className="kavacha-sale">$281.80</span>
             <span className="kavacha-badge">Śrī Nṛsiṁha Caturdaśī Special</span>
           </div>
-          <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="btn-kavacha cta-glow"><i className="fas fa-shopping-cart"></i> &nbsp;Shop Now</a>
+          <a href="https://iskm-eshop.kyte.site/en/p/silver-narasimha-kavacha-kavns/1621095636824-pepAr" target="_blank" rel="noopener noreferrer" className="btn-kavacha cta-glow"><i className="fas fa-shopping-cart"></i> &nbsp;Shop Now</a>
         </div>
       </div>
     </div>
