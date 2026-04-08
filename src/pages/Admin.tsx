@@ -108,17 +108,12 @@ export default function Admin() {
   };
 
   const handleDownloadCSV = () => {
-    const headers = ["Name", "Email", "Phone", "Attendees", "Age", "Gender", "Volunteer", "Volunteer Categories", "Remarks", "Registered At"];
+    const headers = ["Name", "Email", "Phone", "Attendees", "Registered At"];
     const rows = data.map(r => [
       r.name,
       r.email,
       r.phone || "",
       r.attendees,
-      r.age || "",
-      r.gender || "",
-      r.is_volunteer ? "Yes" : "No",
-      r.volunteer_categories?.join("; ") || "",
-      r.remarks || "",
       new Date(r.created_at).toLocaleString("en-SG"),
     ]);
     const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");

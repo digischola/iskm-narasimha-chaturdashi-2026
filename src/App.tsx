@@ -760,7 +760,6 @@ function LandingPage() {
       <Schedule />
       <Seva />
       <KavachaSection />
-      <Volunteer />
       <FAQ />
       <Location />
       <Share />

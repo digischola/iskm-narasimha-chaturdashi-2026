@@ -76,11 +76,6 @@ Deno.serve(async (req) => {
       email,
       phone,
       attendees,
-      is_volunteer,
-      age,
-      gender,
-      remarks,
-      volunteer_categories,
     });
 
     if (error) {
