@@ -301,7 +301,24 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
               </div>
               <div className="form-group">
                 <label>Phone</label>
-                <input type="tel" placeholder="+65 XXXX XXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <select value={phoneCode} onChange={(e) => setPhoneCode(e.target.value)} style={{ width: "90px", flexShrink: 0 }}>
+                    <option value="+65">+65</option>
+                    <option value="+91">+91</option>
+                    <option value="+60">+60</option>
+                    <option value="+62">+62</option>
+                    <option value="+63">+63</option>
+                    <option value="+66">+66</option>
+                    <option value="+1">+1</option>
+                    <option value="+44">+44</option>
+                    <option value="+61">+61</option>
+                    <option value="+81">+81</option>
+                    <option value="+82">+82</option>
+                    <option value="+86">+86</option>
+                  </select>
+                  <input type="tel" placeholder="XXXX XXXX" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} style={{ flex: 1 }} className={phoneNum && !isPhoneValid() ? "input-error" : ""} />
+                </div>
+                {phoneNum && !isPhoneValid() && <span style={{ color: "#e74c3c", fontSize: "0.8rem", marginTop: "0.25rem" }}>Enter 8–15 digits</span>}
               </div>
             </div>
             <div className="form-group">
