@@ -573,7 +573,7 @@ function KavachaSection() {
             <span className="kavacha-sale">$281.80</span>
             <span className="kavacha-badge">Śrī Nṛsiṁha Caturdaśī Special</span>
           </div>
-          <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="btn-kavacha cta-glow"><i className="fas fa-shopping-cart"></i> &nbsp;Shop Now</a>
+          <a href="https://iskm-eshop.kyte.site/en/p/silver-narasimha-kavacha-kavns/1621095636824-pepAr" target="_blank" rel="noopener noreferrer" className="btn-kavacha cta-glow"><i className="fas fa-shopping-cart"></i> &nbsp;Shop Now</a>
         </div>
       </div>
     </div>
