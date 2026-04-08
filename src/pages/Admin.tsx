@@ -87,7 +87,7 @@ export default function Admin() {
 
   const totalRegistrations = data.length;
   const totalAttendees = data.reduce((s, r) => s + r.attendees, 0);
-  const volunteerCount = data.filter((r) => r.is_volunteer).length;
+
 
   // Chart data: registrations per day
   const dayMap: Record<string, number> = {};
