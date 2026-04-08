@@ -403,8 +403,8 @@ function SocialProof() {
 function Stats() {
   const [animated, setAnimated] = useState(false);
   const [values, setValues] = useState([0, 0, 0, 0]);
-  const targets = [50, 500, 50, 30];
-  const labels = ["Years of Service", "Expected Attendees", "Dedicated Volunteers", "Festivals Celebrated Yearly"];
+  const targets = [50, 500, 10, 30];
+  const labels = ["Years of Service", "Expected Attendees", "Cultural Programmes", "Festivals Celebrated Yearly"];
 
   useEffect(() => {
     if (!animated) return;
