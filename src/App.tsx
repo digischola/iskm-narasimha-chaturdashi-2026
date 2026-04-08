@@ -301,15 +301,9 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           <div className="reg-badge"><i className="fas fa-ticket-alt"></i> &nbsp;Free Entry</div>
           <h3>Confirm Your Attendance</h3>
           <p>Fill in below to register for the celebration</p>
-          <div className="step-dots">
-            <span className={`step-dot${step >= 1 ? " active" : ""}`}></span>
-            {stepCount === 2 && <span className={`step-dot${step >= 2 ? " active" : ""}`}></span>}
-            <span className="step-text">Step {step} of {stepCount}</span>
-          </div>
         </div>
 
-        {step === 1 ? (
-          <form onSubmit={handleStep1}>
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Full Name *</label>
               <div className="input-wrap">
