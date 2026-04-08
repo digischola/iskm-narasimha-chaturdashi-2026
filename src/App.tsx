@@ -609,7 +609,7 @@ const FAQ_DATA = [
   { q: "Will food be provided?", a: "Yes! A sumptuous vegetarian prasādam feast will be served free of charge to all attendees at 8:45 PM. The food is sanctified, freshly prepared, and absolutely delicious." },
   { q: "Can I bring my children?", a: "Absolutely! The celebration is family-friendly and suitable for all ages. Children will enjoy the cultural programme and prasādam. The atmosphere is welcoming and inclusive for families." },
   { q: "Do I need to register to attend?", a: "Registration is free and helps us plan for seating and prasādam. Walk-ins are welcome on a first-come, first-served basis, but we recommend registering in advance." },
-  { q: "How long is the event?", a: "The programme runs from 6:30 PM to approximately 9:45 PM (about 3 hours 15 minutes). You're welcome to arrive at any point and stay as long as you'd like." },
+  { q: "How long is the event?", a: "The programme runs from 6:30 PM to 10:00 PM (about 3.5 hours). You're welcome to arrive at any point and stay as long as you'd like." },
 ];
 
 function FAQ() {
