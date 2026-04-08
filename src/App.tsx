@@ -197,7 +197,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
     } else {
       msg = `Hare Kṛṣṇa! 🙏\n\nI've registered for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n\n📅 Thursday, 30th April 2026\n🕡 6:30 PM – 10:00 PM\n📍 No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nLooking forward to it!\nJai Śrī Nṛsiṁhadeva! 🦁`;
     }
-    setTimeout(() => window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`, "_blank"), 800);
+    setTimeout(() => window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`, "_blank"), 3000);
   };
 
   const handleStep1 = (e: React.FormEvent) => {
@@ -232,8 +232,12 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
             </div>
             <div className="check-icon"><i className="fas fa-check"></i></div>
             <h3>You're Registered!</h3>
-            <p>We've saved your spot for Śrī Nṛsiṁha Caturdaśī 2026. A WhatsApp message is being opened so you can confirm directly with the temple.</p>
-            <a href={calendarUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginTop: "20px", padding: "12px 24px", background: "var(--navy)", color: "white", borderRadius: "8px", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "opacity 0.2s" }} onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={e => (e.currentTarget.style.opacity = "1")}><i className="fas fa-calendar-plus"></i> Add to Google Calendar</a>
+            <p>We've saved your spot for Śrī Nṛsiṁha Caturdaśī 2026.</p>
+            <a href={calendarUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginTop: "16px", padding: "12px 24px", background: "var(--navy)", color: "white", borderRadius: "8px", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "opacity 0.2s" }} onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={e => (e.currentTarget.style.opacity = "1")}><i className="fas fa-calendar-plus"></i> Add to Google Calendar</a>
+            <div style={{ marginTop: "18px", padding: "14px 20px", background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.3)", borderRadius: "10px", display: "flex", alignItems: "center", gap: "10px", fontSize: "13.5px", color: "var(--navy-deep)" }}>
+              <i className="fab fa-whatsapp" style={{ color: "#25d366", fontSize: "20px" }}></i>
+              <span>Redirecting you to <strong>WhatsApp</strong> in a moment — stay connected for the latest event updates from the team!</span>
+            </div>
           </div>
         </div>
       </div>
@@ -605,7 +609,7 @@ const FAQ_DATA = [
   { q: "Will food be provided?", a: "Yes! A sumptuous vegetarian prasādam feast will be served free of charge to all attendees at 8:45 PM. The food is sanctified, freshly prepared, and absolutely delicious." },
   { q: "Can I bring my children?", a: "Absolutely! The celebration is family-friendly and suitable for all ages. Children will enjoy the cultural programme and prasādam. The atmosphere is welcoming and inclusive for families." },
   { q: "Do I need to register to attend?", a: "Registration is free and helps us plan for seating and prasādam. Walk-ins are welcome on a first-come, first-served basis, but we recommend registering in advance." },
-  { q: "How long is the event?", a: "The programme runs from 6:30 PM to approximately 9:45 PM (about 3 hours 15 minutes). You're welcome to arrive at any point and stay as long as you'd like." },
+  { q: "How long is the event?", a: "The programme runs from 6:30 PM to 10:00 PM (about 3.5 hours). You're welcome to arrive at any point and stay as long as you'd like." },
 ];
 
 function FAQ() {
@@ -661,7 +665,7 @@ function Share() {
     });
   };
   const openGoogleCalendar = () => {
-    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Śrī+Nṛsiṁha+Caturdaśī+2026+at+ISKM+Singapore&dates=20260430T103000Z/20260430T134500Z&details=Grand+celebration+with+Abhisheka,+Kirtana,+Cultural+Programme+%26+free+Prasadam.+Register:+https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&location=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065";
+    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Śrī+Nṛsiṁha+Caturdaśī+2026+at+ISKM+Singapore&dates=20260430T103000Z/20260430T140000Z&details=Grand+celebration+with+Abhisheka,+Kirtana,+Cultural+Programme+%26+free+Prasadam.+Register:+https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&location=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065";
     window.open(url, "_blank");
   };
 
