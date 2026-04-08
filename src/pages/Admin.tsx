@@ -147,7 +147,6 @@ export default function Admin() {
           {[
             { label: "Total Registrations", value: totalRegistrations, color: "var(--navy)" },
             { label: "Total Attendees", value: totalAttendees, color: "var(--gold)" },
-            { label: "Volunteers", value: volunteerCount, color: "var(--pink)" },
           ].map((s) => (
             <div key={s.label} style={{ background: "white", borderRadius: "12px", padding: "20px 24px", boxShadow: "0 2px 12px rgba(0,0,0,.04)" }}>
               <p style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "4px" }}>{s.label}</p>
