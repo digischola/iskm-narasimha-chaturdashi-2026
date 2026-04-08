@@ -202,11 +202,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
     setPhoneDupStatus("idle");
   };
 
-  const toggleCat = (cat: string) => {
-    setVolCats((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]);
-  };
-
-  const completeRegistration = async (volunteer: boolean) => {
+  const completeRegistration = async () => {
     if (emailDupStatus === "duplicate") {
       alert("This email is already registered. Please use a different email.");
       return;
