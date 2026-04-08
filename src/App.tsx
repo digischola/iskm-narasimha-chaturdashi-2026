@@ -257,17 +257,10 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
     setTimeout(() => window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`, "_blank"), 3000);
   };
 
-  const handleStep1 = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isVolunteer) { setStep(2); } else { completeRegistration(false); }
+    completeRegistration();
   };
-
-  const handleStep2 = (e: React.FormEvent) => {
-    e.preventDefault();
-    completeRegistration(true);
-  };
-
-  const stepCount = isVolunteer ? 2 : 1;
 
   if (success) {
     const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Śrī Nṛsiṁha Caturdaśī 2026 – ISKM Singapore")}&dates=20260430T103000Z/20260430T140000Z&details=${encodeURIComponent("Grand Abhisheka, Kirtana, Cultural Programme & Prasādam\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://narasimha-caturdasi-2026.lovable.app")}&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
