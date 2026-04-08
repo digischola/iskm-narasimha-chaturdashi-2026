@@ -145,7 +145,8 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phoneCode, setPhoneCode] = useState("+65");
+  const [phoneNum, setPhoneNum] = useState("");
   const [attendees, setAttendees] = useState("2");
   const [nameValid, setNameValid] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
@@ -155,13 +156,29 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const [volCats, setVolCats] = useState<string[]>([]);
 
   const handleNameChange = (v: string) => { setName(v); setNameValid(v.trim().length >= 2); };
-  const handleEmailChange = (v: string) => { setEmail(v); setEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)); };
+  const handleEmailChange = (v: string) => { setEmail(v); setEmailValid(/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)); };
+
+  const stripPhoneFormatting = (v: string) => v.replace(/[\s\-().]/g, "");
+  const getFullPhone = () => {
+    const digits = stripPhoneFormatting(phoneNum);
+    return digits ? `${phoneCode}${digits}` : "";
+  };
+  const isPhoneValid = () => {
+    const digits = stripPhoneFormatting(phoneNum);
+    if (!digits) return true; // phone is optional
+    const total = stripPhoneFormatting(phoneCode).replace("+", "").length + digits.length;
+    return /^\d+$/.test(digits) && total >= 8 && total <= 15;
+  };
 
   const toggleCat = (cat: string) => {
     setVolCats((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]);
   };
 
   const completeRegistration = async (volunteer: boolean) => {
+    if (!isPhoneValid()) {
+      alert("Please enter a valid phone number (8–15 digits).");
+      return;
+    }
     setSubmitting(true);
     const numAtt = attendees === "5" ? 5 : parseInt(attendees);
 
@@ -171,7 +188,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
         body: {
           name: name.trim(),
           email: email.trim(),
-          phone: phone.trim() || null,
+          phone: getFullPhone() || null,
           attendees: numAtt,
           is_volunteer: volunteer,
           age: age || null,
@@ -288,7 +305,24 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
               </div>
               <div className="form-group">
                 <label>Phone</label>
-                <input type="tel" placeholder="+65 XXXX XXXX" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <select value={phoneCode} onChange={(e) => setPhoneCode(e.target.value)} style={{ width: "90px", flexShrink: 0 }}>
+                    <option value="+65">+65</option>
+                    <option value="+91">+91</option>
+                    <option value="+60">+60</option>
+                    <option value="+62">+62</option>
+                    <option value="+63">+63</option>
+                    <option value="+66">+66</option>
+                    <option value="+1">+1</option>
+                    <option value="+44">+44</option>
+                    <option value="+61">+61</option>
+                    <option value="+81">+81</option>
+                    <option value="+82">+82</option>
+                    <option value="+86">+86</option>
+                  </select>
+                  <input type="tel" placeholder="XXXX XXXX" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} style={{ flex: 1 }} className={phoneNum && !isPhoneValid() ? "input-error" : ""} />
+                </div>
+                {phoneNum && !isPhoneValid() && <span style={{ color: "#e74c3c", fontSize: "0.8rem", marginTop: "0.25rem" }}>Enter 8–15 digits</span>}
               </div>
             </div>
             <div className="form-group">

@@ -27,7 +27,15 @@ Deno.serve(async (req) => {
 
     const attendees = Math.min(Math.max(parseInt(body.attendees) || 1, 1), 20);
     const is_volunteer = body.is_volunteer === true;
-    const phone = typeof body.phone === "string" ? body.phone.trim().slice(0, 30) : null;
+    const rawPhone = typeof body.phone === "string" ? body.phone.trim().slice(0, 30) : null;
+    // Validate phone: must be + followed by 8-15 digits
+    const phone = rawPhone && /^\+\d{8,15}$/.test(rawPhone.replace(/[\s\-().]/g, "")) ? rawPhone.replace(/[\s\-().]/g, "") : (rawPhone ? null : null);
+    if (rawPhone && !phone) {
+      return new Response(JSON.stringify({ error: "Invalid phone number format" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const age = typeof body.age === "string" ? body.age.trim().slice(0, 5) : null;
     const gender = typeof body.gender === "string" ? body.gender.trim().slice(0, 20) : null;
     const remarks = typeof body.remarks === "string" ? body.remarks.trim().slice(0, 1000) : null;
