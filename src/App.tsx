@@ -665,7 +665,7 @@ function Share() {
     });
   };
   const openGoogleCalendar = () => {
-    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Śrī+Nṛsiṁha+Caturdaśī+2026+at+ISKM+Singapore&dates=20260430T103000Z/20260430T134500Z&details=Grand+celebration+with+Abhisheka,+Kirtana,+Cultural+Programme+%26+free+Prasadam.+Register:+https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&location=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065";
+    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Śrī+Nṛsiṁha+Caturdaśī+2026+at+ISKM+Singapore&dates=20260430T103000Z/20260430T140000Z&details=Grand+celebration+with+Abhisheka,+Kirtana,+Cultural+Programme+%26+free+Prasadam.+Register:+https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&location=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065";
     window.open(url, "_blank");
   };
 
