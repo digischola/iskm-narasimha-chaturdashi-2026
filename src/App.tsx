@@ -141,7 +141,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const [email, setEmail] = useState("");
   const [phoneCode, setPhoneCode] = useState("+65");
   const [phoneNum, setPhoneNum] = useState("");
-  const [attendees, setAttendees] = useState("2");
+  const [attendees, setAttendees] = useState("");
   const [nameValid, setNameValid] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
 
