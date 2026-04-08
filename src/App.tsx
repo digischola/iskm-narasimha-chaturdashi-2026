@@ -619,21 +619,6 @@ function KavachaSection() {
   );
 }
 
-/* ═══ VOLUNTEER ═══ */
-function Volunteer() {
-  return (
-    <div className="volunteer-banner animate-in" style={{ paddingBottom: "70px" }}>
-      <div className="volunteer-inner">
-        <div className="volunteer-img"><img src="/images/11.webp" alt="Young volunteers helping at ISKM" loading="lazy" decoding="async" width="600" height="300" /></div>
-        <div className="volunteer-text">
-          <h2>Serve &amp; Be Blessed</h2>
-          <p>Volunteer for decorations, prasādam distribution, guest welcome, and more. Experience the joy of selfless service.</p>
-          <a href="#register" className="btn-volunteer cta-glow btn-volunteer-navy"><i className="fas fa-hands-helping"></i> &nbsp;Register &amp; Volunteer</a>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ═══ FAQ ═══ */
 const FAQ_DATA = [
