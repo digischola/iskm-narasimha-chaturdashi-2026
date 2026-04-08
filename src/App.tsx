@@ -175,6 +175,10 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   };
 
   const completeRegistration = async (volunteer: boolean) => {
+    if (!isPhoneValid()) {
+      alert("Please enter a valid phone number (8–15 digits).");
+      return;
+    }
     setSubmitting(true);
     const numAtt = attendees === "5" ? 5 : parseInt(attendees);
 
