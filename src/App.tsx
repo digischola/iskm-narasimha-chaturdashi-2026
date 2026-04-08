@@ -361,15 +361,8 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 <option value="5">5+ People</option>
               </select>
             </div>
-            <div className="form-group">
-              <label>Would you like to volunteer?</label>
-              <select value={isVolunteer ? "yes" : "no"} onChange={(e) => setIsVolunteer(e.target.value === "yes")}>
-                <option value="no">No, just attending</option>
-                <option value="yes">Yes, I'd love to help!</option>
-              </select>
-            </div>
             <button type="submit" className="btn-register cta-glow btn-register-navy" disabled={submitting}>
-              {submitting ? "Submitting..." : isVolunteer ? "Next — Volunteer Details" : "Register Now — It's Free"}
+              {submitting ? "Submitting..." : "Register Now — It's Free"}
             </button>
             <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
           </form>
