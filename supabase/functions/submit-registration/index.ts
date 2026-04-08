@@ -71,8 +71,8 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (phoneMatch) {
-        return new Response(JSON.stringify({ error: "This phone number has already been registered" }), {
-          status: 409,
+        return new Response(JSON.stringify({ success: false, error: "This phone number has already been registered" }), {
+          status: 200,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
