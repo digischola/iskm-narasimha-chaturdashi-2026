@@ -141,7 +141,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const [email, setEmail] = useState("");
   const [phoneCode, setPhoneCode] = useState("+65");
   const [phoneNum, setPhoneNum] = useState("");
-  const [attendees, setAttendees] = useState("2");
+  const [attendees, setAttendees] = useState("");
   const [nameValid, setNameValid] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
 
@@ -352,8 +352,9 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
               </div>
             </div>
             <div className="form-group">
-              <label>Number of Attendees</label>
-              <select value={attendees} onChange={(e) => setAttendees(e.target.value)}>
+              <label>Number of Attendees *</label>
+              <select value={attendees} onChange={(e) => setAttendees(e.target.value)} required>
+                <option value="" disabled>Select number of attendees</option>
                 <option value="1">1 Person</option>
                 <option value="2">2 People</option>
                 <option value="3">3 People</option>
@@ -361,7 +362,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 <option value="5">5+ People</option>
               </select>
             </div>
-            <button type="submit" className="btn-register cta-glow btn-register-navy" disabled={submitting}>
+            <button type="submit" className="btn-register cta-glow btn-register-navy" disabled={submitting || !nameValid || !emailValid || !attendees || emailDupStatus === "duplicate" || phoneDupStatus === "duplicate" || (phoneNum !== "" && !isPhoneValid())}>
               {submitting ? "Submitting..." : "Register Now — It's Free"}
             </button>
             <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
