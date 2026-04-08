@@ -226,11 +226,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           email: email.trim(),
           phone: getFullPhone() || null,
           attendees: numAtt,
-          is_volunteer: volunteer,
-          age: age || null,
-          gender: gender || null,
-          remarks: remarks || null,
-          volunteer_categories: volunteer ? volCats : null,
+          is_volunteer: false,
         },
       });
 
