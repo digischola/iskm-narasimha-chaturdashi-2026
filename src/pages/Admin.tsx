@@ -205,7 +205,7 @@ export default function Admin() {
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={7} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>No registrations found</td></tr>
+                  <tr><td colSpan={5} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>No registrations found</td></tr>
                 )}
               </tbody>
             </table>
