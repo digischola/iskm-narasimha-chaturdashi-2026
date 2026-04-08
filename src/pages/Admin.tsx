@@ -136,7 +136,10 @@ export default function Admin() {
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--navy)", fontSize: "28px" }}>Registration Dashboard</h1>
-          <button onClick={handleLogout} style={{ background: "var(--cream-warm)", border: "1px solid #e5ded5", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", fontWeight: 600, color: "var(--navy)" }}>Sign Out</button>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <button onClick={handleDownloadCSV} style={{ background: "var(--navy)", color: "white", border: "none", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", fontWeight: 600, fontSize: "13px" }}>⬇ Download CSV</button>
+            <button onClick={handleLogout} style={{ background: "var(--cream-warm)", border: "1px solid #e5ded5", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", fontWeight: 600, color: "var(--navy)" }}>Sign Out</button>
+          </div>
         </div>
 
         {/* Stats cards */}
