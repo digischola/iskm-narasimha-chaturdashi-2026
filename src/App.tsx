@@ -109,7 +109,7 @@ function Hero({ spotsCount }: { spotsCount: number }) {
           <p className="hero-desc">Celebrate the divine appearance of Lord Nṛsiṁhadeva — an evening of grand Abhiṣeka, soul-stirring Kīrtana, cultural programme, and blessed Prasādam.</p>
           <div className="hero-meta">
             <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-calendar"></i></div><span>Thursday, 30th April 2026</span></div>
-            <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-clock"></i></div><span>6:30 PM – 9:45 PM</span></div>
+            <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-clock"></i></div><span>6:30 PM – 10:00 PM</span></div>
             <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-map-marker-alt"></i></div><span>No.9 Lorong 29 Geylang, #03-02</span></div>
           </div>
           {done ? (
@@ -195,7 +195,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
       const cats = volCats.join(", ") || "Not specified";
       msg = `Hare Kṛṣṇa! 🙏\n\nI've registered as a *volunteer* for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n*Volunteer Categories:* ${cats}\n\nI'm excited to serve! Please coordinate with me before the event.\n\nJai Śrī Nṛsiṁhadeva! 🦁`;
     } else {
-      msg = `Hare Kṛṣṇa! 🙏\n\nI've registered for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n\n📅 Thursday, 30th April 2026\n🕡 6:30 PM – 9:45 PM\n📍 No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nLooking forward to it!\nJai Śrī Nṛsiṁhadeva! 🦁`;
+      msg = `Hare Kṛṣṇa! 🙏\n\nI've registered for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n\n📅 Thursday, 30th April 2026\n🕡 6:30 PM – 10:00 PM\n📍 No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nLooking forward to it!\nJai Śrī Nṛsiṁhadeva! 🦁`;
     }
     setTimeout(() => window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`, "_blank"), 800);
   };
@@ -213,7 +213,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const stepCount = isVolunteer ? 2 : 1;
 
   if (success) {
-    const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Śrī Nṛsiṁha Caturdaśī 2026 – ISKM Singapore")}&dates=20260430T103000Z/20260430T134500Z&details=${encodeURIComponent("Grand Abhisheka, Kirtana, Cultural Programme & Prasādam\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://narasimha-caturdasi-2026.lovable.app")}&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
+    const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Śrī Nṛsiṁha Caturdaśī 2026 – ISKM Singapore")}&dates=20260430T103000Z/20260430T140000Z&details=${encodeURIComponent("Grand Abhisheka, Kirtana, Cultural Programme & Prasādam\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://narasimha-caturdasi-2026.lovable.app")}&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
     return (
       <div className="reg-section" id="register">
         <div className="reg-card">
