@@ -191,8 +191,6 @@ export default function Admin() {
                   <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Email</th>
                   <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Phone</th>
                   <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Attendees</th>
-                  <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Volunteer</th>
-                  <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Categories</th>
                   <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Date</th>
                 </tr>
               </thead>
