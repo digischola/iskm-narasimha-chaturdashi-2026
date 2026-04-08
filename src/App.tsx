@@ -606,7 +606,7 @@ function Volunteer() {
 const FAQ_DATA = [
   { q: "Is there parking available at the venue?", a: "Limited parking is available along Lorong 29 Geylang. We recommend using public transport — Aljunied MRT (EW9) and Paya Lebar MRT (CC9/EW9) are both within walking distance. Several bus services also stop nearby along Sims Avenue." },
   { q: "Is there a dress code?", a: "There is no strict dress code. We recommend modest, comfortable clothing. Traditional Indian attire is welcome but not required. Please remove shoes before entering the temple hall." },
-  { q: "Will food be provided?", a: "Yes! A sumptuous vegetarian prasādam feast will be served free of charge to all attendees at 8:45 PM. The food is sanctified, freshly prepared, and absolutely delicious." },
+  { q: "Will food be provided?", a: "Yes! A sumptuous vegetarian prasādam feast will be served free of charge to all attendees at 8:30 PM. The food is sanctified, freshly prepared, and absolutely delicious." },
   { q: "Can I bring my children?", a: "Absolutely! The celebration is family-friendly and suitable for all ages. Children will enjoy the cultural programme and prasādam. The atmosphere is welcoming and inclusive for families." },
   { q: "Do I need to register to attend?", a: "Registration is free and helps us plan for seating and prasādam. Walk-ins are welcome on a first-come, first-served basis, but we recommend registering in advance." },
   { q: "How long is the event?", a: "The programme runs from 6:30 PM to 10:00 PM (about 3.5 hours). You're welcome to arrive at any point and stay as long as you'd like." },
@@ -642,7 +642,7 @@ function Location() {
           <img src="/images/logo.webp" alt="ISKM" width="45" height="45" />
           <h3>International Sri Krishna Mandir</h3>
           <div className="loc-detail"><i className="fas fa-map-marker-alt"></i><span>No. 9 Lorong 29 Geylang, #03-02<br />Singapore 388065</span></div>
-          <div className="loc-detail"><i className="fas fa-clock"></i><span>Thursday, 30 April 2026<br />6:30 PM – 9:45 PM</span></div>
+          <div className="loc-detail"><i className="fas fa-clock"></i><span>Thursday, 30 April 2026<br /><div className="loc-detail"><i className="fas fa-clock"></i><span>Thursday, 30 April 2026<br />6:30 PM – 10:00 PM</span></div></span></div>
           <div className="loc-detail"><i className="fas fa-phone"></i><span>+(65) 6250 2280</span></div>
           <div className="loc-transport"><h4>Getting Here</h4>
             <p className="loc-transport-item"><i className="fas fa-train"></i> Aljunied MRT (EW9) or Paya Lebar MRT (CC9/EW9)</p>
