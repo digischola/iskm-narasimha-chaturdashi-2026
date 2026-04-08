@@ -366,37 +366,6 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
             </button>
             <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
           </form>
-        ) : (
-          <form onSubmit={handleStep2}>
-            <div className="form-row">
-              <div className="form-group"><label>Age *</label><input type="number" placeholder="Your age" required min={1} max={120} value={age} onChange={(e) => setAge(e.target.value)} /></div>
-              <div className="form-group">
-                <label>Gender *</label>
-                <select required value={gender} onChange={(e) => setGender(e.target.value)}>
-                  <option value="" disabled>Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="prefer-not">Prefer not to say</option>
-                </select>
-              </div>
-            </div>
-            <div className="form-group"><label>Remarks</label><textarea placeholder="If you are skilled in photography or videography, please let us know here" value={remarks} onChange={(e) => setRemarks(e.target.value)}></textarea></div>
-            <div className="form-group">
-              <label>Volunteering Categories</label>
-              <div className="vol-categories">
-                {VOLUNTEER_CATEGORIES.map((cat) => (
-                  <label key={cat} className="vol-cat-label">
-                    <input type="checkbox" checked={volCats.includes(cat)} onChange={() => toggleCat(cat)} /> {cat}
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div className="form-buttons">
-              <button type="button" className="btn-back" onClick={() => setStep(1)}><i className="fas fa-arrow-left"></i> Back</button>
-              <button type="submit" className="btn-register cta-glow" disabled={submitting}>{submitting ? "Submitting..." : "Submit Registration"}</button>
-            </div>
-          </form>
-        )}
       </div>
     </div>
   );
