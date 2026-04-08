@@ -156,7 +156,19 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const [volCats, setVolCats] = useState<string[]>([]);
 
   const handleNameChange = (v: string) => { setName(v); setNameValid(v.trim().length >= 2); };
-  const handleEmailChange = (v: string) => { setEmail(v); setEmailValid(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)); };
+  const handleEmailChange = (v: string) => { setEmail(v); setEmailValid(/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)); };
+
+  const stripPhoneFormatting = (v: string) => v.replace(/[\s\-().]/g, "");
+  const getFullPhone = () => {
+    const digits = stripPhoneFormatting(phoneNum);
+    return digits ? `${phoneCode}${digits}` : "";
+  };
+  const isPhoneValid = () => {
+    const digits = stripPhoneFormatting(phoneNum);
+    if (!digits) return true; // phone is optional
+    const total = stripPhoneFormatting(phoneCode).replace("+", "").length + digits.length;
+    return /^\d+$/.test(digits) && total >= 8 && total <= 15;
+  };
 
   const toggleCat = (cat: string) => {
     setVolCats((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]);
