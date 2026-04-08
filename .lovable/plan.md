@@ -1,23 +1,44 @@
 
 
-## Prevent duplicate registrations by email or phone
+## Plan: Remove Volunteer Section Entirely
 
-### Approach
-Add a duplicate check in the edge function before inserting. Query the `registrations` table for existing rows matching the submitted email OR phone number (if provided). Return a user-friendly error if a match is found. Also add a unique constraint on `email` at the database level as a safety net.
+### What's changing
+The client doesn't need volunteer functionality for this festival. We'll remove all volunteer-related UI, form fields, logic, and backend handling across the entire app.
 
 ### Changes
 
-**1. Database migration** — Add unique index on `email` column:
-```sql
-CREATE UNIQUE INDEX IF NOT EXISTS registrations_email_unique ON public.registrations (email);
-```
+**1. `src/App.tsx` — Registration Form**
+- Remove `VOLUNTEER_CATEGORIES` array
+- Remove state: `isVolunteer`, `volCats`
+- Remove the "Would you like to volunteer?" dropdown (lines 401-407)
+- Remove Step 2 entirely (the volunteer details form with age, gender, remarks, volunteer categories — lines 413-443)
+- Remove multi-step logic: no more `step` state, `stepCount`, step dots, `handleStep2`
+- Simplify `completeRegistration` — always pass `is_volunteer: false`, remove volunteer WhatsApp message branch
+- Remove `toggleCat` function
+- Simplify button text (no "Next — Volunteer Details" conditional)
 
-**2. Edge function (`supabase/functions/submit-registration/index.ts`)** — Add duplicate check before insert (after validation, before insert):
-- Query `registrations` table for rows where `email = $email` OR (phone is not null AND `phone = $phone`)
-- If match found on email → return 409 with message "This email has already been registered"
-- If match found on phone → return 409 with message "This phone number has already been registered"
+**2. `src/App.tsx` — Volunteer Component**
+- Delete the entire `Volunteer()` component (lines 697-711, the "Serve & Be Blessed" section)
+- Remove `<Volunteer />` from `LandingPage` render (line 853)
 
-**3. Frontend (`src/App.tsx`)** — Handle the 409 response in the form submission handler:
-- Parse the error message from the response
-- Display it in the existing error UI (toast or inline) instead of a generic failure message
+**3. `src/App.tsx` — Stats Component**
+- Change "50 Dedicated Volunteers" stat to something else relevant (e.g., "10+ Cultural Programmes" or remove that stat entry)
+
+**4. `src/pages/Admin.tsx` — Dashboard**
+- Remove "Volunteers" stat card
+- Remove "Volunteer" and "Categories" columns from the table
+- Remove those fields from CSV export headers/data
+- Remove `volunteerCount` calculation
+- Remove `is_volunteer` and `volunteer_categories` from the Registration interface (keep in type but ignore)
+
+**5. `supabase/functions/submit-registration/index.ts` — Edge Function**
+- Remove `is_volunteer` and `volunteer_categories` parsing
+- Stop inserting those fields (they'll default to `false` and `null` in the DB, so no migration needed)
+
+**6. CSS cleanup**
+- Volunteer-related CSS classes (`.volunteer-banner`, `.volunteer-inner`, etc.) can be left as dead code or cleaned up
+
+### What stays
+- The database columns remain (no migration needed — they have defaults). Existing data is preserved.
+- The edge function still accepts these fields silently if sent, but the UI won't send them.
 
