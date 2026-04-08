@@ -642,7 +642,7 @@ function Location() {
           <img src="/images/logo.webp" alt="ISKM" width="45" height="45" />
           <h3>International Sri Krishna Mandir</h3>
           <div className="loc-detail"><i className="fas fa-map-marker-alt"></i><span>No. 9 Lorong 29 Geylang, #03-02<br />Singapore 388065</span></div>
-          <div className="loc-detail"><i className="fas fa-clock"></i><span>Thursday, 30 April 2026<br />6:30 PM – 9:45 PM</span></div>
+          <div className="loc-detail"><i className="fas fa-clock"></i><span>Thursday, 30 April 2026<br /><div className="loc-detail"><i className="fas fa-clock"></i><span>Thursday, 30 April 2026<br />6:30 PM – 10:00 PM</span></div></span></div>
           <div className="loc-detail"><i className="fas fa-phone"></i><span>+(65) 6250 2280</span></div>
           <div className="loc-transport"><h4>Getting Here</h4>
             <p className="loc-transport-item"><i className="fas fa-train"></i> Aljunied MRT (EW9) or Paya Lebar MRT (CC9/EW9)</p>
