@@ -344,14 +344,18 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
               <div className="form-group">
                 <label>Email *</label>
                 <div className="input-wrap">
-                  <input type="email" placeholder="you@email.com" required value={email} onChange={(e) => handleEmailChange(e.target.value)} className={emailValid ? "input-valid" : ""} />
-                  {emailValid && <i className="fas fa-check check-inline"></i>}
+                  <input type="email" placeholder="you@email.com" required value={email} onChange={(e) => handleEmailChange(e.target.value)} onBlur={checkEmailDuplicate} className={emailValid && emailDupStatus !== "duplicate" ? "input-valid" : emailDupStatus === "duplicate" ? "input-error" : ""} />
+                  {emailDupStatus === "checking" && <i className="fas fa-spinner fa-spin check-inline" style={{ color: "#999" }}></i>}
+                  {emailDupStatus === "ok" && <i className="fas fa-check check-inline" style={{ color: "#27ae60" }}></i>}
+                  {emailDupStatus === "duplicate" && <i className="fas fa-times check-inline" style={{ color: "#e74c3c" }}></i>}
+                  {emailValid && emailDupStatus === "idle" && <i className="fas fa-check check-inline"></i>}
                 </div>
+                {emailDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: "0.8rem", marginTop: "0.25rem" }}>This email is already registered</span>}
               </div>
               <div className="form-group">
                 <label>Phone</label>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <select value={phoneCode} onChange={(e) => setPhoneCode(e.target.value)} style={{ width: "90px", flexShrink: 0 }}>
+                  <select value={phoneCode} onChange={(e) => { setPhoneCode(e.target.value); setPhoneDupStatus("idle"); }} style={{ width: "90px", flexShrink: 0 }}>
                     <option value="+65">+65</option>
                     <option value="+91">+91</option>
                     <option value="+60">+60</option>
@@ -365,9 +369,15 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                     <option value="+82">+82</option>
                     <option value="+86">+86</option>
                   </select>
-                  <input type="tel" placeholder="XXXX XXXX" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} style={{ flex: 1 }} className={phoneNum && !isPhoneValid() ? "input-error" : ""} />
+                  <div className="input-wrap" style={{ flex: 1 }}>
+                    <input type="tel" placeholder="XXXX XXXX" value={phoneNum} onChange={(e) => handlePhoneChange(e.target.value)} onBlur={checkPhoneDuplicate} className={phoneNum && !isPhoneValid() ? "input-error" : phoneDupStatus === "duplicate" ? "input-error" : phoneNum && isPhoneValid() && phoneDupStatus === "ok" ? "input-valid" : ""} />
+                    {phoneDupStatus === "checking" && <i className="fas fa-spinner fa-spin check-inline" style={{ color: "#999" }}></i>}
+                    {phoneDupStatus === "ok" && <i className="fas fa-check check-inline" style={{ color: "#27ae60" }}></i>}
+                    {phoneDupStatus === "duplicate" && <i className="fas fa-times check-inline" style={{ color: "#e74c3c" }}></i>}
+                  </div>
                 </div>
                 {phoneNum && !isPhoneValid() && <span style={{ color: "#e74c3c", fontSize: "0.8rem", marginTop: "0.25rem" }}>Enter 8–15 digits</span>}
+                {phoneDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: "0.8rem", marginTop: "0.25rem" }}>This phone number is already registered</span>}
               </div>
             </div>
             <div className="form-group">
