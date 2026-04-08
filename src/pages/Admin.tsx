@@ -201,8 +201,6 @@ export default function Admin() {
                     <td style={{ padding: "10px 8px" }}>{r.email}</td>
                     <td style={{ padding: "10px 8px" }}>{r.phone || "—"}</td>
                     <td style={{ padding: "10px 8px" }}>{r.attendees}</td>
-                    <td style={{ padding: "10px 8px" }}>{r.is_volunteer ? "✅" : "—"}</td>
-                    <td style={{ padding: "10px 8px", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis" }}>{r.volunteer_categories?.join(", ") || "—"}</td>
                     <td style={{ padding: "10px 8px", whiteSpace: "nowrap" }}>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</td>
                   </tr>
                 ))}
