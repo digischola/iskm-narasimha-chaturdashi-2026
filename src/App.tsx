@@ -122,7 +122,7 @@ function Hero({ spotsCount }: { spotsCount: number }) {
               <div className="cd-pill"><div className={`num${digitChange ? " digit-change" : ""}`}>{s}</div><div className="lbl">Secs</div></div>
             </div>
           )}
-          <p className="hero-spots"><strong><span>{spotsCount}</span> people</strong> have registered so far</p>
+          <p className="hero-spots"><strong>100+ people</strong> already registered</p>
         </div>
         <div className="hero-painting" ref={parallaxRef}>
           <img src="/images/hero-image.webp" alt="Lord Śrī Nṛsiṁhadeva with Prahlāda Mahārāja" width="680" height="850" fetchPriority="high" decoding="async" />
