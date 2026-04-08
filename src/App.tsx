@@ -133,10 +133,6 @@ function Hero({ spotsCount }: { spotsCount: number }) {
 }
 
 /* ═══ REGISTRATION FORM ═══ */
-const VOLUNTEER_CATEGORIES = [
-  "Cutting vegetables", "Washing dishes", "Sweeping & mopping", "Decorating temple hall",
-  "Setting up crew", "Packing up crew", "Temple cleaning", "Photography and Videography",
-];
 
 function RegistrationForm({ onRegister }: { onRegister: (count: number) => void }) {
   const [step, setStep] = useState(1);
