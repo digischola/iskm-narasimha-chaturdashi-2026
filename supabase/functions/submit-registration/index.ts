@@ -40,6 +40,36 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    // Check for duplicate email
+    const { data: emailMatch } = await supabase
+      .from("registrations")
+      .select("id")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (emailMatch) {
+      return new Response(JSON.stringify({ error: "This email has already been registered" }), {
+        status: 409,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Check for duplicate phone (if provided)
+    if (phone) {
+      const { data: phoneMatch } = await supabase
+        .from("registrations")
+        .select("id")
+        .eq("phone", phone)
+        .maybeSingle();
+
+      if (phoneMatch) {
+        return new Response(JSON.stringify({ error: "This phone number has already been registered" }), {
+          status: 409,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const { error } = await supabase.from("registrations").insert({
       name,
       email,

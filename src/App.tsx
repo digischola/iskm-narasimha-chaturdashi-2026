@@ -167,7 +167,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
 
     // Save to backend
     try {
-      await supabase.functions.invoke("submit-registration", {
+      const { data, error: fnError } = await supabase.functions.invoke("submit-registration", {
         body: {
           name: name.trim(),
           email: email.trim(),
@@ -180,8 +180,19 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           volunteer_categories: volunteer ? volCats : null,
         },
       });
+
+      // supabase.functions.invoke returns non-2xx body in data when there's an error status
+      if (fnError || (data && data.error)) {
+        const msg = data?.error || "Registration failed. Please try again.";
+        alert(msg);
+        setSubmitting(false);
+        return;
+      }
     } catch (err) {
       console.error("Registration save error:", err);
+      alert("Registration failed. Please try again.");
+      setSubmitting(false);
+      return;
     }
 
     onRegister(numAtt);
