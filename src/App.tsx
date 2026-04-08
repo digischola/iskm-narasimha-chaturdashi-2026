@@ -213,6 +213,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   const stepCount = isVolunteer ? 2 : 1;
 
   if (success) {
+    const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Śrī Nṛsiṁha Caturdaśī 2026 – ISKM Singapore")}&dates=20260430T103000Z/20260430T134500Z&details=${encodeURIComponent("Grand Abhisheka, Kirtana, Cultural Programme & Prasādam\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://narasimha-caturdasi-2026.lovable.app")}&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
     return (
       <div className="reg-section" id="register">
         <div className="reg-card">
@@ -232,6 +233,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
             <div className="check-icon"><i className="fas fa-check"></i></div>
             <h3>You're Registered!</h3>
             <p>We've saved your spot for Śrī Nṛsiṁha Caturdaśī 2026. A WhatsApp message is being opened so you can confirm directly with the temple.</p>
+            <a href={calendarUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginTop: "20px", padding: "12px 24px", background: "var(--navy)", color: "white", borderRadius: "8px", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "opacity 0.2s" }} onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={e => (e.currentTarget.style.opacity = "1")}><i className="fas fa-calendar-plus"></i> Add to Google Calendar</a>
           </div>
         </div>
       </div>
