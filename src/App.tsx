@@ -352,8 +352,9 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
               </div>
             </div>
             <div className="form-group">
-              <label>Number of Attendees</label>
-              <select value={attendees} onChange={(e) => setAttendees(e.target.value)}>
+              <label>Number of Attendees *</label>
+              <select value={attendees} onChange={(e) => setAttendees(e.target.value)} required>
+                <option value="" disabled>Select number of attendees</option>
                 <option value="1">1 Person</option>
                 <option value="2">2 People</option>
                 <option value="3">3 People</option>
