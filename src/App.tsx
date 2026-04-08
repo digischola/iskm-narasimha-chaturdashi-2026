@@ -109,7 +109,7 @@ function Hero({ spotsCount }: { spotsCount: number }) {
           <p className="hero-desc">Celebrate the divine appearance of Lord Nṛsiṁhadeva — an evening of grand Abhiṣeka, soul-stirring Kīrtana, cultural programme, and blessed Prasādam.</p>
           <div className="hero-meta">
             <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-calendar"></i></div><span>Thursday, 30th April 2026</span></div>
-            <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-clock"></i></div><span>6:30 PM – 9:45 PM</span></div>
+            <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-clock"></i></div><span>6:30 PM – 10:00 PM</span></div>
             <div className="hero-meta-item"><div className="icon-circle"><i className="fas fa-map-marker-alt"></i></div><span>No.9 Lorong 29 Geylang, #03-02</span></div>
           </div>
           {done ? (
