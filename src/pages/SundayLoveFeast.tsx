@@ -69,7 +69,7 @@ export default function SundayLoveFeast() {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [showOccasion, setShowOccasion] = useState(false);
+  
   const [regCounter, setRegCounter] = useState(187);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(true);
   const [activeGalleryDot, setActiveGalleryDot] = useState(0);
@@ -383,29 +383,6 @@ export default function SundayLoveFeast() {
                 </div>
               </div>
 
-              <div className="toggle-row">
-                <span>Celebrating a special occasion?</span>
-                <label className="toggle-switch">
-                  <input type="checkbox" checked={showOccasion} onChange={e => setShowOccasion(e.target.checked)} />
-                  <span className="toggle-slider" />
-                </label>
-              </div>
-              <div className={`occasion-field${showOccasion ? " show" : ""}`}>
-                <div className="form-row two-col">
-                  <div className="form-group">
-                    <label>Occasion</label>
-                    <select>
-                      <option>Birthday</option>
-                      <option>Anniversary</option>
-                      <option>In Memory of Loved One</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Preferred Date</label>
-                    <input type="date" />
-                  </div>
-                </div>
               </div>
 
               <button type="submit" className="btn-register">Register Now — It's Free</button>
