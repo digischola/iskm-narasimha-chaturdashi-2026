@@ -143,6 +143,36 @@ export type Database = {
         }
         Relationships: []
       }
+      slf_registrations: {
+        Row: {
+          attendees: number
+          created_at: string
+          email: string
+          first_time: boolean
+          id: string
+          name: string
+          phone: string | null
+        }
+        Insert: {
+          attendees?: number
+          created_at?: string
+          email: string
+          first_time?: boolean
+          id?: string
+          name: string
+          phone?: string | null
+        }
+        Update: {
+          attendees?: number
+          created_at?: string
+          email?: string
+          first_time?: boolean
+          id?: string
+          name?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
