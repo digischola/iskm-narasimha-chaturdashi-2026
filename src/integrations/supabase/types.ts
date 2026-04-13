@@ -105,6 +105,7 @@ export type Database = {
         Row: {
           age: string | null
           attendees: number
+          confirmation_sent: boolean
           created_at: string
           email: string
           gender: string | null
@@ -113,11 +114,13 @@ export type Database = {
           name: string
           phone: string | null
           remarks: string | null
+          reminder_sent: boolean
           volunteer_categories: string[] | null
         }
         Insert: {
           age?: string | null
           attendees?: number
+          confirmation_sent?: boolean
           created_at?: string
           email: string
           gender?: string | null
@@ -126,11 +129,13 @@ export type Database = {
           name: string
           phone?: string | null
           remarks?: string | null
+          reminder_sent?: boolean
           volunteer_categories?: string[] | null
         }
         Update: {
           age?: string | null
           attendees?: number
+          confirmation_sent?: boolean
           created_at?: string
           email?: string
           gender?: string | null
@@ -139,6 +144,7 @@ export type Database = {
           name?: string
           phone?: string | null
           remarks?: string | null
+          reminder_sent?: boolean
           volunteer_categories?: string[] | null
         }
         Relationships: []

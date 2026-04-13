@@ -27,7 +27,6 @@ Deno.serve(async (req) => {
 
     const attendees = Math.min(Math.max(parseInt(body.attendees) || 1, 1), 20);
     const rawPhone = typeof body.phone === "string" ? body.phone.trim().slice(0, 30) : null;
-    // Validate phone: must be + followed by 8-15 digits
     const phone = rawPhone && /^\+\d{8,15}$/.test(rawPhone.replace(/[\s\-().]/g, "")) ? rawPhone.replace(/[\s\-().]/g, "") : (rawPhone ? null : null);
     if (rawPhone && !phone) {
       return new Response(JSON.stringify({ error: "Invalid phone number format" }), {
@@ -36,10 +35,9 @@ Deno.serve(async (req) => {
       });
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Check for duplicate email
     const { data: emailMatch } = await supabase
@@ -71,7 +69,11 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Generate registration ID for tracking
+    const registrationId = crypto.randomUUID();
+
     const { error } = await supabase.from("registrations").insert({
+      id: registrationId,
       name,
       email,
       phone,
@@ -84,6 +86,20 @@ Deno.serve(async (req) => {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Trigger confirmation email (fire and forget)
+    try {
+      await supabase.functions.invoke("send-nc-confirmation", {
+        body: {
+          registration_id: registrationId,
+          name,
+          email,
+        },
+      });
+    } catch (emailErr) {
+      console.error("Failed to trigger confirmation email:", emailErr);
+      // Don't fail the registration if email fails
     }
 
     return new Response(JSON.stringify({ success: true }), {
