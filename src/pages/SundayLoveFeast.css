@@ -481,6 +481,8 @@
 
 /* ═══ GALLERY ═══ */
 .slf .gallery-section { background: var(--white); }
+.slf .gallery-carousel { display: none; }
+.slf .gallery-dots { display: none; }
 .slf .gallery-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
