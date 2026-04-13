@@ -383,7 +383,7 @@ export default function SundayLoveFeast() {
                 </div>
               </div>
 
-              </div>
+
 
               <button type="submit" className="btn-register">Register Now — It's Free</button>
             </form>
