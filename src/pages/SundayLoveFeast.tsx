@@ -28,22 +28,30 @@ function formatNextSunday(): string {
 
 const IMG = "/images/sunday-love-feast";
 
-const GALLERY_IMAGES = [
-  { src: `${IMG}/8-community-circle-dancing-joyful.jpg`, alt: "Community dancing at Love Feast", tall: true },
-  { src: `${IMG}/9-kirtan-leader-singing-mridanga.jpg`, alt: "Kirtan session" },
-  { src: `${IMG}/8-prasadam-plates-closeup-food.jpg`, alt: "Prasadam feast" },
-  { src: `${IMG}/8-father-child-clapping-family.jpg`, alt: "Family at Love Feast" },
-  { src: `${IMG}/7-women-dancing-clapping.jpg`, alt: "Devotees dancing" },
-  { src: `${IMG}/9-jagannath-deities-food-offerings-flowers.jpg`, alt: "Deities with offerings", tall: true },
-  { src: `${IMG}/8-buffet-serving-line-prasadam.jpg`, alt: "Prasadam serving line" },
-  { src: `${IMG}/8-woman-smiling-flowers-vibrant.jpg`, alt: "Devotee with flowers" },
+const GALLERY_ROW1 = [
+  { src: `${IMG}/5-individual-person-chatting.webp`, alt: "Person chatting at Love Feast" },
+  { src: `${IMG}/6-ladle-pouring-sauce-closeup.webp`, alt: "Ladle pouring sauce" },
+  { src: `${IMG}/6-women-merchandise-table.webp`, alt: "Women at merchandise table" },
+  { src: `${IMG}/7-cupcakes-muffins-baked-closeup.webp`, alt: "Cupcakes and muffins" },
+  { src: `${IMG}/7-men-clapping-chanting-engaged.webp`, alt: "Men chanting" },
+  { src: `${IMG}/7-prasadam-serving-line-multiple.webp`, alt: "Prasadam serving line" },
+  { src: `${IMG}/7-volunteers-posing-food-trays.webp`, alt: "Volunteers with food trays" },
+];
+const GALLERY_ROW2 = [
+  { src: `${IMG}/8-devotee-mridanga-kirtan-group.webp`, alt: "Kirtan group" },
+  { src: `${IMG}/8-father-son-matching-yellow-shirts.webp`, alt: "Father and son" },
+  { src: `${IMG}/8-man-smiling-holding-prasadam-plate.webp`, alt: "Man with prasadam plate" },
+  { src: `${IMG}/8-woman-smiling-flowers-vibrant.webp`, alt: "Woman with flowers" },
+  { src: `${IMG}/9-congregation-seated-temple-hall-wide.webp`, alt: "Congregation in temple hall" },
+  { src: `${IMG}/9-jagannath-deities-food-offerings-flowers.webp`, alt: "Jagannath deities with offerings" },
+  { src: `${IMG}/9-radha-krishna-deities-flower-decoration.webp`, alt: "Radha Krishna deities" },
 ];
 
 const SCHEDULE = [
-  { time: "5:00 PM", title: "Bhajan", desc: "Begin the evening with melodious devotional songs that calm the mind and uplift the spirit.", img: `${IMG}/9-kirtan-leader-singing-mridanga.jpg`, alt: "Bhajan session at Sunday Love Feast" },
-  { time: "5:30 PM", title: "Bhagavad Gita Class", desc: "Adults explore timeless wisdom from the Gita, while children enjoy their own engaging class.", img: `${IMG}/9-bhagavad-gita-class-temple-hall.jpg`, alt: "Bhagavad Gita Class at ISKM" },
-  { time: "6:30 PM", title: "Arati & Kirtan", desc: "Experience the ecstasy of congregational chanting and the beautiful Arati ceremony.", img: `${IMG}/9-radha-krishna-deities-flower-decoration.jpg`, alt: "Arati & Kirtan ceremony" },
-  { time: "7:15 PM", title: "Prasadam Feast", desc: "Relish a delicious vegetarian feast lovingly prepared and offered to Lord Krishna.", img: `${IMG}/8-prasadam-plates-closeup-food.jpg`, alt: "Prasadam feast plates" },
+  { time: "5:00 PM", title: "Bhajan", desc: "Begin the evening with melodious devotional songs that calm the mind and uplift the spirit.", img: `${IMG}/9-kirtan-leader-singing-mridanga.webp`, alt: "Bhajan session at Sunday Love Feast" },
+  { time: "5:30 PM", title: "Bhagavad Gita Class", desc: "Adults explore timeless wisdom from the Gita, while children enjoy their own engaging class.", img: `${IMG}/9-bhagavad-gita-class-temple-hall.webp`, alt: "Bhagavad Gita Class at ISKM" },
+  { time: "6:30 PM", title: "Arati & Kirtan", desc: "Experience the ecstasy of congregational chanting and the beautiful Arati ceremony.", img: `${IMG}/9-radha-krishna-deities-flower-decoration.webp`, alt: "Arati & Kirtan ceremony" },
+  { time: "7:15 PM", title: "Prasadam Feast", desc: "Relish a delicious vegetarian feast lovingly prepared and offered to Lord Krishna.", img: `${IMG}/8-prasadam-plates-closeup-food.webp`, alt: "Prasadam feast plates" },
 ];
 
 const FAQS = [
