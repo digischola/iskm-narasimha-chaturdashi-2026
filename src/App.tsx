@@ -669,7 +669,7 @@ function Location() {
     <div className="section" id="location">
       <div className="sec-header animate-in"><div className="overline">Venue</div><h2>How to Get Here</h2><div className="divider"></div></div>
       <div className="location-wrap animate-in">
-        <div className="loc-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7843!2d103.8873!3d1.3137!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMcKwMTgnNDkuMyJOIDEwM8KwNTMnMTQuMyJF!5e0!3m2!1sen!2ssg!4v1" allowFullScreen loading="lazy" title="ISKM Singapore Map"></iframe></div>
+        <div className="loc-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7843!2d103.8807558!3d1.3146362!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da183c80ceaac5%3A0x458ccd4e57b8697b!2sInternational%20Sri%20Krishna%20Mandir%20(ISKM)!5e0!3m2!1sen!2ssg!4v1" allowFullScreen loading="lazy" title="ISKM Singapore Map"></iframe></div>
         <div className="loc-info">
           <img src="/images/logo.webp" alt="ISKM" width="45" height="45" />
           <h3>International Sri Krishna Mandir</h3>
@@ -680,7 +680,7 @@ function Location() {
             <p className="loc-transport-item"><i className="fas fa-train"></i> Aljunied MRT (EW9) or Paya Lebar MRT (CC9/EW9)</p>
             <p className="loc-transport-item"><i className="fas fa-bus"></i> Bus 2, 13, 21, 26, 40, 51, 67 — Sims Ave (B10)</p>
           </div>
-          <a href="https://maps.google.com/?q=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065" target="_blank" rel="noopener noreferrer" className="directions-btn"><i className="fas fa-directions"></i> Get Directions</a>
+          <a href="https://www.google.com/maps/place/International+Sri+Krishna+Mandir+(ISKM)/@1.3146362,103.8807558,17z/data=!3m1!5s0x31da183c7fd36ed1:0x5a6dd216c71b14b1!4m6!3m5!1s0x31da183c80ceaac5:0x458ccd4e57b8697b!8m2!3d1.3146362!4d103.8856267!16s%2Fg%2F1tf33gsl" target="_blank" rel="noopener noreferrer" className="directions-btn"><i className="fas fa-directions"></i> Get Directions</a>
         </div>
       </div>
     </div>
