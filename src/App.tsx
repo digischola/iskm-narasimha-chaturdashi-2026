@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef, lazy, Suspense } from "react";
+import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -248,6 +249,16 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
       setSubmitting(false);
       return;
     }
+
+    // Track Lead event
+    const eid = genEventId();
+    trackPixelEvent("Lead", {}, eid);
+    trackCapiEvent({
+      eventName: "Lead",
+      eventId: eid,
+      userEmail: email.trim(),
+      userPhone: getFullPhone() || undefined,
+    });
 
     onRegister(numAtt);
     setSuccess(true);
@@ -744,6 +755,11 @@ function LandingPage() {
   const { progress, scrolled } = useScrollProgress();
   const [spotsCount, setSpotsCount] = useState(84);
   useAnimateOnScroll();
+
+  // Fire ViewContent pixel event on mount
+  useEffect(() => {
+    trackPixelEvent("ViewContent", { content_name: "Nrsimha Caturdasi 2026" });
+  }, []);
 
   const handleRegister = (count: number) => {
     setSpotsCount((prev) => prev + count);

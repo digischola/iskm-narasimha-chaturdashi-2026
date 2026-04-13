@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
 import "./SundayLoveFeast.css";
 
 /* ═══════════════════════════════════════
@@ -182,6 +183,11 @@ export default function SundayLoveFeast() {
   }, []);
 
   // Fetch real registration count
+  // Fire ViewContent pixel on mount
+  useEffect(() => {
+    trackPixelEvent("ViewContent", { content_name: "Sunday Love Feast" });
+  }, []);
+
   useEffect(() => {
     const fetchCount = async () => {
       const { count } = await supabase
@@ -264,6 +270,16 @@ export default function SundayLoveFeast() {
       if (data?.error) {
         setFormError(data.error);
       } else if (data?.success) {
+        // Track Lead event
+        const eid = genEventId();
+        trackPixelEvent("Lead", {}, eid);
+        trackCapiEvent({
+          eventName: "Lead",
+          eventId: eid,
+          userEmail: formEmail.trim(),
+          userPhone: formPhone || undefined,
+        });
+
         setFormSuccess(true);
         if (data.count) setRegCounter(data.count);
       } else {
