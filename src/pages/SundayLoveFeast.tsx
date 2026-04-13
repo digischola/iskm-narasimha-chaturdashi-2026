@@ -389,27 +389,35 @@ export default function SundayLoveFeast() {
               <h2>Reserve Your Seat This Sunday</h2>
               <p className="form-desc">Fill in below so we can prepare enough Prasadam for everyone</p>
             </div>
-            <form onSubmit={e => e.preventDefault()}>
+            {formSuccess ? (
+              <div className="text-center" style={{ padding: "40px 0" }}>
+                <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+                <h3 style={{ color: "var(--navy)", marginBottom: 8 }}>You're Registered!</h3>
+                <p style={{ color: "var(--text-muted)", maxWidth: 360, margin: "0 auto" }}>We look forward to seeing you this Sunday. Walk in with a smile — Prasadam awaits!</p>
+              </div>
+            ) : (
+            <form onSubmit={handleFormSubmit}>
+              {formError && <p style={{ color: "var(--red, #c0392b)", fontSize: 13, textAlign: "center", marginBottom: 12 }}>{formError}</p>}
               <div className="form-row">
                 <div className="form-group">
                   <label>Full Name <span className="req">*</span></label>
-                  <input type="text" placeholder="Your full name" required />
+                  <input type="text" placeholder="Your full name" required value={formName} onChange={e => setFormName(e.target.value)} />
                 </div>
               </div>
               <div className="form-row two-col">
                 <div className="form-group">
                   <label>Email <span className="req">*</span></label>
-                  <input type="email" placeholder="you@email.com" required />
+                  <input type="email" placeholder="you@email.com" required value={formEmail} onChange={e => setFormEmail(e.target.value)} />
                 </div>
                 <div className="form-group">
                   <label>Phone</label>
-                  <input type="tel" placeholder="+65 XXXX XXXX" />
+                  <input type="tel" placeholder="+65 XXXX XXXX" value={formPhone} onChange={e => setFormPhone(e.target.value)} />
                 </div>
               </div>
               <div className="form-row two-col">
                 <div className="form-group">
                   <label>Number of Attendees</label>
-                  <select defaultValue="2">
+                  <select value={formAttendees} onChange={e => setFormAttendees(e.target.value)}>
                     <option value="1">1 Person</option>
                     <option value="2">2 People</option>
                     <option value="3">3 People</option>
@@ -420,17 +428,18 @@ export default function SundayLoveFeast() {
                 </div>
                 <div className="form-group">
                   <label>First time visiting?</label>
-                  <select defaultValue="no">
+                  <select value={formFirstTime} onChange={e => setFormFirstTime(e.target.value)}>
                     <option value="no">No, I've been before</option>
                     <option value="yes">Yes, first time!</option>
                   </select>
                 </div>
               </div>
 
-
-
-              <button type="submit" className="btn-register">Register Now — It's Free</button>
+              <button type="submit" className="btn-register" disabled={formSubmitting}>
+                {formSubmitting ? "Registering..." : "Register Now — It's Free"}
+              </button>
             </form>
+            )}
 
             <div className="form-trust">
               <span className="form-trust-item"><i className="fas fa-check-circle" /> No payment required</span>
