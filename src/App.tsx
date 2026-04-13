@@ -1,6 +1,8 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+
+const SundayLoveFeast = lazy(() => import("@/pages/SundayLoveFeast"));
 
 
 /* ═══ HOOKS ═══ */
@@ -781,6 +783,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/nrsimha-caturdasi-2026" element={<LandingPage />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/sunday-love-feast" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><SundayLoveFeast /></Suspense>} />
       </Routes>
     </BrowserRouter>
   );
