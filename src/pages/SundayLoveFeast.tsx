@@ -82,7 +82,7 @@ export default function SundayLoveFeast() {
   
   const [regCounter, setRegCounter] = useState(0);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(true);
-  const [activeGalleryDot, setActiveGalleryDot] = useState(0);
+  
 
   // Form state
   const [formName, setFormName] = useState("");
@@ -101,7 +101,7 @@ export default function SundayLoveFeast() {
   const particlesRef = useRef<HTMLDivElement>(null);
   const registerRef = useRef<HTMLElement>(null);
   const faqRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  
 
   // Countdown timer
   useEffect(() => {
