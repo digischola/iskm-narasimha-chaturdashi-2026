@@ -76,8 +76,7 @@ export default function SundayLoveFeast() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null); // kept for potential future use
-  const [lightboxAlt, setLightboxAlt] = useState("");
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   
