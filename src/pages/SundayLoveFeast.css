@@ -36,7 +36,13 @@
   position: relative;
 }
 .slf *, .slf *::before, .slf *::after { margin: 0; padding: 0; box-sizing: border-box; }
-/* Override global !important styles from index.css */
+
+/* ═══ GLOBAL OVERRIDES — neutralize index.css bleeding ═══ */
+.slf .section {
+  max-width: none !important;
+  padding: 80px 0 !important;
+  margin: 0 !important;
+}
 .slf .nav-cta {
   background: var(--pink) !important;
   color: var(--navy) !important;
@@ -415,7 +421,7 @@
 }
 .slf .experience-section::before {
   content: ''; position: absolute; inset: 0;
-  background: url('/images/community-family.jpg') center/cover no-repeat;
+  background: url('/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.jpg') center/cover no-repeat;
   opacity: .08;
 }
 .slf .experience-content { position: relative; z-index: 1; }
@@ -554,7 +560,7 @@
 }
 .slf .final-cta::before {
   content: ''; position: absolute; inset: 0;
-  background: url('/images/community-family.jpg') center/cover no-repeat;
+  background: url('/images/sunday-love-feast/8-community-circle-dancing-joyful.jpg') center/cover no-repeat;
   opacity: .1;
 }
 .slf .final-cta .container { position: relative; z-index: 1; }
