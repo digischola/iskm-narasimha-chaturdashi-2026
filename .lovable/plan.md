@@ -1,37 +1,52 @@
-## Plan: Mobile Content Sizing + Gallery Carousel
 
-### Problem Summary
 
-1. **Oversized mobile elements** — Nav brand name, "Register Free" button, and other header elements are too large for 390px viewport
-2. **Gallery on mobile** — Current masonry grid causes excessive scroll and poor image framing; switching to a horizontal swipeable carousel
+## Plan: Sunday Love Feast Backend Integration + Admin Dashboard
 
-### Changes
+### What We're Building
 
-#### 1. Mobile typography & sizing downsizing (SundayLoveFeast.css)
+1. **New database table** (`slf_registrations`) dedicated to Sunday Love Feast registrations, separate from the Nrsimha Caturdasi `registrations` table
+2. **New edge function** (`submit-slf-registration`) to handle Sunday Love Feast form submissions with validation, duplicate checks, and "first time visiting" field
+3. **Wire up the Sunday Love Feast form** to the backend — add form state, validation, duplicate checking, submission logic, and success screen
+4. **Admin dashboard update** — add a tab/toggle on `/admin` so admins can switch between "Nrsimha Caturdasi" and "Sunday Love Feast" registrations, with stats, chart, search, and CSV download for each program
 
-In the `@media (max-width: 900px)` and `@media (max-width: 600px)` breakpoints:
+### Database Changes
 
-- **Nav brand**: Reduce font-size from 18px → 14px
-- **Nav CTA button** ("Register Free"): Reduce padding and font-size (13px → 11px, padding 8px 22px → 6px 14px)
-- **Ribbon**: Already 12px — fine
-- **Section titles**: Reduce `section-title` font-size on mobile (e.g. clamp down to ~1.4rem)
-- **Section subtitles/badges**: Slightly smaller on mobile
-- **Schedule card text, sponsor cards, FAQ question text**: Audit and reduce by ~1px each where too large
-- **Hero h1**: Already responsive via clamp — verify it's not too big at 390px (currently 2rem at 600px, 1.7rem at 380px — reasonable)
+**New table: `slf_registrations`**
+- `id` (uuid, PK, default gen_random_uuid())
+- `name` (text, NOT NULL)
+- `email` (text, NOT NULL)
+- `phone` (text, nullable)
+- `attendees` (integer, NOT NULL, default 1)
+- `first_time` (boolean, NOT NULL, default false)
+- `created_at` (timestamptz, NOT NULL, default now())
 
-#### 2. Gallery → Horizontal Carousel (SundayLoveFeast.tsx + .css)
+**RLS policies:**
+- INSERT: allow `anon` and `authenticated` (public registration)
+- SELECT: only authenticated users with admin role
 
-Replace the masonry grid gallery with a touch-swipeable horizontal carousel:
+### Edge Functions
 
-- **Layout**: Single row of images, horizontally scrollable with `overflow-x: auto`, `scroll-snap-type: x mandatory`
-- **Each image**: Fixed aspect ratio (3:4), rounded corners, ~280px wide on mobile, scroll-snap-align: center, auto scroll 4 second
-- **Navigation**: CSS-only scroll with optional dot indicators showing position
-- **Desktop (>900px)**: Keep existing masonry grid layout — carousel only applies on mobile
-- **Lightbox**: Still opens on tap
+**`submit-slf-registration`** — validates name/email/phone/attendees, checks email duplicates against `slf_registrations`, inserts row. Reuses the same pattern as the existing `submit-registration` function.
 
-**Implementation approach**: Pure CSS scroll-snap (no external library needed). On desktop, render the existing grid. On mobile, render a horizontal scroll container with the same images.
+### Frontend Changes
 
-#### 3. Files Modified
+**`src/pages/SundayLoveFeast.tsx`:**
+- Add form state (name, email, phone, attendees, firstTime, submitting, success)
+- Add validation and duplicate email check on blur (direct call to edge function)
+- Wire `onSubmit` to call `submit-slf-registration`
+- Show success state with confetti after registration
+- Fetch real registration count from backend for the social proof counter
 
-- `src/pages/SundayLoveFeast.css` — Add mobile size overrides, carousel styles
-- `src/pages/SundayLoveFeast.tsx` — Gallery section: conditionally render carousel markup on mobile (or use CSS to switch layout)
+**`src/pages/Admin.tsx`:**
+- Add a program selector (tabs: "Nrsimha Caturdasi" / "Sunday Love Feast")
+- When "Sunday Love Feast" is selected, query `slf_registrations` table
+- Show matching stats cards (Total Registrations, Total Attendees, First-Time Visitors)
+- Show registrations-over-time chart and searchable table with relevant columns
+- CSV download for the selected program
+
+### Files Modified
+- `src/pages/SundayLoveFeast.tsx` — form state + backend integration
+- `src/pages/Admin.tsx` — dual-program dashboard
+- `supabase/functions/submit-slf-registration/index.ts` — new edge function
+- Database migration for `slf_registrations` table + RLS
+
