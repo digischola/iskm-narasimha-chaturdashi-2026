@@ -16,8 +16,22 @@ interface Registration {
   created_at: string;
 }
 
+interface SlfRegistration {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  attendees: number;
+  first_time: boolean;
+  created_at: string;
+}
+
+type Program = "nrsimha" | "slf";
+
 export default function Admin() {
-  const [data, setData] = useState<Registration[]>([]);
+  const [program, setProgram] = useState<Program>("nrsimha");
+  const [ncData, setNcData] = useState<Registration[]>([]);
+  const [slfData, setSlfData] = useState<SlfRegistration[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
@@ -29,31 +43,30 @@ export default function Admin() {
     e.preventDefault();
     setAuthError("");
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setAuthError(error.message);
-    }
+    if (error) setAuthError(error.message);
   };
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
       setLoggedIn(!!session);
-      if (session) fetchData();
+      if (session) fetchAll();
     });
     supabase.auth.getSession().then(({ data: { session } }) => {
       setLoggedIn(!!session);
-      if (session) fetchData();
+      if (session) fetchAll();
       else setLoading(false);
     });
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchData = async () => {
+  const fetchAll = async () => {
     setLoading(true);
-    const { data: rows } = await supabase
-      .from("registrations")
-      .select("*")
-      .order("created_at", { ascending: false });
-    setData((rows as Registration[]) || []);
+    const [ncRes, slfRes] = await Promise.all([
+      supabase.from("registrations").select("*").order("created_at", { ascending: false }),
+      supabase.from("slf_registrations").select("*").order("created_at", { ascending: false }),
+    ]);
+    setNcData((ncRes.data as Registration[]) || []);
+    setSlfData((slfRes.data as SlfRegistration[]) || []);
     setLoading(false);
   };
 
@@ -85,51 +98,68 @@ export default function Admin() {
     );
   }
 
-  const totalRegistrations = data.length;
-  const totalAttendees = data.reduce((s, r) => s + r.attendees, 0);
+  const handleLogout = async () => { await supabase.auth.signOut(); };
 
+  // ─── Program-specific data ───
+  const isSlf = program === "slf";
+  const activeData = isSlf ? slfData : ncData;
+  const totalRegistrations = activeData.length;
+  const totalAttendees = activeData.reduce((s, r) => s + r.attendees, 0);
+  const firstTimeCount = isSlf ? slfData.filter(r => r.first_time).length : 0;
 
-  // Chart data: registrations per day
   const dayMap: Record<string, number> = {};
-  data.forEach((r) => {
+  activeData.forEach((r) => {
     const day = new Date(r.created_at).toLocaleDateString("en-SG", { month: "short", day: "numeric" });
     dayMap[day] = (dayMap[day] || 0) + 1;
   });
   const chartData = Object.entries(dayMap).reverse().map(([date, count]) => ({ date, count }));
 
-  const filtered = data.filter(
+  const filtered = activeData.filter(
     (r) =>
       r.name.toLowerCase().includes(search.toLowerCase()) ||
       r.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleDownloadCSV = () => {
+    if (isSlf) {
+      const headers = ["Name", "Email", "Phone", "Attendees", "First Time", "Registered At"];
+      const rows = slfData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      downloadCSV(csvContent, "slf_registrations");
+    } else {
+      const headers = ["Name", "Email", "Phone", "Attendees", "Registered At"];
+      const rows = ncData.map(r => [r.name, r.email, r.phone || "", r.attendees, new Date(r.created_at).toLocaleString("en-SG")]);
+      const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      downloadCSV(csvContent, "registrations");
+    }
   };
 
-  const handleDownloadCSV = () => {
-    const headers = ["Name", "Email", "Phone", "Attendees", "Registered At"];
-    const rows = data.map(r => [
-      r.name,
-      r.email,
-      r.phone || "",
-      r.attendees,
-      new Date(r.created_at).toLocaleString("en-SG"),
-    ]);
-    const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const downloadCSV = (csvContent: string, prefix: string) => {
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `registrations_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `${prefix}_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
+  const tabStyle = (active: boolean): React.CSSProperties => ({
+    padding: "8px 20px",
+    borderRadius: "8px",
+    border: "none",
+    cursor: "pointer",
+    fontWeight: 600,
+    fontSize: "13px",
+    background: active ? "var(--navy)" : "var(--cream-warm, #f5f0e8)",
+    color: active ? "white" : "var(--navy)",
+    transition: "all .2s",
+  });
+
   return (
     <div style={{ minHeight: "100vh", background: "var(--cream)", fontFamily: "'Source Sans Pro', sans-serif", padding: "24px" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
           <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--navy)", fontSize: "28px" }}>Registration Dashboard</h1>
           <div style={{ display: "flex", gap: "8px" }}>
             <button onClick={handleDownloadCSV} style={{ background: "var(--navy)", color: "white", border: "none", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", fontWeight: 600, fontSize: "13px" }}>⬇ Download CSV</button>
@@ -137,17 +167,17 @@ export default function Admin() {
           </div>
         </div>
 
+        {/* Program Tabs */}
+        <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
+          <button style={tabStyle(program === "nrsimha")} onClick={() => { setProgram("nrsimha"); setSearch(""); }}>Nrsimha Caturdasi</button>
+          <button style={tabStyle(program === "slf")} onClick={() => { setProgram("slf"); setSearch(""); }}>Sunday Love Feast</button>
+        </div>
+
         {/* Stats cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "24px" }}>
-          {[
-            { label: "Total Registrations", value: totalRegistrations, color: "var(--navy)" },
-            { label: "Total Attendees", value: totalAttendees, color: "var(--gold)" },
-          ].map((s) => (
-            <div key={s.label} style={{ background: "white", borderRadius: "12px", padding: "20px 24px", boxShadow: "0 2px 12px rgba(0,0,0,.04)" }}>
-              <p style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "4px" }}>{s.label}</p>
-              <p style={{ fontSize: "32px", fontWeight: 700, color: s.color, fontFamily: "'Playfair Display', serif" }}>{s.value}</p>
-            </div>
-          ))}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "16px", marginBottom: "24px" }}>
+          <StatCard label="Total Registrations" value={totalRegistrations} color="var(--navy)" />
+          <StatCard label="Total Attendees" value={totalAttendees} color="var(--gold)" />
+          {isSlf && <StatCard label="First-Time Visitors" value={firstTimeCount} color="#27ae60" />}
         </div>
 
         {/* Chart */}
@@ -166,7 +196,7 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Search + Table */}
+        {/* Table */}
         <div style={{ background: "white", borderRadius: "12px", padding: "24px", boxShadow: "0 2px 12px rgba(0,0,0,.04)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
             <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--navy)", fontSize: "18px" }}>All Registrations</h3>
@@ -182,25 +212,27 @@ export default function Admin() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
               <thead>
                 <tr style={{ borderBottom: "2px solid #e5ded5", textAlign: "left" }}>
-                  <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Name</th>
-                  <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Email</th>
-                  <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Phone</th>
-                  <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Attendees</th>
-                  <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>Date</th>
+                  <Th>Name</Th>
+                  <Th>Email</Th>
+                  <Th>Phone</Th>
+                  <Th>Attendees</Th>
+                  {isSlf && <Th>First Time</Th>}
+                  <Th>Date</Th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((r) => (
                   <tr key={r.id} style={{ borderBottom: "1px solid #f0ebe3" }}>
-                    <td style={{ padding: "10px 8px" }}>{r.name}</td>
-                    <td style={{ padding: "10px 8px" }}>{r.email}</td>
-                    <td style={{ padding: "10px 8px" }}>{r.phone || "—"}</td>
-                    <td style={{ padding: "10px 8px" }}>{r.attendees}</td>
-                    <td style={{ padding: "10px 8px", whiteSpace: "nowrap" }}>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</td>
+                    <Td>{r.name}</Td>
+                    <Td>{r.email}</Td>
+                    <Td>{r.phone || "—"}</Td>
+                    <Td>{r.attendees}</Td>
+                    {isSlf && <Td>{(r as SlfRegistration).first_time ? "✓ Yes" : "No"}</Td>}
+                    <Td style={{ whiteSpace: "nowrap" }}>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</Td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={5} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>No registrations found</td></tr>
+                  <tr><td colSpan={isSlf ? 6 : 5} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>No registrations found</td></tr>
                 )}
               </tbody>
             </table>
@@ -209,4 +241,21 @@ export default function Admin() {
       </div>
     </div>
   );
+}
+
+function StatCard({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <div style={{ background: "white", borderRadius: "12px", padding: "20px 24px", boxShadow: "0 2px 12px rgba(0,0,0,.04)" }}>
+      <p style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "4px" }}>{label}</p>
+      <p style={{ fontSize: "32px", fontWeight: 700, color, fontFamily: "'Playfair Display', serif" }}>{value}</p>
+    </div>
+  );
+}
+
+function Th({ children }: { children: React.ReactNode }) {
+  return <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>{children}</th>;
+}
+
+function Td({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+  return <td style={{ padding: "10px 8px", ...style }}>{children}</td>;
 }
