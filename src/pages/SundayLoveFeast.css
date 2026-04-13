@@ -479,30 +479,32 @@
 }
 .slf .btn-sponsor:hover { background: var(--navy); color: var(--white); }
 
-/* ═══ GALLERY ═══ */
-.slf .gallery-section { background: var(--white); }
-.slf .gallery-carousel { display: none; }
-.slf .gallery-dots { display: none; }
-.slf .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto auto;
-  gap: 16px;
+/* ═══ GALLERY MARQUEE ═══ */
+.slf .gallery-section { background: var(--white); overflow: hidden; }
+.slf .marquee-wrap { width: 100%; overflow: hidden; display: flex; flex-direction: column; gap: 16px; }
+.slf .marquee-track {
+  display: flex; gap: 16px; width: max-content;
+  will-change: transform;
 }
-.slf .gallery-item {
+.slf .marquee-ltr { animation: slf-marquee-ltr 40s linear infinite; }
+.slf .marquee-rtl { animation: slf-marquee-rtl 40s linear infinite; }
+@keyframes slf-marquee-ltr {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes slf-marquee-rtl {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.slf .marquee-item {
+  flex-shrink: 0; width: 220px; height: 220px;
   border-radius: var(--radius-md); overflow: hidden;
-  position: relative; cursor: pointer;
 }
-.slf .gallery-item img { width: 100%; height: 240px; object-fit: cover; transition: transform .5s cubic-bezier(.4,0,.2,1); }
-.slf .gallery-item:hover img { transform: scale(1.05); }
-.slf .gallery-item::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(transparent 60%, rgba(22,45,88,.4));
-  opacity: 0; transition: opacity var(--transition);
+.slf .marquee-item img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .5s cubic-bezier(.4,0,.2,1);
 }
-.slf .gallery-item:hover::after { opacity: 1; }
-.slf .gallery-item.tall { grid-row: span 2; }
-.slf .gallery-item.tall img { height: 100%; min-height: 496px; }
+.slf .marquee-item:hover img { transform: scale(1.1); }
 
 /* ═══ FAQ ═══ */
 .slf .faq-section { background: var(--cream); }
