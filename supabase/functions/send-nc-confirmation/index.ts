@@ -351,6 +351,8 @@ Deno.serve(async (req) => {
       unsubscribe_url: unsubscribeUrl,
     });
 
+    const text = `You're in, ${firstName} — Śrī Nṛsiṁha Caturdaśī 2026\n\nYour seat is saved.\n\nThursday, 30 April 2026\n6:30 PM – 10:00 PM\nInternational Sri Krishna Mandir\nNo.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nSchedule:\n6:30–7:00 PM – Ārati & Kīrtana\n7:00–8:00 PM – Grand Abhiṣeka\n8:00–10:00 PM – Cultural Programme\n8:30 PM – Prasādam Served\n\nQuestions? WhatsApp +65 6250 2280\n\nISKM Singapore\nhttps://events.srikrishnamandir.org/nrsimha-caturdasi-2026\n\nUnsubscribe: ${unsubscribeUrl}`;
+
     const messageId = "nc-confirm-" + registration_id;
     const idempotencyKey = "nc-confirm-" + registration_id;
 
@@ -359,14 +361,16 @@ Deno.serve(async (req) => {
       queue_name: "transactional_emails",
       payload: {
         to: email,
-        from: "ISKM Singapore <contact@srikrishnamandir.org>",
+        from: "ISKM Singapore <contact@notify.events.srikrishnamandir.org>",
         sender_domain: "notify.events.srikrishnamandir.org",
         subject: "You're in, " + firstName + " — Śrī Nṛsiṁha Caturdaśī 2026 🦁",
         html,
+        text,
         purpose: "transactional",
         label: "nc-confirmation",
         message_id: messageId,
         idempotency_key: idempotencyKey,
+        unsubscribe_token: token,
         queued_at: new Date().toISOString(),
       },
     });
