@@ -791,6 +791,7 @@ function LandingPage() {
 
 /* ═══ APP WITH ROUTING ═══ */
 import Admin from "@/pages/Admin";
+import Unsubscribe from "@/pages/Unsubscribe";
 
 export default function App() {
   return (
@@ -800,6 +801,7 @@ export default function App() {
         <Route path="/nrsimha-caturdasi-2026" element={<LandingPage />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/sunday-love-feast" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><SundayLoveFeast /></Suspense>} />
+        <Route path="/unsubscribe" element={<Unsubscribe />} />
       </Routes>
     </BrowserRouter>
   );
