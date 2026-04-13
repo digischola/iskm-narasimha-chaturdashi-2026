@@ -213,7 +213,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
               <span style="font-size:22px;font-weight:700;color:#f4c96b;margin-left:8px;">$281.80</span>
               <span style="display:inline-block;margin-left:8px;padding:2px 8px;background:#f8a4c0;color:#1e3a6e;font-size:10px;font-weight:700;border-radius:999px;letter-spacing:0.5px;">FESTIVAL SPECIAL</span>
             </div>
-            <a href="https://events.srikrishnamandir.org/nrsimha-caturdasi-2026#kavacha" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;background:#f4c96b;text-decoration:none;border-radius:999px;">Reserve Yours →</a>
+            <a href="https://iskm-eshop.kyte.site/en/p/silver-narasimha-kavacha-kavns/1621095636824-pepAr" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;background:#f4c96b;text-decoration:none;border-radius:999px;">Buy Yours →</a>
           </td></tr>
         </table>
       </td></tr>
