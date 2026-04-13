@@ -246,6 +246,36 @@ export default function SundayLoveFeast() {
     setMobileMenuOpen(false);
   }, []);
 
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError("");
+    setFormSubmitting(true);
+    try {
+      const res = await supabase.functions.invoke("submit-slf-registration", {
+        body: {
+          name: formName,
+          email: formEmail,
+          phone: formPhone || null,
+          attendees: parseInt(formAttendees) || 2,
+          first_time: formFirstTime === "yes",
+        },
+      });
+      const data = res.data;
+      if (data?.error) {
+        setFormError(data.error);
+      } else if (data?.success) {
+        setFormSuccess(true);
+        if (data.count) setRegCounter(data.count);
+      } else {
+        setFormError("Something went wrong. Please try again.");
+      }
+    } catch {
+      setFormError("Network error. Please try again.");
+    } finally {
+      setFormSubmitting(false);
+    }
+  };
+
   const toggleFaq = (idx: number) => {
     setOpenFaq(prev => prev === idx ? null : idx);
   };
