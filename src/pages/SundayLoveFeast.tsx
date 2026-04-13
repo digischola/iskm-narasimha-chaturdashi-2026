@@ -76,7 +76,8 @@ export default function SundayLoveFeast() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null); // kept for potential future use
+  const [lightboxAlt, setLightboxAlt] = useState("");
   const [lightboxAlt, setLightboxAlt] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   
@@ -328,7 +329,7 @@ export default function SundayLoveFeast() {
       {/* Sticky Nav */}
       <nav className={`sticky-nav${navScrolled ? " scrolled" : ""}`} ref={navRef}>
         <a href="#slf-home" className="nav-brand" onClick={e => { e.preventDefault(); scrollTo("slf-home"); }}>
-          <img src="/images/sunday-love-feast/logo.jpg" alt="ISKM Logo" width="32" height="32" />
+          <img src="/images/sunday-love-feast/logo.webp" alt="ISKM Logo" width="32" height="32" />
           ISKM Singapore
         </a>
         <div className="nav-links">
@@ -384,7 +385,7 @@ export default function SundayLoveFeast() {
             </div>
           </div>
           <div className="hero-video-wrap">
-            <video autoPlay muted loop playsInline poster="/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.jpg" ref={heroVideoRef}>
+            <video autoPlay muted loop playsInline poster="/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.webp" ref={heroVideoRef}>
               <source src="/images/sunday-love-feast/hero-video.mp4" type="video/mp4" />
             </video>
             <div className="hero-video-overlay">
