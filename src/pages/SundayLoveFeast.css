@@ -422,7 +422,7 @@
 }
 .slf .experience-section::before {
   content: ''; position: absolute; inset: 0;
-  background: url('/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.jpg') center/cover no-repeat;
+  background: url('/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.webp') center/cover no-repeat;
   opacity: .08;
 }
 .slf .experience-content { position: relative; z-index: 1; }
@@ -479,30 +479,32 @@
 }
 .slf .btn-sponsor:hover { background: var(--navy); color: var(--white); }
 
-/* ═══ GALLERY ═══ */
-.slf .gallery-section { background: var(--white); }
-.slf .gallery-carousel { display: none; }
-.slf .gallery-dots { display: none; }
-.slf .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto auto;
-  gap: 16px;
+/* ═══ GALLERY MARQUEE ═══ */
+.slf .gallery-section { background: var(--white); overflow: hidden; }
+.slf .marquee-wrap { width: 100%; overflow: hidden; display: flex; flex-direction: column; gap: 16px; }
+.slf .marquee-track {
+  display: flex; gap: 16px; width: max-content;
+  will-change: transform;
 }
-.slf .gallery-item {
+.slf .marquee-ltr { animation: slf-marquee-ltr 40s linear infinite; }
+.slf .marquee-rtl { animation: slf-marquee-rtl 40s linear infinite; }
+@keyframes slf-marquee-ltr {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes slf-marquee-rtl {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.slf .marquee-item {
+  flex-shrink: 0; width: 220px; height: 220px;
   border-radius: var(--radius-md); overflow: hidden;
-  position: relative; cursor: pointer;
 }
-.slf .gallery-item img { width: 100%; height: 240px; object-fit: cover; transition: transform .5s cubic-bezier(.4,0,.2,1); }
-.slf .gallery-item:hover img { transform: scale(1.05); }
-.slf .gallery-item::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(transparent 60%, rgba(22,45,88,.4));
-  opacity: 0; transition: opacity var(--transition);
+.slf .marquee-item img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .5s cubic-bezier(.4,0,.2,1);
 }
-.slf .gallery-item:hover::after { opacity: 1; }
-.slf .gallery-item.tall { grid-row: span 2; }
-.slf .gallery-item.tall img { height: 100%; min-height: 496px; }
+.slf .marquee-item:hover img { transform: scale(1.1); }
 
 /* ═══ FAQ ═══ */
 .slf .faq-section { background: var(--cream); }
@@ -563,7 +565,7 @@
 }
 .slf .final-cta::before {
   content: ''; position: absolute; inset: 0;
-  background: url('/images/sunday-love-feast/8-community-circle-dancing-joyful.jpg') center/cover no-repeat;
+  background: url('/images/sunday-love-feast/8-community-circle-dancing-joyful.webp') center/cover no-repeat;
   opacity: .1;
 }
 .slf .final-cta .container { position: relative; z-index: 1; }
@@ -763,41 +765,9 @@
   .slf .location-grid { grid-template-columns: 1fr; }
   .slf .faq-question { font-size: 13px; }
 
-  /* Gallery carousel on mobile */
-  .slf .gallery-grid { display: none; }
-  .slf .gallery-carousel {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 14px;
-    padding: 0 4px 16px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .slf .gallery-carousel::-webkit-scrollbar { display: none; }
-  .slf .gallery-carousel-item {
-    flex: 0 0 75vw;
-    max-width: 320px;
-    scroll-snap-align: center;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-  }
-  .slf .gallery-carousel-item img {
-    width: 100%; height: auto; aspect-ratio: 3/4;
-    object-fit: cover; display: block;
-    transition: transform .5s cubic-bezier(.4,0,.2,1);
-  }
-  .slf .gallery-carousel-item:hover img { transform: scale(1.03); }
-  .slf .gallery-dots {
-    display: flex; justify-content: center; gap: 6px; margin-top: 12px;
-  }
-  .slf .gallery-dot {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--navy);
-    opacity: .2; transition: opacity .3s, transform .3s; border: none; padding: 0; cursor: pointer;
-  }
-  .slf .gallery-dot.active { opacity: .7; transform: scale(1.3); }
+  /* Gallery marquee mobile */
+  .slf .marquee-item { width: 160px; height: 160px; }
+  .slf .marquee-ltr, .slf .marquee-rtl { animation-duration: 25s; }
 
   .slf .nav-links .desk-link { display: none; }
   .slf .mobile-toggle { display: block; }
@@ -831,7 +801,7 @@
   .slf .footer-links { flex-wrap: wrap; gap: 16px; }
   .slf .footer-inner { flex-direction: column; text-align: center; }
   .slf select, .slf input[type="text"], .slf input[type="email"], .slf input[type="tel"], .slf input[type="date"] { font-size: 16px; }
-  .slf .gallery-carousel-item { flex: 0 0 80vw; }
+  .slf .marquee-item { width: 140px; height: 140px; }
 }
 @media (max-width: 380px) {
   .slf .hero h1 { font-size: 1.6rem; }

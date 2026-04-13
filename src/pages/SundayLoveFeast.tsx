@@ -28,22 +28,30 @@ function formatNextSunday(): string {
 
 const IMG = "/images/sunday-love-feast";
 
-const GALLERY_IMAGES = [
-  { src: `${IMG}/8-community-circle-dancing-joyful.jpg`, alt: "Community dancing at Love Feast", tall: true },
-  { src: `${IMG}/9-kirtan-leader-singing-mridanga.jpg`, alt: "Kirtan session" },
-  { src: `${IMG}/8-prasadam-plates-closeup-food.jpg`, alt: "Prasadam feast" },
-  { src: `${IMG}/8-father-child-clapping-family.jpg`, alt: "Family at Love Feast" },
-  { src: `${IMG}/7-women-dancing-clapping.jpg`, alt: "Devotees dancing" },
-  { src: `${IMG}/9-jagannath-deities-food-offerings-flowers.jpg`, alt: "Deities with offerings", tall: true },
-  { src: `${IMG}/8-buffet-serving-line-prasadam.jpg`, alt: "Prasadam serving line" },
-  { src: `${IMG}/8-woman-smiling-flowers-vibrant.jpg`, alt: "Devotee with flowers" },
+const GALLERY_ROW1 = [
+  { src: `${IMG}/5-individual-person-chatting.webp`, alt: "Person chatting at Love Feast" },
+  { src: `${IMG}/6-ladle-pouring-sauce-closeup.webp`, alt: "Ladle pouring sauce" },
+  { src: `${IMG}/6-women-merchandise-table.webp`, alt: "Women at merchandise table" },
+  { src: `${IMG}/7-cupcakes-muffins-baked-closeup.webp`, alt: "Cupcakes and muffins" },
+  { src: `${IMG}/7-men-clapping-chanting-engaged.webp`, alt: "Men chanting" },
+  { src: `${IMG}/7-prasadam-serving-line-multiple.webp`, alt: "Prasadam serving line" },
+  { src: `${IMG}/7-volunteers-posing-food-trays.webp`, alt: "Volunteers with food trays" },
+];
+const GALLERY_ROW2 = [
+  { src: `${IMG}/8-devotee-mridanga-kirtan-group.webp`, alt: "Kirtan group" },
+  { src: `${IMG}/8-father-son-matching-yellow-shirts.webp`, alt: "Father and son" },
+  { src: `${IMG}/8-man-smiling-holding-prasadam-plate.webp`, alt: "Man with prasadam plate" },
+  { src: `${IMG}/8-woman-smiling-flowers-vibrant.webp`, alt: "Woman with flowers" },
+  { src: `${IMG}/9-congregation-seated-temple-hall-wide.webp`, alt: "Congregation in temple hall" },
+  { src: `${IMG}/9-jagannath-deities-food-offerings-flowers.webp`, alt: "Jagannath deities with offerings" },
+  { src: `${IMG}/9-radha-krishna-deities-flower-decoration.webp`, alt: "Radha Krishna deities" },
 ];
 
 const SCHEDULE = [
-  { time: "5:00 PM", title: "Bhajan", desc: "Begin the evening with melodious devotional songs that calm the mind and uplift the spirit.", img: `${IMG}/9-kirtan-leader-singing-mridanga.jpg`, alt: "Bhajan session at Sunday Love Feast" },
-  { time: "5:30 PM", title: "Bhagavad Gita Class", desc: "Adults explore timeless wisdom from the Gita, while children enjoy their own engaging class.", img: `${IMG}/9-bhagavad-gita-class-temple-hall.jpg`, alt: "Bhagavad Gita Class at ISKM" },
-  { time: "6:30 PM", title: "Arati & Kirtan", desc: "Experience the ecstasy of congregational chanting and the beautiful Arati ceremony.", img: `${IMG}/9-radha-krishna-deities-flower-decoration.jpg`, alt: "Arati & Kirtan ceremony" },
-  { time: "7:15 PM", title: "Prasadam Feast", desc: "Relish a delicious vegetarian feast lovingly prepared and offered to Lord Krishna.", img: `${IMG}/8-prasadam-plates-closeup-food.jpg`, alt: "Prasadam feast plates" },
+  { time: "5:00 PM", title: "Bhajan", desc: "Begin the evening with melodious devotional songs that calm the mind and uplift the spirit.", img: `${IMG}/9-kirtan-leader-singing-mridanga.webp`, alt: "Bhajan session at Sunday Love Feast" },
+  { time: "5:30 PM", title: "Bhagavad Gita Class", desc: "Adults explore timeless wisdom from the Gita, while children enjoy their own engaging class.", img: `${IMG}/9-bhagavad-gita-class-temple-hall.webp`, alt: "Bhagavad Gita Class at ISKM" },
+  { time: "6:30 PM", title: "Arati & Kirtan", desc: "Experience the ecstasy of congregational chanting and the beautiful Arati ceremony.", img: `${IMG}/9-radha-krishna-deities-flower-decoration.webp`, alt: "Arati & Kirtan ceremony" },
+  { time: "7:15 PM", title: "Prasadam Feast", desc: "Relish a delicious vegetarian feast lovingly prepared and offered to Lord Krishna.", img: `${IMG}/8-prasadam-plates-closeup-food.webp`, alt: "Prasadam feast plates" },
 ];
 
 const FAQS = [
@@ -74,7 +82,7 @@ export default function SundayLoveFeast() {
   
   const [regCounter, setRegCounter] = useState(0);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(true);
-  const [activeGalleryDot, setActiveGalleryDot] = useState(0);
+  
 
   // Form state
   const [formName, setFormName] = useState("");
@@ -93,7 +101,7 @@ export default function SundayLoveFeast() {
   const particlesRef = useRef<HTMLDivElement>(null);
   const registerRef = useRef<HTMLElement>(null);
   const faqRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  
 
   // Countdown timer
   useEffect(() => {
@@ -222,30 +230,7 @@ export default function SundayLoveFeast() {
     return () => { document.body.style.overflow = ""; };
   }, [lightboxSrc, mobileMenuOpen]);
 
-  // Gallery carousel auto-scroll + dot tracking
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (!el) return;
-    // Track scroll position for dots
-    const onScroll = () => {
-      const scrollLeft = el.scrollLeft;
-      const itemWidth = el.children[0]?.clientWidth || 280;
-      const gap = 14;
-      const idx = Math.round(scrollLeft / (itemWidth + gap));
-      setActiveGalleryDot(Math.min(idx, GALLERY_IMAGES.length - 1));
-    };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    // Auto-scroll every 4s
-    const autoId = setInterval(() => {
-      if (!el || document.hidden) return;
-      const itemWidth = el.children[0]?.clientWidth || 280;
-      const gap = 14;
-      const maxScroll = el.scrollWidth - el.clientWidth;
-      const nextScroll = el.scrollLeft + itemWidth + gap;
-      el.scrollTo({ left: nextScroll > maxScroll ? 0 : nextScroll, behavior: "smooth" });
-    }, 4000);
-    return () => { el.removeEventListener("scroll", onScroll); clearInterval(autoId); };
-  }, []);
+  // No longer need carousel auto-scroll — using CSS marquee
 
   const scrollTo = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -320,7 +305,7 @@ export default function SundayLoveFeast() {
       {/* Sticky Nav */}
       <nav className={`sticky-nav${navScrolled ? " scrolled" : ""}`} ref={navRef}>
         <a href="#slf-home" className="nav-brand" onClick={e => { e.preventDefault(); scrollTo("slf-home"); }}>
-          <img src="/images/sunday-love-feast/logo.jpg" alt="ISKM Logo" width="32" height="32" />
+          <img src="/images/sunday-love-feast/logo.webp" alt="ISKM Logo" width="32" height="32" />
           ISKM Singapore
         </a>
         <div className="nav-links">
@@ -376,7 +361,7 @@ export default function SundayLoveFeast() {
             </div>
           </div>
           <div className="hero-video-wrap">
-            <video autoPlay muted loop playsInline poster="/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.jpg" ref={heroVideoRef}>
+            <video autoPlay muted loop playsInline poster="/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.webp" ref={heroVideoRef}>
               <source src="/images/sunday-love-feast/hero-video.mp4" type="video/mp4" />
             </video>
             <div className="hero-video-overlay">
@@ -561,34 +546,20 @@ export default function SundayLoveFeast() {
             <h2 className="section-title">Glimpses of Love Feast</h2>
             <p className="section-subtitle">Moments of devotion, joy, and togetherness from our Sunday gatherings</p>
           </div>
-          <div className="gallery-grid reveal">
-            {GALLERY_IMAGES.map((g, i) => (
-              <div className={`gallery-item${g.tall ? " tall" : ""}`} key={i} onClick={() => { setLightboxSrc(g.src); setLightboxAlt(g.alt); }}>
+        </div>
+        <div className="marquee-wrap">
+          <div className="marquee-track marquee-ltr">
+            {[...GALLERY_ROW1, ...GALLERY_ROW1].map((g, i) => (
+              <div className="marquee-item" key={i}>
                 <img loading="lazy" decoding="async" src={g.src} alt={g.alt} />
               </div>
             ))}
           </div>
-          {/* Mobile carousel */}
-          <div className="gallery-carousel reveal" ref={carouselRef}>
-            {GALLERY_IMAGES.map((g, i) => (
-              <div className="gallery-carousel-item" key={i} onClick={() => { setLightboxSrc(g.src); setLightboxAlt(g.alt); }}>
+          <div className="marquee-track marquee-rtl">
+            {[...GALLERY_ROW2, ...GALLERY_ROW2].map((g, i) => (
+              <div className="marquee-item" key={i}>
                 <img loading="lazy" decoding="async" src={g.src} alt={g.alt} />
               </div>
-            ))}
-          </div>
-          <div className="gallery-dots">
-            {GALLERY_IMAGES.map((_, i) => (
-              <button
-                key={i}
-                className={`gallery-dot${activeGalleryDot === i ? " active" : ""}`}
-                onClick={() => {
-                  const el = carouselRef.current;
-                  if (!el) return;
-                  const itemWidth = el.children[0]?.clientWidth || 280;
-                  el.scrollTo({ left: i * (itemWidth + 14), behavior: "smooth" });
-                }}
-                aria-label={`View image ${i + 1}`}
-              />
             ))}
           </div>
         </div>
@@ -676,7 +647,7 @@ export default function SundayLoveFeast() {
         <div className="container">
           <div className="footer-inner">
             <div className="footer-brand">
-              <img src="/images/sunday-love-feast/logo.jpg" alt="ISKM" width="28" height="28" />
+              <img src="/images/sunday-love-feast/logo.webp" alt="ISKM" width="28" height="28" />
               <span>ISKM Singapore</span>
             </div>
             <div className="footer-links">
