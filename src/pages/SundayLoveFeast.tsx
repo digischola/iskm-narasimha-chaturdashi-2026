@@ -647,7 +647,7 @@ export default function SundayLoveFeast() {
         <div className="container">
           <div className="footer-inner">
             <div className="footer-brand">
-              <img src="/images/sunday-love-feast/logo.jpg" alt="ISKM" width="28" height="28" />
+              <img src="/images/sunday-love-feast/logo.webp" alt="ISKM" width="28" height="28" />
               <span>ISKM Singapore</span>
             </div>
             <div className="footer-links">
