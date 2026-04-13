@@ -15,15 +15,8 @@ export default function Unsubscribe() {
       setStatus("invalid");
       return;
     }
-    // Validate token
     const validate = async () => {
       try {
-        const { data, error } = await supabase.functions.invoke("handle-email-unsubscribe", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          body: null,
-        });
-        // Use a direct fetch for GET with query params
         const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/handle-email-unsubscribe?token=${encodeURIComponent(token)}`;
         const resp = await fetch(url, {
           headers: {
