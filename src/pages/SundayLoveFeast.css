@@ -801,7 +801,7 @@
   .slf .footer-links { flex-wrap: wrap; gap: 16px; }
   .slf .footer-inner { flex-direction: column; text-align: center; }
   .slf select, .slf input[type="text"], .slf input[type="email"], .slf input[type="tel"], .slf input[type="date"] { font-size: 16px; }
-  .slf .gallery-carousel-item { flex: 0 0 80vw; }
+  .slf .marquee-item { width: 140px; height: 140px; }
 }
 @media (max-width: 380px) {
   .slf .hero h1 { font-size: 1.6rem; }
