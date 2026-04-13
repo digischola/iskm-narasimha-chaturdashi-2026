@@ -765,41 +765,9 @@
   .slf .location-grid { grid-template-columns: 1fr; }
   .slf .faq-question { font-size: 13px; }
 
-  /* Gallery carousel on mobile */
-  .slf .gallery-grid { display: none; }
-  .slf .gallery-carousel {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 14px;
-    padding: 0 4px 16px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .slf .gallery-carousel::-webkit-scrollbar { display: none; }
-  .slf .gallery-carousel-item {
-    flex: 0 0 75vw;
-    max-width: 320px;
-    scroll-snap-align: center;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-  }
-  .slf .gallery-carousel-item img {
-    width: 100%; height: auto; aspect-ratio: 3/4;
-    object-fit: cover; display: block;
-    transition: transform .5s cubic-bezier(.4,0,.2,1);
-  }
-  .slf .gallery-carousel-item:hover img { transform: scale(1.03); }
-  .slf .gallery-dots {
-    display: flex; justify-content: center; gap: 6px; margin-top: 12px;
-  }
-  .slf .gallery-dot {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--navy);
-    opacity: .2; transition: opacity .3s, transform .3s; border: none; padding: 0; cursor: pointer;
-  }
-  .slf .gallery-dot.active { opacity: .7; transform: scale(1.3); }
+  /* Gallery marquee mobile */
+  .slf .marquee-item { width: 160px; height: 160px; }
+  .slf .marquee-ltr, .slf .marquee-rtl { animation-duration: 25s; }
 
   .slf .nav-links .desk-link { display: none; }
   .slf .mobile-toggle { display: block; }
