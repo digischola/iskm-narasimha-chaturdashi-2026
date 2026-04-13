@@ -72,6 +72,7 @@ export default function SundayLoveFeast() {
   const [showOccasion, setShowOccasion] = useState(false);
   const [regCounter, setRegCounter] = useState(187);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(true);
+  const [activeGalleryDot, setActiveGalleryDot] = useState(0);
 
   const ribbonRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -80,6 +81,7 @@ export default function SundayLoveFeast() {
   const particlesRef = useRef<HTMLDivElement>(null);
   const registerRef = useRef<HTMLElement>(null);
   const faqRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   // Countdown timer
   useEffect(() => {
@@ -199,6 +201,31 @@ export default function SundayLoveFeast() {
     document.body.style.overflow = lightboxSrc || mobileMenuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [lightboxSrc, mobileMenuOpen]);
+
+  // Gallery carousel auto-scroll + dot tracking
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    // Track scroll position for dots
+    const onScroll = () => {
+      const scrollLeft = el.scrollLeft;
+      const itemWidth = el.children[0]?.clientWidth || 280;
+      const gap = 14;
+      const idx = Math.round(scrollLeft / (itemWidth + gap));
+      setActiveGalleryDot(Math.min(idx, GALLERY_IMAGES.length - 1));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    // Auto-scroll every 4s
+    const autoId = setInterval(() => {
+      if (!el || document.hidden) return;
+      const itemWidth = el.children[0]?.clientWidth || 280;
+      const gap = 14;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const nextScroll = el.scrollLeft + itemWidth + gap;
+      el.scrollTo({ left: nextScroll > maxScroll ? 0 : nextScroll, behavior: "smooth" });
+    }, 4000);
+    return () => { el.removeEventListener("scroll", onScroll); clearInterval(autoId); };
+  }, []);
 
   const scrollTo = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -491,8 +518,31 @@ export default function SundayLoveFeast() {
           <div className="gallery-grid reveal">
             {GALLERY_IMAGES.map((g, i) => (
               <div className={`gallery-item${g.tall ? " tall" : ""}`} key={i} onClick={() => { setLightboxSrc(g.src); setLightboxAlt(g.alt); }}>
-                <img loading="lazy" src={g.src} alt={g.alt} />
+                <img loading="lazy" decoding="async" src={g.src} alt={g.alt} />
               </div>
+            ))}
+          </div>
+          {/* Mobile carousel */}
+          <div className="gallery-carousel reveal" ref={carouselRef}>
+            {GALLERY_IMAGES.map((g, i) => (
+              <div className="gallery-carousel-item" key={i} onClick={() => { setLightboxSrc(g.src); setLightboxAlt(g.alt); }}>
+                <img loading="lazy" decoding="async" src={g.src} alt={g.alt} />
+              </div>
+            ))}
+          </div>
+          <div className="gallery-dots">
+            {GALLERY_IMAGES.map((_, i) => (
+              <button
+                key={i}
+                className={`gallery-dot${activeGalleryDot === i ? " active" : ""}`}
+                onClick={() => {
+                  const el = carouselRef.current;
+                  if (!el) return;
+                  const itemWidth = el.children[0]?.clientWidth || 280;
+                  el.scrollTo({ left: i * (itemWidth + 14), behavior: "smooth" });
+                }}
+                aria-label={`View image ${i + 1}`}
+              />
             ))}
           </div>
         </div>

@@ -481,6 +481,8 @@
 
 /* ═══ GALLERY ═══ */
 .slf .gallery-section { background: var(--white); }
+.slf .gallery-carousel { display: none; }
+.slf .gallery-dots { display: none; }
 .slf .gallery-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -717,8 +719,11 @@
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 900px) {
-  .slf .ribbon { font-size: 12px; padding: 8px 14px; line-height: 1.4; }
+  .slf .ribbon { font-size: 11px; padding: 6px 14px; line-height: 1.4; }
   .slf .ribbon a { display: block; margin-left: 0; margin-top: 2px; }
+  .slf .nav-brand { font-size: 14px; gap: 6px; }
+  .slf .nav-brand img { height: 26px; }
+  .slf .nav-cta { font-size: 11px !important; padding: 6px 14px !important; }
   .slf .hero { min-height: auto; padding-top: 16px; }
   .slf .hero .container { grid-template-columns: 1fr; gap: 16px; }
   .slf .hero-video-wrap {
@@ -735,20 +740,65 @@
   .slf .hero-video-overlay .tag { font-size: 10px; padding: 3px 10px; }
   .slf .hero-video-overlay p { font-size: 12px; }
   .slf .hero-content { padding: 20px 0 44px; text-align: center; }
-  .slf .hero-subtitle { font-size: 16px; margin-bottom: 24px; margin-left: auto; margin-right: auto; }
-  .slf .hero-badge { margin-bottom: 14px; }
+  .slf .hero-subtitle { font-size: 15px; margin-bottom: 24px; margin-left: auto; margin-right: auto; }
+  .slf .hero-badge { margin-bottom: 14px; font-size: 10px; }
   .slf .hero h1 { margin-bottom: 12px; }
   .slf .hero-details { gap: 10px; margin-bottom: 24px; align-items: center; }
+  .slf .hero-detail { font-size: 13px; }
   .slf .hero-cta-wrap { display: flex; justify-content: center; }
+  .slf .hero-cta { font-size: 14px; padding: 12px 28px; }
   .slf .countdown-row { margin-bottom: 24px; justify-content: center; }
+  .slf .section-title { font-size: 1.4rem; }
+  .slf .section-subtitle { font-size: 14px; margin-bottom: 36px; }
+  .slf .section-badge { font-size: 10px; letter-spacing: 1.5px; }
   .slf .schedule-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .slf .schedule-card-img { height: auto; aspect-ratio: 1 / 1; }
+  .slf .schedule-card h3 { font-size: 1rem; }
+  .slf .schedule-card p { font-size: 12px; }
   .slf .testimonial-grid { grid-template-columns: 1fr; }
+  .slf .testimonial-card blockquote { font-size: 14px; }
   .slf .sponsor-grid { grid-template-columns: 1fr; }
+  .slf .sponsor-card h3 { font-size: 1rem; }
+  .slf .sponsor-card p { font-size: 12px; }
   .slf .location-grid { grid-template-columns: 1fr; }
-  .slf .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-  .slf .gallery-item.tall { grid-row: span 1; }
-  .slf .gallery-item.tall img { min-height: auto; height: 240px; }
+  .slf .faq-question { font-size: 13px; }
+
+  /* Gallery carousel on mobile */
+  .slf .gallery-grid { display: none; }
+  .slf .gallery-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 14px;
+    padding: 0 4px 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .slf .gallery-carousel::-webkit-scrollbar { display: none; }
+  .slf .gallery-carousel-item {
+    flex: 0 0 75vw;
+    max-width: 320px;
+    scroll-snap-align: center;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+  }
+  .slf .gallery-carousel-item img {
+    width: 100%; height: auto; aspect-ratio: 3/4;
+    object-fit: cover; display: block;
+    transition: transform .5s cubic-bezier(.4,0,.2,1);
+  }
+  .slf .gallery-carousel-item:hover img { transform: scale(1.03); }
+  .slf .gallery-dots {
+    display: flex; justify-content: center; gap: 6px; margin-top: 12px;
+  }
+  .slf .gallery-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--navy);
+    opacity: .2; transition: opacity .3s, transform .3s; border: none; padding: 0; cursor: pointer;
+  }
+  .slf .gallery-dot.active { opacity: .7; transform: scale(1.3); }
+
   .slf .nav-links .desk-link { display: none; }
   .slf .mobile-toggle { display: block; }
   .slf .hero-particles { opacity: .5; }
@@ -756,25 +806,24 @@
 @keyframes slf-heroVideoFadeMobile { to { opacity: 1; } }
 
 @media (max-width: 600px) {
-  .slf .hero h1 { font-size: 2rem; }
+  .slf .hero h1 { font-size: 1.8rem; }
   .slf .hero-video-wrap { max-width: 100%; }
   .slf .countdown-row { gap: 8px; }
   .slf .countdown-box { padding: 10px 12px; min-width: 60px; }
   .slf .countdown-box .num { font-size: 22px; }
   .slf .schedule-grid { grid-template-columns: 1fr; }
   .slf .schedule-card-img { height: 200px; aspect-ratio: auto; }
-  .slf .gallery-grid { grid-template-columns: 1fr 1fr; }
   .slf .form-card { padding: 32px 24px; }
   .slf .form-row.two-col { grid-template-columns: 1fr; }
   .slf .trust-bar .container { gap: 24px; flex-wrap: wrap; justify-content: center; }
   .slf .trust-item span { font-size: 13px; }
-  .slf .section { padding: 60px 0; }
+  .slf .section { padding: 60px 0 !important; }
   .slf .mobile-sticky-cta { display: block; }
   .slf { padding-bottom: 70px; }
   .slf .footer { padding-bottom: 80px; }
   .slf .lightbox img { max-width: 96vw; max-height: 75vh; border-radius: var(--radius-sm); }
   .slf .form-card::before { inset: -1px; }
-  .slf .faq-question { padding: 18px 20px; min-height: 48px; }
+  .slf .faq-question { padding: 18px 20px; min-height: 48px; font-size: 13px; }
   .slf .btn-register { min-height: 48px; font-size: 15px; }
   .slf .btn-directions { min-height: 48px; }
   .slf .btn-sponsor { min-height: 48px; }
@@ -782,14 +831,17 @@
   .slf .footer-links { flex-wrap: wrap; gap: 16px; }
   .slf .footer-inner { flex-direction: column; text-align: center; }
   .slf select, .slf input[type="text"], .slf input[type="email"], .slf input[type="tel"], .slf input[type="date"] { font-size: 16px; }
+  .slf .gallery-carousel-item { flex: 0 0 80vw; }
 }
 @media (max-width: 380px) {
-  .slf .hero h1 { font-size: 1.7rem; }
-  .slf .hero-subtitle { font-size: 15px; }
+  .slf .hero h1 { font-size: 1.6rem; }
+  .slf .hero-subtitle { font-size: 14px; }
   .slf .hero-video-wrap { max-width: 100%; }
   .slf .countdown-box { min-width: 52px; padding: 8px 10px; }
   .slf .countdown-box .num { font-size: 18px; }
-  .slf .ribbon { font-size: 11px; padding: 8px 12px; }
-  .slf .section-title { font-size: 1.5rem; }
+  .slf .ribbon { font-size: 10px; padding: 6px 10px; }
+  .slf .section-title { font-size: 1.3rem; }
   .slf .container { padding: 0 16px; }
+  .slf .nav-brand { font-size: 12px; }
+  .slf .nav-brand img { height: 22px; }
 }
