@@ -32,8 +32,29 @@
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   margin: 0; padding: 0;
+  width: 100%;
+  position: relative;
 }
 .slf *, .slf *::before, .slf *::after { margin: 0; padding: 0; box-sizing: border-box; }
+/* Reset ALL global styles that bleed in */
+.slf .ribbon,
+.slf .sticky-nav,
+.slf .hero,
+.slf .nav-cta,
+.slf .nav-brand,
+.slf .nav-links,
+.slf .countdown-row,
+.slf .form-group,
+.slf .form-group input,
+.slf .form-group select,
+.slf .form-group textarea,
+.slf .form-row {
+  all: revert;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+}
 .slf h1, .slf h2, .slf h3, .slf h4, .slf h5 { font-family: 'Playfair Display', serif; color: var(--navy); line-height: 1.25; }
 .slf img { max-width: 100%; display: block; }
 .slf a { text-decoration: none; color: inherit; }
