@@ -371,7 +371,7 @@ Deno.serve(async (req) => {
       queue_name: "transactional_emails",
       payload: {
         to: reg.email,
-        from: "ISKM Singapore <contact@srikrishnamandir.org>",
+        from: "ISKM Singapore <contact@notify.events.srikrishnamandir.org>",
         sender_domain: "notify.events.srikrishnamandir.org",
         subject: "Tomorrow, " + firstName + " 🦁",
         html,
