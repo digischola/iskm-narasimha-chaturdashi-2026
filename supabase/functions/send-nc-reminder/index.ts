@@ -364,6 +364,7 @@ Deno.serve(async (req) => {
 
     const unsubscribeUrl = "https://events.srikrishnamandir.org/unsubscribe?token=" + token;
     const html = renderTemplate(REMINDER_HTML, { first_name: firstName, unsubscribe_url: unsubscribeUrl });
+    const text = `Tomorrow, ${firstName} — Śrī Nṛsiṁha Caturdaśī 2026\n\nThursday, 30 April 2026\n6:30 PM – 10:00 PM\nInternational Sri Krishna Mandir\nNo.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nSchedule:\n6:30–7:00 PM – Ārati & Kīrtana\n7:00–8:00 PM – Grand Abhiṣeka\n8:00–10:00 PM – Cultural Programme\n8:30 PM – Prasādam Served\n\nGet Directions: https://maps.app.goo.gl/ISKM\n\nUnsubscribe: ${unsubscribeUrl}`;
     const messageId = "nc-reminder-" + reg.id;
 
     await supabase.rpc("enqueue_email", {
@@ -374,6 +375,7 @@ Deno.serve(async (req) => {
         sender_domain: "notify.events.srikrishnamandir.org",
         subject: "Tomorrow, " + firstName + " 🦁",
         html,
+        text,
         purpose: "transactional",
         label: "nc-reminder",
         message_id: messageId,
