@@ -202,6 +202,31 @@ export default function SundayLoveFeast() {
     return () => { document.body.style.overflow = ""; };
   }, [lightboxSrc, mobileMenuOpen]);
 
+  // Gallery carousel auto-scroll + dot tracking
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    // Track scroll position for dots
+    const onScroll = () => {
+      const scrollLeft = el.scrollLeft;
+      const itemWidth = el.children[0]?.clientWidth || 280;
+      const gap = 14;
+      const idx = Math.round(scrollLeft / (itemWidth + gap));
+      setActiveGalleryDot(Math.min(idx, GALLERY_IMAGES.length - 1));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    // Auto-scroll every 4s
+    const autoId = setInterval(() => {
+      if (!el || document.hidden) return;
+      const itemWidth = el.children[0]?.clientWidth || 280;
+      const gap = 14;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const nextScroll = el.scrollLeft + itemWidth + gap;
+      el.scrollTo({ left: nextScroll > maxScroll ? 0 : nextScroll, behavior: "smooth" });
+    }, 4000);
+    return () => { el.removeEventListener("scroll", onScroll); clearInterval(autoId); };
+  }, []);
+
   const scrollTo = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     setMobileMenuOpen(false);
