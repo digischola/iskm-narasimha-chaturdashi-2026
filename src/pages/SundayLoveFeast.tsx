@@ -518,8 +518,31 @@ export default function SundayLoveFeast() {
           <div className="gallery-grid reveal">
             {GALLERY_IMAGES.map((g, i) => (
               <div className={`gallery-item${g.tall ? " tall" : ""}`} key={i} onClick={() => { setLightboxSrc(g.src); setLightboxAlt(g.alt); }}>
-                <img loading="lazy" src={g.src} alt={g.alt} />
+                <img loading="lazy" decoding="async" src={g.src} alt={g.alt} />
               </div>
+            ))}
+          </div>
+          {/* Mobile carousel */}
+          <div className="gallery-carousel reveal" ref={carouselRef}>
+            {GALLERY_IMAGES.map((g, i) => (
+              <div className="gallery-carousel-item" key={i} onClick={() => { setLightboxSrc(g.src); setLightboxAlt(g.alt); }}>
+                <img loading="lazy" decoding="async" src={g.src} alt={g.alt} />
+              </div>
+            ))}
+          </div>
+          <div className="gallery-dots">
+            {GALLERY_IMAGES.map((_, i) => (
+              <button
+                key={i}
+                className={`gallery-dot${activeGalleryDot === i ? " active" : ""}`}
+                onClick={() => {
+                  const el = carouselRef.current;
+                  if (!el) return;
+                  const itemWidth = el.children[0]?.clientWidth || 280;
+                  el.scrollTo({ left: i * (itemWidth + 14), behavior: "smooth" });
+                }}
+                aria-label={`View image ${i + 1}`}
+              />
             ))}
           </div>
         </div>
