@@ -380,6 +380,7 @@ Deno.serve(async (req) => {
         label: "nc-reminder",
         message_id: messageId,
         idempotency_key: "nc-reminder-" + reg.id,
+        unsubscribe_token: token,
         queued_at: new Date().toISOString(),
       },
     });
