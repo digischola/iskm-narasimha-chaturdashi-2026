@@ -370,6 +370,7 @@ Deno.serve(async (req) => {
         label: "nc-confirmation",
         message_id: messageId,
         idempotency_key: idempotencyKey,
+        unsubscribe_token: token,
         queued_at: new Date().toISOString(),
       },
     });
