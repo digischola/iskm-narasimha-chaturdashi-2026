@@ -25,21 +25,21 @@ function formatNextSunday(): string {
 }
 
 const GALLERY_IMAGES = [
-  { src: "/images/8-community-circle-dancing-joyful.jpg", alt: "Community dancing at Love Feast", tall: true },
-  { src: "/images/9-kirtan-leader-singing-mridanga.jpg", alt: "Kirtan session" },
-  { src: "/images/8-prasadam-plates-closeup-food.jpg", alt: "Prasadam feast" },
-  { src: "/images/8-father-child-clapping-family.jpg", alt: "Family at Love Feast" },
-  { src: "/images/7-women-dancing-clapping.jpg", alt: "Devotees dancing" },
-  { src: "/images/9-jagannath-deities-food-offerings-flowers.jpg", alt: "Jagannath deities with offerings", tall: true },
-  { src: "/images/8-buffet-serving-line-prasadam.jpg", alt: "Prasadam serving line" },
-  { src: "/images/8-woman-smiling-flowers-vibrant.jpg", alt: "Devotee with flowers" },
+  { src: "/images/community-family.jpg", alt: "Community dancing at Love Feast", tall: true },
+  { src: "/images/divine-kirtana.jpg", alt: "Kirtan session" },
+  { src: "/images/blessed-prasadam.jpg", alt: "Prasadam feast" },
+  { src: "/images/community-family.jpg", alt: "Family at Love Feast" },
+  { src: "/images/cultural-programme.jpg", alt: "Devotees dancing" },
+  { src: "/images/arati-worship.jpg", alt: "Deities with offerings", tall: true },
+  { src: "/images/annadanam-seva.jpg", alt: "Prasadam serving line" },
+  { src: "/images/pushpa-alankara.jpg", alt: "Devotee with flowers" },
 ];
 
 const SCHEDULE = [
-  { time: "5:00 PM", title: "Bhajan", desc: "Begin the evening with melodious devotional songs that calm the mind and uplift the spirit.", img: "/images/9-kirtan-leader-singing-mridanga.jpg", alt: "Bhajan session at Sunday Love Feast" },
-  { time: "5:30 PM", title: "Bhagavad Gita Class", desc: "Adults explore timeless wisdom from the Gita, while children enjoy their own engaging class.", img: "/images/9-bhagavad-gita-class-temple-hall.jpg", alt: "Bhagavad Gita Class at ISKM" },
-  { time: "6:30 PM", title: "Arati & Kirtan", desc: "Experience the ecstasy of congregational chanting and the beautiful Arati ceremony.", img: "/images/9-radha-krishna-deities-flower-decoration.jpg", alt: "Arati & Kirtan ceremony" },
-  { time: "7:15 PM", title: "Prasadam Feast", desc: "Relish a delicious vegetarian feast lovingly prepared and offered to Lord Krishna.", img: "/images/8-prasadam-plates-closeup-food.jpg", alt: "Prasadam feast plates" },
+  { time: "5:00 PM", title: "Bhajan", desc: "Begin the evening with melodious devotional songs that calm the mind and uplift the spirit.", img: "/images/divine-kirtana.jpg", alt: "Bhajan session at Sunday Love Feast" },
+  { time: "5:30 PM", title: "Bhagavad Gita Class", desc: "Adults explore timeless wisdom from the Gita, while children enjoy their own engaging class.", img: "/images/the-significance.jpg", alt: "Bhagavad Gita Class at ISKM" },
+  { time: "6:30 PM", title: "Arati & Kirtan", desc: "Experience the ecstasy of congregational chanting and the beautiful Arati ceremony.", img: "/images/arati-worship.jpg", alt: "Arati & Kirtan ceremony" },
+  { time: "7:15 PM", title: "Prasadam Feast", desc: "Relish a delicious vegetarian feast lovingly prepared and offered to Lord Krishna.", img: "/images/blessed-prasadam.jpg", alt: "Prasadam feast plates" },
 ];
 
 const FAQS = [
