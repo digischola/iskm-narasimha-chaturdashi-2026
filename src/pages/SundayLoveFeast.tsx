@@ -71,9 +71,19 @@ export default function SundayLoveFeast() {
   const [lightboxAlt, setLightboxAlt] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   
-  const [regCounter, setRegCounter] = useState(187);
+  const [regCounter, setRegCounter] = useState(0);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(true);
   const [activeGalleryDot, setActiveGalleryDot] = useState(0);
+
+  // Form state
+  const [formName, setFormName] = useState("");
+  const [formEmail, setFormEmail] = useState("");
+  const [formPhone, setFormPhone] = useState("");
+  const [formAttendees, setFormAttendees] = useState("2");
+  const [formFirstTime, setFormFirstTime] = useState("no");
+  const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formSuccess, setFormSuccess] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const ribbonRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
