@@ -181,13 +181,16 @@ export default function SundayLoveFeast() {
     return () => observer.disconnect();
   }, []);
 
-  // Simulated live counter
+  // Fetch real registration count
   useEffect(() => {
-    const id = setInterval(() => {
-      if (Math.random() > 0.7) setRegCounter(c => c + Math.floor(Math.random() * 2) + 1);
-    }, 8000);
-    return () => clearInterval(id);
-  }, []);
+    const fetchCount = async () => {
+      const { count } = await supabase
+        .from("slf_registrations")
+        .select("*", { count: "exact", head: true });
+      if (count !== null) setRegCounter(count);
+    };
+    fetchCount();
+  }, [formSuccess]);
 
   // Mobile sticky CTA visibility
   useEffect(() => {
