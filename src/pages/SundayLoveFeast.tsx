@@ -596,11 +596,11 @@ export default function SundayLoveFeast() {
           </div>
           <div className="location-grid reveal">
             <div className="map-wrap">
-              <iframe src="https://www.google.com/maps?q=9+Lorong+29+Geylang+Singapore+388065&output=embed" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Map" />
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7843!2d103.8807558!3d1.3146362!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da183c80ceaac5%3A0x458ccd4e57b8697b!2sInternational%20Sri%20Krishna%20Mandir%20(ISKM)!5e0!3m2!1sen!2ssg!4v1" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Map" />
             </div>
             <div className="location-info">
               <h3><i className="fas fa-spa" style={{ color: "var(--gold)", marginRight: 8, fontSize: 20 }} /> International Sri Krishna Mandir</h3>
-              <div className="location-detail"><i className="fas fa-map-marker-alt" /><div><strong>Address</strong>No.9 Lorong 29 Geylang, #03-02, Singapore 388062</div></div>
+              <div className="location-detail"><i className="fas fa-map-marker-alt" /><div><strong>Address</strong>No.9 Lorong 29 Geylang, #03-02, Singapore 388065</div></div>
               <div className="location-detail"><i className="far fa-clock" /><div><strong>Every Sunday</strong>5:00 PM – 7:30 PM</div></div>
               <div className="location-detail"><i className="fas fa-phone" /><div><strong>Contact</strong>+65 8125 1260</div></div>
               <div className="directions-list">
@@ -609,7 +609,7 @@ export default function SundayLoveFeast() {
                 <div className="direction-item"><i className="fas fa-bus" /> <strong>Bus:</strong>&nbsp; 2, 13, 21, 26, 51, 67 along Geylang Road</div>
                 <div className="direction-item"><i className="fas fa-car" /> <strong>Parking:</strong>&nbsp; Street parking available on Lorong 29</div>
               </div>
-              <a href="https://maps.google.com/?q=9+Lorong+29+Geylang+%2303-02+Singapore+388065" target="_blank" rel="noopener noreferrer" className="btn-directions">
+              <a href="https://www.google.com/maps/place/International+Sri+Krishna+Mandir+(ISKM)/@1.3146362,103.8807558,17z/data=!3m1!5s0x31da183c7fd36ed1:0x5a6dd216c71b14b1!4m6!3m5!1s0x31da183c80ceaac5:0x458ccd4e57b8697b!8m2!3d1.3146362!4d103.8856267!16s%2Fg%2F1tf33gsl" target="_blank" rel="noopener noreferrer" className="btn-directions">
                 <i className="fas fa-directions" /> Get Directions
               </a>
             </div>
