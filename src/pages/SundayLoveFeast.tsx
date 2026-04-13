@@ -231,7 +231,7 @@ export default function SundayLoveFeast() {
       {/* Sticky Nav */}
       <nav className={`sticky-nav${navScrolled ? " scrolled" : ""}`} ref={navRef}>
         <a href="#slf-home" className="nav-brand" onClick={e => { e.preventDefault(); scrollTo("slf-home"); }}>
-          <img src="/images/logo.jpg" alt="ISKM Logo" width="32" height="32" />
+          <img src="/images/logo.webp" alt="ISKM Logo" width="32" height="32" />
           ISKM Singapore
         </a>
         <div className="nav-links">
@@ -287,7 +287,7 @@ export default function SundayLoveFeast() {
             </div>
           </div>
           <div className="hero-video-wrap">
-            <video autoPlay muted loop playsInline poster="/images/9-congregation-seated-temple-hall-wide.jpg" ref={heroVideoRef}>
+            <video autoPlay muted loop playsInline poster="/images/community-family.jpg" ref={heroVideoRef}>
               <source src="/images/hero-video.mp4" type="video/mp4" />
             </video>
             <div className="hero-video-overlay">
@@ -578,7 +578,7 @@ export default function SundayLoveFeast() {
         <div className="container">
           <div className="footer-inner">
             <div className="footer-brand">
-              <img src="/images/logo.jpg" alt="ISKM" width="28" height="28" />
+              <img src="/images/logo.webp" alt="ISKM" width="28" height="28" />
               <span>ISKM Singapore</span>
             </div>
             <div className="footer-links">
