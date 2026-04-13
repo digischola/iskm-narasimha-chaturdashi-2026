@@ -301,69 +301,17 @@ Deno.serve(async (req) => {
     return new Response("ok", { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" } });
   }
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const supabase = createClient(supabaseUrl, supabaseKey);
-
-  // TEST MODE: send a single test reminder to a specified email
-  let testMode = false;
-  let testEmail = "";
-  let testName = "Test User";
-  try {
-    const body = await req.clone().json();
-    if (body?.test_email) {
-      testMode = true;
-      testEmail = body.test_email;
-      testName = body.test_name || "Test User";
-    }
-  } catch { /* no body = normal cron mode */ }
-
-  if (!testMode) {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-  }
-
-  if (testMode) {
-    // Send single test reminder
-    const firstName = testName.trim().split(/\s+/)[0];
-    const token = crypto.randomUUID();
-    const unsubscribeUrl = "https://events.srikrishnamandir.org/unsubscribe?token=" + token;
-    await supabase.from("email_unsubscribe_tokens").insert({ email: testEmail, token });
-    const html = renderTemplate(REMINDER_HTML, { first_name: firstName, unsubscribe_url: unsubscribeUrl });
-    const text = `Tomorrow, ${firstName} — Śrī Nṛsiṁha Caturdaśī 2026\n\nThursday, 30 April 2026\n6:30 PM – 10:00 PM\nInternational Sri Krishna Mandir\nNo.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nUnsubscribe: ${unsubscribeUrl}`;
-    const messageId = "nc-reminder-test-" + crypto.randomUUID().slice(0, 8);
-    await supabase.rpc("enqueue_email", {
-      queue_name: "transactional_emails",
-      payload: {
-        to: testEmail,
-        from: "ISKM Singapore <contact@notify.events.srikrishnamandir.org>",
-        sender_domain: "notify.events.srikrishnamandir.org",
-        subject: "Tomorrow, " + firstName + " 🦁",
-        html,
-        text,
-        purpose: "transactional",
-        label: "nc-reminder",
-        message_id: messageId,
-        idempotency_key: messageId,
-        unsubscribe_token: token,
-        queued_at: new Date().toISOString(),
-      },
-    });
-    await supabase.from("email_send_log").insert({
-      message_id: messageId,
-      template_name: "nc-reminder",
-      recipient_email: testEmail,
-      status: "pending",
-    });
-    return new Response(JSON.stringify({ success: true, test: true, message_id: messageId }), {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
       headers: { "Content-Type": "application/json" },
     });
   }
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   const { data: registrations, error } = await supabase
     .from("registrations")
