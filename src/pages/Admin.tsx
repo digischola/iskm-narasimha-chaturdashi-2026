@@ -30,6 +30,19 @@ interface SlfRegistration {
   created_at: string;
 }
 
+interface PrasadamSponsorship {
+  id: string;
+  full_name: string;
+  whatsapp_number: string;
+  preferred_date: string;
+  occasion: string | null;
+  tier: string;
+  dedication: string | null;
+  status: string;
+  notes: string | null;
+  created_at: string;
+}
+
 interface EmailLog {
   id: string;
   message_id: string | null;
@@ -50,7 +63,7 @@ interface TrackingEvent {
   created_at: string;
 }
 
-type Page = "overview" | "registrations" | "emails";
+type Page = "overview" | "registrations" | "emails" | "prasadam";
 
 const ROWS_PER_PAGE = 10;
 
