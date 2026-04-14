@@ -137,6 +137,45 @@ export type Database = {
         }
         Relationships: []
       }
+      prasadam_sponsorships: {
+        Row: {
+          created_at: string
+          dedication: string | null
+          full_name: string
+          id: string
+          notes: string | null
+          occasion: string | null
+          preferred_date: string
+          status: string
+          tier: string
+          whatsapp_number: string
+        }
+        Insert: {
+          created_at?: string
+          dedication?: string | null
+          full_name: string
+          id?: string
+          notes?: string | null
+          occasion?: string | null
+          preferred_date: string
+          status?: string
+          tier: string
+          whatsapp_number: string
+        }
+        Update: {
+          created_at?: string
+          dedication?: string | null
+          full_name?: string
+          id?: string
+          notes?: string | null
+          occasion?: string | null
+          preferred_date?: string
+          status?: string
+          tier?: string
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
       registrations: {
         Row: {
           age: string | null
