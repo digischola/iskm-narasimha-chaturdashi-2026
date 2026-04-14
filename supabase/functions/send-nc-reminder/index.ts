@@ -283,7 +283,7 @@ const REMINDER_HTML = `<!DOCTYPE html>
   </td></tr>
 </table>
 </center>
-
+{{tracking_pixel}}
 </body>
 </html>
 `;
@@ -294,6 +294,26 @@ function renderTemplate(html: string, vars: Record<string, string>): string {
     result = result.replaceAll("{{" + key + "}}", value);
   }
   return result;
+}
+
+function trackUrl(base: string, rid: string, et: string, email: string, linkName: string, originalUrl: string): string {
+  return `${base}?t=c&et=${et}&rid=${rid}&e=${encodeURIComponent(email)}&l=${linkName}&r=${encodeURIComponent(originalUrl)}`;
+}
+
+function addClickTracking(html: string, trackBase: string, rid: string, et: string, email: string): string {
+  html = html.replace(
+    /href="(https:\/\/calendar\.google\.com\/[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'calendar', url)}"`
+  );
+  html = html.replace(
+    /href="(https:\/\/www\.google\.com\/maps\/place[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'directions', url)}"`
+  );
+  html = html.replace(
+    /href="(https:\/\/wa\.me\/\?text=[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'share_whatsapp', url)}"`
+  );
+  return html;
 }
 
 Deno.serve(async (req) => {
@@ -367,7 +387,14 @@ Deno.serve(async (req) => {
     }
 
     const unsubscribeUrl = "https://events.srikrishnamandir.org/unsubscribe?token=" + token;
-    const html = renderTemplate(REMINDER_HTML, { first_name: firstName, unsubscribe_url: unsubscribeUrl });
+    const trackBase = supabaseUrl + "/functions/v1/track-email";
+    const pixelUrl = `${trackBase}?t=o&et=reminder&rid=${reg.id}&e=${encodeURIComponent(reg.email)}`;
+    let html = renderTemplate(REMINDER_HTML, {
+      first_name: firstName,
+      unsubscribe_url: unsubscribeUrl,
+      tracking_pixel: `<img src="${pixelUrl}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="" />`,
+    });
+    html = addClickTracking(html, trackBase, reg.id, "reminder", reg.email);
     const text = `Tomorrow, ${firstName} — Śrī Nṛsiṁha Caturdaśī 2026\n\nThursday, 30 April 2026\n6:30 PM – 10:00 PM\nInternational Sri Krishna Mandir\nNo.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nSchedule:\n6:30–7:00 PM – Ārati & Kīrtana\n7:00–8:00 PM – Grand Abhiṣeka\n8:00–10:00 PM – Cultural Programme\n8:30 PM – Prasādam Served\n\nGet Directions: https://maps.app.goo.gl/ISKM\n\nUnsubscribe: ${unsubscribeUrl}`;
     const messageId = "nc-reminder-" + reg.id;
 

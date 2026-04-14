@@ -77,6 +77,42 @@ export type Database = {
         }
         Relationships: []
       }
+      email_tracking_events: {
+        Row: {
+          created_at: string
+          email_type: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          link_name: string | null
+          recipient_email: string
+          registration_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          email_type: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          link_name?: string | null
+          recipient_email: string
+          registration_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          email_type?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          link_name?: string | null
+          recipient_email?: string
+          registration_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       email_unsubscribe_tokens: {
         Row: {
           created_at: string

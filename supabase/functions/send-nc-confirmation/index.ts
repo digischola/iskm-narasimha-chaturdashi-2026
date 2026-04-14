@@ -289,7 +289,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
   </td></tr>
 </table>
 </center>
-
+{{tracking_pixel}}
 </body>
 </html>
 `;
@@ -300,6 +300,34 @@ function renderTemplate(html: string, vars: Record<string, string>): string {
     result = result.replaceAll("{{" + key + "}}", value);
   }
   return result;
+}
+
+function trackUrl(base: string, rid: string, et: string, email: string, linkName: string, originalUrl: string): string {
+  return `${base}?t=c&et=${et}&rid=${rid}&e=${encodeURIComponent(email)}&l=${linkName}&r=${encodeURIComponent(originalUrl)}`;
+}
+
+function addClickTracking(html: string, trackBase: string, rid: string, et: string, email: string): string {
+  // Calendar link
+  html = html.replace(
+    /href="(https:\/\/calendar\.google\.com\/[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'calendar', url)}"`
+  );
+  // Kavacha / Buy link
+  html = html.replace(
+    /href="(https:\/\/iskm-eshop\.kyte\.site[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'buy_kavacha', url)}"`
+  );
+  // Directions / Maps link
+  html = html.replace(
+    /href="(https:\/\/www\.google\.com\/maps\/place[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'directions', url)}"`
+  );
+  // WhatsApp share
+  html = html.replace(
+    /href="(https:\/\/wa\.me\/\?text=[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'share_whatsapp', url)}"`
+  );
+  return html;
 }
 
 Deno.serve(async (req) => {
@@ -346,10 +374,17 @@ Deno.serve(async (req) => {
       token,
     });
 
-    const html = renderTemplate(CONFIRMATION_HTML, {
+    const trackBase = supabaseUrl + "/functions/v1/track-email";
+    const pixelUrl = `${trackBase}?t=o&et=confirmation&rid=${registration_id}&e=${encodeURIComponent(email)}`;
+
+    let html = renderTemplate(CONFIRMATION_HTML, {
       first_name: firstName,
       unsubscribe_url: unsubscribeUrl,
+      tracking_pixel: `<img src="${pixelUrl}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="" />`,
     });
+
+    // Add click tracking
+    html = addClickTracking(html, trackBase, registration_id, "confirmation", email);
 
     const text = `You're in, ${firstName} — Śrī Nṛsiṁha Caturdaśī 2026\n\nYour seat is saved.\n\nThursday, 30 April 2026\n6:30 PM – 10:00 PM\nInternational Sri Krishna Mandir\nNo.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nSchedule:\n6:30–7:00 PM – Ārati & Kīrtana\n7:00–8:00 PM – Grand Abhiṣeka\n8:00–10:00 PM – Cultural Programme\n8:30 PM – Prasādam Served\n\nQuestions? WhatsApp +65 6250 2280\n\nISKM Singapore\nhttps://events.srikrishnamandir.org/nrsimha-caturdasi-2026\n\nUnsubscribe: ${unsubscribeUrl}`;
 
