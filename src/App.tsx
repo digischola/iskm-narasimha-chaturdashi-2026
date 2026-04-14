@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 const SundayLoveFeast = lazy(() => import("@/pages/SundayLoveFeast"));
+const FreePrasadamProgram = lazy(() => import("@/pages/FreePrasadamProgram"));
 
 
 /* ═══ HOOKS ═══ */
@@ -802,6 +803,7 @@ export default function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/sunday-love-feast" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><SundayLoveFeast /></Suspense>} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
+        <Route path="/free-prasadam-program" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><FreePrasadamProgram /></Suspense>} />
       </Routes>
     </BrowserRouter>
   );
