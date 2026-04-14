@@ -30,6 +30,19 @@ interface SlfRegistration {
   created_at: string;
 }
 
+interface PrasadamSponsorship {
+  id: string;
+  full_name: string;
+  whatsapp_number: string;
+  preferred_date: string;
+  occasion: string | null;
+  tier: string;
+  dedication: string | null;
+  status: string;
+  notes: string | null;
+  created_at: string;
+}
+
 interface EmailLog {
   id: string;
   message_id: string | null;
@@ -50,7 +63,7 @@ interface TrackingEvent {
   created_at: string;
 }
 
-type Page = "overview" | "registrations" | "emails";
+type Page = "overview" | "registrations" | "emails" | "prasadam";
 
 const ROWS_PER_PAGE = 10;
 
@@ -59,6 +72,7 @@ export default function Admin() {
   const [page, setPage] = useState<Page>("overview");
   const [ncData, setNcData] = useState<Registration[]>([]);
   const [slfData, setSlfData] = useState<SlfRegistration[]>([]);
+  const [prasadamData, setPrasadamData] = useState<PrasadamSponsorship[]>([]);
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
   const [trackingEvents, setTrackingEvents] = useState<TrackingEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,6 +84,7 @@ export default function Admin() {
   const [eventTab, setEventTab] = useState<"nrsimha" | "slf">("nrsimha");
   const [regPage, setRegPage] = useState(1);
   const [emailPage, setEmailPage] = useState(1);
+  const [prasadamPage, setPrasadamPage] = useState(1);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,14 +108,16 @@ export default function Admin() {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [ncRes, slfRes, emailRes, trackRes] = await Promise.all([
+    const [ncRes, slfRes, prasadamRes, emailRes, trackRes] = await Promise.all([
       supabase.from("registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("slf_registrations").select("*").order("created_at", { ascending: false }),
+      supabase.from("prasadam_sponsorships").select("*").order("created_at", { ascending: false }),
       supabase.from("email_send_log").select("*").order("created_at", { ascending: false }).limit(1000),
       supabase.from("email_tracking_events").select("*").order("created_at", { ascending: false }).limit(1000),
     ]);
     setNcData((ncRes.data as Registration[]) || []);
     setSlfData((slfRes.data as SlfRegistration[]) || []);
+    setPrasadamData((prasadamRes.data as PrasadamSponsorship[]) || []);
     setEmailLogs((emailRes.data as EmailLog[]) || []);
     setTrackingEvents((trackRes.data as TrackingEvent[]) || []);
     setLoading(false);
@@ -196,6 +213,19 @@ export default function Admin() {
   const emailTotalPages = Math.max(1, Math.ceil(filteredEmails.length / ROWS_PER_PAGE));
   const emailSlice = filteredEmails.slice((emailPage - 1) * ROWS_PER_PAGE, emailPage * ROWS_PER_PAGE);
 
+  // Filtered & paginated prasadam sponsorships
+  const filteredPrasadam = prasadamData.filter(
+    (r: PrasadamSponsorship) => r.full_name.toLowerCase().includes(search.toLowerCase()) ||
+      r.whatsapp_number.toLowerCase().includes(search.toLowerCase()) ||
+      (r.occasion || "").toLowerCase().includes(search.toLowerCase()) ||
+      r.status.toLowerCase().includes(search.toLowerCase())
+  );
+  const prasadamPending = prasadamData.filter(r => r.status === "pending").length;
+  const prasadamConfirmed = prasadamData.filter(r => r.status === "confirmed").length;
+  const prasadamCompleted = prasadamData.filter(r => r.status === "completed").length;
+  const prasadamTotalPages = Math.max(1, Math.ceil(filteredPrasadam.length / ROWS_PER_PAGE));
+  const prasadamSlice = filteredPrasadam.slice((prasadamPage - 1) * ROWS_PER_PAGE, prasadamPage * ROWS_PER_PAGE);
+
   const getInitials = (name: string) => {
     const parts = name.trim().split(/\s+/);
     return parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
@@ -204,7 +234,12 @@ export default function Admin() {
   const handleDownloadCSV = () => {
     let csvContent: string;
     let prefix: string;
-    if (page === "emails") {
+    if (page === "prasadam") {
+      const headers = ["Full Name", "WhatsApp", "Preferred Date", "Occasion", "Tier", "Dedication", "Status", "Submitted At"];
+      const rows = filteredPrasadam.map(r => [r.full_name, r.whatsapp_number, r.preferred_date, r.occasion || "", r.tier, r.dedication || "", r.status, new Date(r.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "prasadam_sponsorships";
+    } else if (page === "emails") {
       const headers = ["Template", "Recipient", "Status", "Error", "Sent At"];
       const rows = filteredEmails.map(e => [e.template_name, e.recipient_email, e.status, e.error_message || "", new Date(e.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -232,6 +267,7 @@ export default function Admin() {
   const navItems = [
     { id: "overview" as Page, label: "Executive Overview", icon: "fas fa-th-large" },
     { id: "registrations" as Page, label: "Registration Logs", icon: "fas fa-users" },
+    { id: "prasadam" as Page, label: "Prasadam Program", icon: "fas fa-hand-holding-heart" },
     { id: "emails" as Page, label: "Email Archive", icon: "fas fa-envelope" },
   ];
 
@@ -282,9 +318,9 @@ export default function Admin() {
                 <input
                   type="text"
                   className="admin-search-input"
-                  placeholder={page === "emails" ? "Search emails..." : "Search registrations..."}
+                  placeholder={page === "emails" ? "Search emails..." : page === "prasadam" ? "Search sponsorships..." : "Search registrations..."}
                   value={search}
-                  onChange={e => { setSearch(e.target.value); setRegPage(1); setEmailPage(1); }}
+                  onChange={e => { setSearch(e.target.value); setRegPage(1); setEmailPage(1); setPrasadamPage(1); }}
                 />
               </div>
             )}
@@ -515,7 +551,94 @@ export default function Admin() {
             </>
           )}
 
-          {/* ═══ EMAIL ARCHIVE PAGE ═══ */}
+          {/* ═══ PRASADAM PROGRAM PAGE ═══ */}
+          {page === "prasadam" && (
+            <>
+              <div className="admin-page-header">
+                <h1>Free Prasadam Program</h1>
+                <p>Sponsorship requests and status tracking</p>
+              </div>
+
+              <div className="admin-stats-row">
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Total Submissions</div>
+                  <div className="admin-stat-value">{prasadamData.length}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Pending</div>
+                  <div className="admin-stat-value orange">{prasadamPending}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Confirmed</div>
+                  <div className="admin-stat-value green">{prasadamConfirmed}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Completed</div>
+                  <div className="admin-stat-value gold">{prasadamCompleted}</div>
+                </div>
+              </div>
+
+              <div className="admin-table-card">
+                <div className="admin-table-header">
+                  <h3>Sponsorship Requests</h3>
+                  <span style={{ fontSize: "13px", color: "#888" }}>
+                    Showing {Math.min((prasadamPage - 1) * ROWS_PER_PAGE + 1, filteredPrasadam.length)}-{Math.min(prasadamPage * ROWS_PER_PAGE, filteredPrasadam.length)} of {filteredPrasadam.length} entries
+                  </span>
+                </div>
+                <div style={{ overflowX: "auto" }}>
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>WhatsApp</th>
+                        <th>Date</th>
+                        <th>Occasion</th>
+                        <th>Tier</th>
+                        <th>Dedication</th>
+                        <th>Status</th>
+                        <th>Submitted</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {prasadamSlice.map((r) => (
+                        <tr key={r.id}>
+                          <td>
+                            <div className="admin-name-cell">
+                              <div className="admin-avatar">{getInitials(r.full_name)}</div>
+                              <span className="admin-name-text">{r.full_name}</span>
+                            </div>
+                          </td>
+                          <td style={{ color: "#666" }}>{r.whatsapp_number}</td>
+                          <td style={{ whiteSpace: "nowrap", color: "#1e3a6e", fontWeight: 600 }}>
+                            {new Date(r.preferred_date + "T00:00:00").toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", weekday: "short" })}
+                          </td>
+                          <td style={{ color: "#666" }}>{r.occasion || "—"}</td>
+                          <td>
+                            <span className={`admin-badge ${r.tier === "sunday-500" ? "sent" : "pending"}`}>
+                              {r.tier === "sunday-500" ? "Sunday $500" : "Weekday $300"}
+                            </span>
+                          </td>
+                          <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
+                            {r.dedication || "—"}
+                          </td>
+                          <td><StatusBadge status={r.status} /></td>
+                          <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
+                            <div>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short" })}</div>
+                            <div style={{ fontSize: "11px", color: "#aaa" }}>{new Date(r.created_at).toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit" })}</div>
+                          </td>
+                        </tr>
+                      ))}
+                      {prasadamSlice.length === 0 && (
+                        <tr><td colSpan={8} className="admin-empty">No sponsorship requests found</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                <Pagination current={prasadamPage} total={prasadamTotalPages} onChange={setPrasadamPage} count={filteredPrasadam.length} />
+              </div>
+            </>
+          )}
+
           {page === "emails" && (
             <>
               <div className="admin-page-header">
