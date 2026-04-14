@@ -283,7 +283,7 @@ const REMINDER_HTML = `<!DOCTYPE html>
   </td></tr>
 </table>
 </center>
-
+{{tracking_pixel}}
 </body>
 </html>
 `;
@@ -294,6 +294,26 @@ function renderTemplate(html: string, vars: Record<string, string>): string {
     result = result.replaceAll("{{" + key + "}}", value);
   }
   return result;
+}
+
+function trackUrl(base: string, rid: string, et: string, email: string, linkName: string, originalUrl: string): string {
+  return `${base}?t=c&et=${et}&rid=${rid}&e=${encodeURIComponent(email)}&l=${linkName}&r=${encodeURIComponent(originalUrl)}`;
+}
+
+function addClickTracking(html: string, trackBase: string, rid: string, et: string, email: string): string {
+  html = html.replace(
+    /href="(https:\/\/calendar\.google\.com\/[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'calendar', url)}"`
+  );
+  html = html.replace(
+    /href="(https:\/\/www\.google\.com\/maps\/place[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'directions', url)}"`
+  );
+  html = html.replace(
+    /href="(https:\/\/wa\.me\/\?text=[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'share_whatsapp', url)}"`
+  );
+  return html;
 }
 
 Deno.serve(async (req) => {
