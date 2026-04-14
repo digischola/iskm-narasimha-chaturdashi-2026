@@ -72,6 +72,7 @@ export default function Admin() {
   const [page, setPage] = useState<Page>("overview");
   const [ncData, setNcData] = useState<Registration[]>([]);
   const [slfData, setSlfData] = useState<SlfRegistration[]>([]);
+  const [prasadamData, setPrasadamData] = useState<PrasadamSponsorship[]>([]);
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
   const [trackingEvents, setTrackingEvents] = useState<TrackingEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -83,6 +84,7 @@ export default function Admin() {
   const [eventTab, setEventTab] = useState<"nrsimha" | "slf">("nrsimha");
   const [regPage, setRegPage] = useState(1);
   const [emailPage, setEmailPage] = useState(1);
+  const [prasadamPage, setPrasadamPage] = useState(1);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
