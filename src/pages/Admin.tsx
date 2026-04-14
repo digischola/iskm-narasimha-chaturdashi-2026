@@ -226,6 +226,7 @@ export default function Admin() {
   const prasadamTotalPages = Math.max(1, Math.ceil(filteredPrasadam.length / ROWS_PER_PAGE));
   const prasadamSlice = filteredPrasadam.slice((prasadamPage - 1) * ROWS_PER_PAGE, prasadamPage * ROWS_PER_PAGE);
 
+  const getInitials = (name: string) => {
     const parts = name.trim().split(/\s+/);
     return parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
   };
