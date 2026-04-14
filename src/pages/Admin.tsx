@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import "./AdminStyles.css";
 
+// ═══ TYPES ═══
 interface Registration {
   id: string;
   name: string;
@@ -38,19 +40,36 @@ interface EmailLog {
   created_at: string;
 }
 
-type Tab = "nrsimha" | "slf" | "emails";
+interface TrackingEvent {
+  id: string;
+  registration_id: string | null;
+  email_type: string;
+  event_type: string;
+  link_name: string | null;
+  recipient_email: string;
+  created_at: string;
+}
 
+type Page = "overview" | "registrations" | "emails";
+
+const ROWS_PER_PAGE = 10;
+
+// ═══ MAIN COMPONENT ═══
 export default function Admin() {
-  const [tab, setTab] = useState<Tab>("nrsimha");
+  const [page, setPage] = useState<Page>("overview");
   const [ncData, setNcData] = useState<Registration[]>([]);
   const [slfData, setSlfData] = useState<SlfRegistration[]>([]);
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
+  const [trackingEvents, setTrackingEvents] = useState<TrackingEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
+  const [eventTab, setEventTab] = useState<"nrsimha" | "slf">("nrsimha");
+  const [regPage, setRegPage] = useState(1);
+  const [emailPage, setEmailPage] = useState(1);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,77 +93,63 @@ export default function Admin() {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [ncRes, slfRes, emailRes] = await Promise.all([
+    const [ncRes, slfRes, emailRes, trackRes] = await Promise.all([
       supabase.from("registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("slf_registrations").select("*").order("created_at", { ascending: false }),
-      supabase.from("email_send_log").select("*").order("created_at", { ascending: false }).limit(500),
+      supabase.from("email_send_log").select("*").order("created_at", { ascending: false }).limit(1000),
+      supabase.from("email_tracking_events").select("*").order("created_at", { ascending: false }).limit(1000),
     ]);
     setNcData((ncRes.data as Registration[]) || []);
     setSlfData((slfRes.data as SlfRegistration[]) || []);
     setEmailLogs((emailRes.data as EmailLog[]) || []);
+    setTrackingEvents((trackRes.data as TrackingEvent[]) || []);
     setLoading(false);
   };
 
+  // ═══ LOGIN ═══
   if (!loggedIn) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--cream)", fontFamily: "'Source Sans Pro', sans-serif" }}>
-        <form onSubmit={handleLogin} style={{ background: "white", padding: "40px", borderRadius: "16px", boxShadow: "0 4px 24px rgba(0,0,0,.08)", maxWidth: "380px", width: "100%" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--navy)", marginBottom: "20px", textAlign: "center" }}>Admin Login</h2>
-          {authError && <p style={{ color: "var(--red)", fontSize: "13px", marginBottom: "12px", textAlign: "center" }}>{authError}</p>}
-          <div style={{ marginBottom: "12px" }}>
-            <label style={{ display: "block", fontSize: "12px", fontWeight: 600, marginBottom: "4px" }}>Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required style={{ width: "100%", padding: "10px 14px", border: "1.5px solid #e5ded5", borderRadius: "8px", fontSize: "14px", background: "var(--cream)" }} />
-          </div>
-          <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", fontSize: "12px", fontWeight: 600, marginBottom: "4px" }}>Password</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required style={{ width: "100%", padding: "10px 14px", border: "1.5px solid #e5ded5", borderRadius: "8px", fontSize: "14px", background: "var(--cream)" }} />
-          </div>
-          <button type="submit" style={{ width: "100%", padding: "12px", background: "var(--navy)", color: "white", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "15px", cursor: "pointer" }}>Sign In</button>
-        </form>
+      <div className="admin-login-wrapper">
+        <div className="admin-login-card">
+          <h2>Admin Panel</h2>
+          <p className="admin-login-sub">ISKM Singapore Events</p>
+          {authError && <p className="admin-login-error">{authError}</p>}
+          <form onSubmit={handleLogin}>
+            <div className="admin-form-group">
+              <label>Email</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="admin@example.com" />
+            </div>
+            <div className="admin-form-group">
+              <label>Password</label>
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••" />
+            </div>
+            <button type="submit" className="admin-login-btn">Sign In</button>
+          </form>
+        </div>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--cream)" }}>
-        <p style={{ color: "var(--navy)", fontSize: "18px" }}>Loading...</p>
+      <div className="admin-loading">
+        <div className="admin-loading-spinner">
+          <div className="spinner-dot"></div>
+          <span style={{ color: "#1e3a6e", fontSize: "14px", fontWeight: 600 }}>Loading dashboard...</span>
+        </div>
       </div>
     );
   }
 
   const handleLogout = async () => { await supabase.auth.signOut(); };
 
-  // ─── Program-specific data ───
-  const isSlf = tab === "slf";
-  const isEmails = tab === "emails";
-  const activeData = isSlf ? slfData : ncData;
-  const totalRegistrations = activeData.length;
-  const totalAttendees = activeData.reduce((s, r) => s + r.attendees, 0);
-  const firstTimeCount = isSlf ? slfData.filter(r => r.first_time).length : 0;
+  // ═══ COMPUTED DATA ═══
+  const activeRegData = eventTab === "slf" ? slfData : ncData;
+  const totalRegistrations = activeRegData.length;
+  const totalAttendees = activeRegData.reduce((s, r) => s + r.attendees, 0);
+  const avgGroupSize = totalRegistrations > 0 ? (totalAttendees / totalRegistrations).toFixed(1) : "0";
 
-  const dayMap: Record<string, number> = {};
-  activeData.forEach((r) => {
-    const day = new Date(r.created_at).toLocaleDateString("en-SG", { month: "short", day: "numeric" });
-    dayMap[day] = (dayMap[day] || 0) + 1;
-  });
-  const chartData = Object.entries(dayMap).reverse().map(([date, count]) => ({ date, count }));
-
-  const filtered = activeData.filter(
-    (r) =>
-      r.name.toLowerCase().includes(search.toLowerCase()) ||
-      r.email.toLowerCase().includes(search.toLowerCase())
-  );
-
-  // Email log filtering
-  const filteredEmails = emailLogs.filter(
-    (e) =>
-      e.recipient_email.toLowerCase().includes(search.toLowerCase()) ||
-      e.template_name.toLowerCase().includes(search.toLowerCase()) ||
-      e.status.toLowerCase().includes(search.toLowerCase())
-  );
-
-  // Deduplicate by message_id for stats
+  // Deduplicated emails
   const uniqueEmails = new Map<string, EmailLog>();
   emailLogs.forEach((e) => {
     const key = e.message_id || e.id;
@@ -158,26 +163,63 @@ export default function Admin() {
   const emailStatPending = uniqueEmailList.filter(e => e.status === "pending").length;
   const emailStatFailed = uniqueEmailList.filter(e => e.status === "failed" || e.status === "dlq").length;
 
-  const handleDownloadCSV = () => {
-    if (isEmails) {
-      const headers = ["Template", "Recipient", "Status", "Error", "Sent At"];
-      const rows = emailLogs.map(e => [e.template_name, e.recipient_email, e.status, e.error_message || "", new Date(e.created_at).toLocaleString("en-SG")]);
-      const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
-      downloadCSV(csvContent, "email_log");
-    } else if (isSlf) {
-      const headers = ["Name", "Email", "Phone", "Attendees", "First Time", "Registered At"];
-      const rows = slfData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
-      const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
-      downloadCSV(csvContent, "slf_registrations");
-    } else {
-      const headers = ["Name", "Email", "Phone", "Attendees", "Confirmation Sent", "Reminder Sent", "Registered At"];
-      const rows = ncData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
-      const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
-      downloadCSV(csvContent, "registrations");
-    }
+  // Tracking stats
+  const openEvents = trackingEvents.filter(t => t.event_type === "open");
+  const clickEvents = trackingEvents.filter(t => t.event_type === "click");
+  const uniqueOpens = new Set(openEvents.map(t => t.recipient_email)).size;
+  const calendarClicks = clickEvents.filter(t => t.link_name === "calendar").length;
+  const kavachaClicks = clickEvents.filter(t => t.link_name === "buy_kavacha").length;
+  const directionsClicks = clickEvents.filter(t => t.link_name === "directions").length;
+  const openRate = emailStatSent > 0 ? ((uniqueOpens / emailStatSent) * 100).toFixed(1) : "0";
+
+  // Chart data
+  const dayMap: Record<string, number> = {};
+  activeRegData.forEach((r) => {
+    const day = new Date(r.created_at).toLocaleDateString("en-SG", { month: "short", day: "numeric" });
+    dayMap[day] = (dayMap[day] || 0) + 1;
+  });
+  const chartData = Object.entries(dayMap).reverse().map(([date, count]) => ({ date, count }));
+
+  // Filtered & paginated registrations
+  const filteredReg = activeRegData.filter(
+    (r) => r.name.toLowerCase().includes(search.toLowerCase()) || r.email.toLowerCase().includes(search.toLowerCase())
+  );
+  const regTotalPages = Math.max(1, Math.ceil(filteredReg.length / ROWS_PER_PAGE));
+  const regSlice = filteredReg.slice((regPage - 1) * ROWS_PER_PAGE, regPage * ROWS_PER_PAGE);
+
+  // Filtered & paginated emails
+  const filteredEmails = uniqueEmailList.filter(
+    (e) => e.recipient_email.toLowerCase().includes(search.toLowerCase()) ||
+      e.template_name.toLowerCase().includes(search.toLowerCase()) ||
+      e.status.toLowerCase().includes(search.toLowerCase())
+  );
+  const emailTotalPages = Math.max(1, Math.ceil(filteredEmails.length / ROWS_PER_PAGE));
+  const emailSlice = filteredEmails.slice((emailPage - 1) * ROWS_PER_PAGE, emailPage * ROWS_PER_PAGE);
+
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(/\s+/);
+    return parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
   };
 
-  const downloadCSV = (csvContent: string, prefix: string) => {
+  const handleDownloadCSV = () => {
+    let csvContent: string;
+    let prefix: string;
+    if (page === "emails") {
+      const headers = ["Template", "Recipient", "Status", "Error", "Sent At"];
+      const rows = filteredEmails.map(e => [e.template_name, e.recipient_email, e.status, e.error_message || "", new Date(e.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "email_log";
+    } else if (eventTab === "slf") {
+      const headers = ["Name", "Email", "Phone", "Attendees", "First Time", "Registered At"];
+      const rows = slfData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "slf_registrations";
+    } else {
+      const headers = ["Name", "Email", "Phone", "Attendees", "Confirmation", "Reminder", "Registered At"];
+      const rows = ncData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "nc_registrations";
+    }
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -187,185 +229,428 @@ export default function Admin() {
     URL.revokeObjectURL(url);
   };
 
-  const tabStyle = (active: boolean): React.CSSProperties => ({
-    padding: "8px 20px",
-    borderRadius: "8px",
-    border: "none",
-    cursor: "pointer",
-    fontWeight: 600,
-    fontSize: "13px",
-    background: active ? "var(--navy)" : "var(--cream-warm, #f5f0e8)",
-    color: active ? "white" : "var(--navy)",
-    transition: "all .2s",
-  });
-
-  const statusBadge = (status: string) => {
-    const colors: Record<string, { bg: string; color: string }> = {
-      sent: { bg: "#e8f5e9", color: "#2e7d32" },
-      pending: { bg: "#fff3e0", color: "#e65100" },
-      failed: { bg: "#fce4ec", color: "#c62828" },
-      dlq: { bg: "#fce4ec", color: "#c62828" },
-      rate_limited: { bg: "#fff3e0", color: "#e65100" },
-      suppressed: { bg: "#f3e5f5", color: "#6a1b9a" },
-    };
-    const c = colors[status] || { bg: "#f5f5f5", color: "#666" };
-    return (
-      <span style={{ display: "inline-block", padding: "2px 10px", borderRadius: "999px", fontSize: "11px", fontWeight: 700, background: c.bg, color: c.color, textTransform: "uppercase", letterSpacing: "0.5px" }}>
-        {status}
-      </span>
-    );
-  };
+  const navItems = [
+    { id: "overview" as Page, label: "Executive Overview", icon: "fas fa-th-large" },
+    { id: "registrations" as Page, label: "Registration Logs", icon: "fas fa-users" },
+    { id: "emails" as Page, label: "Email Archive", icon: "fas fa-envelope" },
+  ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--cream)", fontFamily: "'Source Sans Pro', sans-serif", padding: "24px" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--navy)", fontSize: "28px" }}>Registration Dashboard</h1>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button onClick={handleDownloadCSV} style={{ background: "var(--navy)", color: "white", border: "none", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", fontWeight: 600, fontSize: "13px" }}>⬇ Download CSV</button>
-            <button onClick={handleLogout} style={{ background: "var(--cream-warm)", border: "1px solid #e5ded5", padding: "8px 16px", borderRadius: "6px", cursor: "pointer", fontWeight: 600, color: "var(--navy)" }}>Sign Out</button>
+    <div className="admin-wrapper">
+      {/* SIDEBAR */}
+      <aside className="admin-sidebar">
+        <div className="admin-sidebar-header">
+          <div className="admin-sidebar-brand">ISKM Events</div>
+          <div className="admin-sidebar-sub">Management Suite</div>
+        </div>
+        <nav className="admin-sidebar-nav">
+          {navItems.map(item => (
+            <button
+              key={item.id}
+              className={`admin-nav-item${page === item.id ? " active" : ""}`}
+              onClick={() => { setPage(item.id); setSearch(""); setRegPage(1); setEmailPage(1); }}
+            >
+              <i className={item.icon}></i>
+              {item.label}
+            </button>
+          ))}
+        </nav>
+        <div className="admin-sidebar-footer">
+          <div className="admin-user-info">
+            <div className="admin-user-avatar">A</div>
+            <div>
+              <div className="admin-user-name">Admin</div>
+              <div className="admin-user-role">Super User</div>
+            </div>
+          </div>
+          <button className="admin-btn-signout" onClick={handleLogout}>Sign Out</button>
+        </div>
+      </aside>
+
+      {/* MAIN */}
+      <main className="admin-main">
+        <div className="admin-topbar">
+          <div className="admin-topbar-left">
+            <span className="admin-breadcrumb">
+              Dashboard / <span>{navItems.find(n => n.id === page)?.label}</span>
+            </span>
+          </div>
+          <div className="admin-topbar-right">
+            {page !== "overview" && (
+              <div className="admin-search-wrap">
+                <i className="fas fa-search"></i>
+                <input
+                  type="text"
+                  className="admin-search-input"
+                  placeholder={page === "emails" ? "Search emails..." : "Search registrations..."}
+                  value={search}
+                  onChange={e => { setSearch(e.target.value); setRegPage(1); setEmailPage(1); }}
+                />
+              </div>
+            )}
+            <button className="admin-btn-primary" onClick={handleDownloadCSV}>
+              <i className="fas fa-download"></i> Export CSV
+            </button>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
-          <button style={tabStyle(tab === "nrsimha")} onClick={() => { setTab("nrsimha"); setSearch(""); }}>Nrsimha Caturdasi</button>
-          <button style={tabStyle(tab === "slf")} onClick={() => { setTab("slf"); setSearch(""); }}>Sunday Love Feast</button>
-          <button style={tabStyle(tab === "emails")} onClick={() => { setTab("emails"); setSearch(""); }}>📧 Email Log</button>
+        <div className="admin-content">
+          {/* ═══ OVERVIEW PAGE ═══ */}
+          {page === "overview" && (
+            <>
+              <div className="admin-page-header">
+                <h1>Executive Summary</h1>
+                <p>Real-time overview of registrations and email engagement</p>
+              </div>
+
+              <div className="admin-event-tabs">
+                <button className={`admin-event-tab${eventTab === "nrsimha" ? " active" : ""}`} onClick={() => setEventTab("nrsimha")}>Nṛsiṁha Caturdaśī</button>
+                <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => setEventTab("slf")}>Sunday Love Feast</button>
+              </div>
+
+              <div className="admin-stats-row">
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Total Registrations</div>
+                  <div className="admin-stat-value">{totalRegistrations}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Total Attendees</div>
+                  <div className="admin-stat-value gold">{totalAttendees}</div>
+                  <div className="admin-stat-sub">Avg group: {avgGroupSize}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Email Open Rate</div>
+                  <div className="admin-stat-value green">{openRate}%</div>
+                  <div className="admin-stat-sub">{uniqueOpens} unique opens</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Calendar Saves</div>
+                  <div className="admin-stat-value">{calendarClicks}</div>
+                  <div className="admin-stat-sub">Add to Calendar clicks</div>
+                </div>
+              </div>
+
+              {/* Engagement stats row */}
+              <div className="admin-stats-row">
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Emails Sent</div>
+                  <div className="admin-stat-value green">{emailStatSent}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Pending</div>
+                  <div className="admin-stat-value orange">{emailStatPending}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Failed / DLQ</div>
+                  <div className="admin-stat-value red">{emailStatFailed}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Link Clicks</div>
+                  <div className="admin-stat-value">{clickEvents.length}</div>
+                  <div className="admin-stat-sub">Kavacha: {kavachaClicks} · Directions: {directionsClicks}</div>
+                </div>
+              </div>
+
+              {/* Chart */}
+              {chartData.length > 0 && (
+                <div className="admin-chart-card">
+                  <h3>Registrations Over Time</h3>
+                  <ResponsiveContainer width="100%" height={220}>
+                    <BarChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e8e2d9" />
+                      <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                      <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
+                      <Tooltip />
+                      <Bar dataKey="count" fill="#1e3a6e" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+
+              {/* Recent Registrations */}
+              <div className="admin-table-card">
+                <div className="admin-table-header">
+                  <h3>Recent Registrations</h3>
+                  <button className="admin-btn-secondary" onClick={() => setPage("registrations")}>View Full Log →</button>
+                </div>
+                <div style={{ overflowX: "auto" }}>
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Registrant</th>
+                        <th>Email</th>
+                        <th>Attendees</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {activeRegData.slice(0, 5).map((r) => (
+                        <tr key={r.id}>
+                          <td>
+                            <div className="admin-name-cell">
+                              <div className="admin-avatar">{getInitials(r.name)}</div>
+                              <span className="admin-name-text">{r.name}</span>
+                            </div>
+                          </td>
+                          <td style={{ color: "#666" }}>{r.email}</td>
+                          <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
+                          <td>
+                            {eventTab === "nrsimha" ? (
+                              <span className="admin-badge-icon yes">
+                                {(r as Registration).confirmation_sent ? "✅" : "⏳"}
+                              </span>
+                            ) : (
+                              <span>{(r as SlfRegistration).first_time ? "🆕 First time" : "Returning"}</span>
+                            )}
+                          </td>
+                          <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
+                            {new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ═══ REGISTRATIONS PAGE ═══ */}
+          {page === "registrations" && (
+            <>
+              <div className="admin-page-header">
+                <h1>Registration Logs</h1>
+                <p>All registrations with confirmation and reminder status</p>
+              </div>
+
+              <div className="admin-event-tabs">
+                <button className={`admin-event-tab${eventTab === "nrsimha" ? " active" : ""}`} onClick={() => { setEventTab("nrsimha"); setRegPage(1); }}>Nṛsiṁha Caturdaśī</button>
+                <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => { setEventTab("slf"); setRegPage(1); }}>Sunday Love Feast</button>
+              </div>
+
+              <div className="admin-stats-row">
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Total Registrations</div>
+                  <div className="admin-stat-value">{totalRegistrations}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Total Attendees</div>
+                  <div className="admin-stat-value gold">{totalAttendees}</div>
+                </div>
+                {eventTab === "slf" && (
+                  <div className="admin-stat-card">
+                    <div className="admin-stat-label">First-Time Visitors</div>
+                    <div className="admin-stat-value green">{slfData.filter(r => r.first_time).length}</div>
+                  </div>
+                )}
+                {eventTab === "nrsimha" && (
+                  <div className="admin-stat-card">
+                    <div className="admin-stat-label">Confirmations Sent</div>
+                    <div className="admin-stat-value green">{ncData.filter(r => r.confirmation_sent).length}</div>
+                  </div>
+                )}
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Avg Group Size</div>
+                  <div className="admin-stat-value">{avgGroupSize}</div>
+                </div>
+              </div>
+
+              <div className="admin-table-card">
+                <div className="admin-table-header">
+                  <h3>All Registrations</h3>
+                  <span style={{ fontSize: "13px", color: "#888" }}>
+                    Showing {Math.min((regPage - 1) * ROWS_PER_PAGE + 1, filteredReg.length)}-{Math.min(regPage * ROWS_PER_PAGE, filteredReg.length)} of {filteredReg.length} entries
+                  </span>
+                </div>
+                <div style={{ overflowX: "auto" }}>
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Attendees</th>
+                        {eventTab === "nrsimha" && <th>Conf</th>}
+                        {eventTab === "nrsimha" && <th>Reminder</th>}
+                        {eventTab === "slf" && <th>First Time</th>}
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {regSlice.map((r) => (
+                        <tr key={r.id}>
+                          <td>
+                            <div className="admin-name-cell">
+                              <div className="admin-avatar">{getInitials(r.name)}</div>
+                              <span className="admin-name-text">{r.name}</span>
+                            </div>
+                          </td>
+                          <td style={{ color: "#666" }}>{r.email}</td>
+                          <td style={{ color: "#666" }}>{r.phone || "—"}</td>
+                          <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
+                          {eventTab === "nrsimha" && (
+                            <>
+                              <td><span className={`admin-badge-icon ${(r as Registration).confirmation_sent ? "yes" : "no"}`}>{(r as Registration).confirmation_sent ? "✅" : "—"}</span></td>
+                              <td><span className={`admin-badge-icon ${(r as Registration).reminder_sent ? "yes" : "no"}`}>{(r as Registration).reminder_sent ? "🔔" : "—"}</span></td>
+                            </>
+                          )}
+                          {eventTab === "slf" && (
+                            <td>{(r as SlfRegistration).first_time ? <span className="admin-badge sent">Yes</span> : "No"}</td>
+                          )}
+                          <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
+                            <div>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })}</div>
+                            <div style={{ fontSize: "11px", color: "#aaa" }}>{new Date(r.created_at).toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit" })}</div>
+                          </td>
+                        </tr>
+                      ))}
+                      {regSlice.length === 0 && (
+                        <tr><td colSpan={eventTab === "nrsimha" ? 7 : 6} className="admin-empty">No registrations found</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                <Pagination current={regPage} total={regTotalPages} onChange={setRegPage} count={filteredReg.length} />
+              </div>
+            </>
+          )}
+
+          {/* ═══ EMAIL ARCHIVE PAGE ═══ */}
+          {page === "emails" && (
+            <>
+              <div className="admin-page-header">
+                <h1>Email Archive</h1>
+                <p>All sent emails with delivery status and engagement tracking</p>
+              </div>
+
+              <div className="admin-stats-row">
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Total Emails</div>
+                  <div className="admin-stat-value">{uniqueEmailList.length}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Sent</div>
+                  <div className="admin-stat-value green">{emailStatSent}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Open Rate</div>
+                  <div className="admin-stat-value green">{openRate}%</div>
+                  <div className="admin-stat-sub">{uniqueOpens} unique opens</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Failed / DLQ</div>
+                  <div className="admin-stat-value red">{emailStatFailed}</div>
+                </div>
+              </div>
+
+              {/* Engagement breakdown */}
+              <div className="admin-stats-row">
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Calendar Saves</div>
+                  <div className="admin-stat-value">{calendarClicks}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Kavacha Clicks</div>
+                  <div className="admin-stat-value">{kavachaClicks}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Directions Clicks</div>
+                  <div className="admin-stat-value">{directionsClicks}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Share Clicks</div>
+                  <div className="admin-stat-value">{clickEvents.filter(t => t.link_name?.startsWith("share_")).length}</div>
+                </div>
+              </div>
+
+              <div className="admin-table-card">
+                <div className="admin-table-header">
+                  <h3>Email Send Log</h3>
+                  <span style={{ fontSize: "13px", color: "#888" }}>
+                    Showing {Math.min((emailPage - 1) * ROWS_PER_PAGE + 1, filteredEmails.length)}-{Math.min(emailPage * ROWS_PER_PAGE, filteredEmails.length)} of {filteredEmails.length} entries
+                  </span>
+                </div>
+                <div style={{ overflowX: "auto" }}>
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Template</th>
+                        <th>Recipient</th>
+                        <th>Status</th>
+                        <th>Opened</th>
+                        <th>Error</th>
+                        <th>Timestamp</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {emailSlice.map((e) => {
+                        const opened = openEvents.some(t => t.recipient_email === e.recipient_email && t.email_type === (e.template_name.includes("confirm") ? "confirmation" : "reminder"));
+                        return (
+                          <tr key={e.id}>
+                            <td><span style={{ fontWeight: 600, color: "#1e3a6e" }}>{e.template_name}</span></td>
+                            <td style={{ color: "#666" }}>{e.recipient_email}</td>
+                            <td><StatusBadge status={e.status} /></td>
+                            <td><span className={`admin-badge-icon ${opened ? "yes" : "no"}`}>{opened ? "👁️" : "—"}</span></td>
+                            <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>{e.error_message || "—"}</td>
+                            <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
+                              <div>{new Date(e.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short" })}</div>
+                              <div style={{ fontSize: "11px", color: "#aaa" }}>{new Date(e.created_at).toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit" })}</div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                      {emailSlice.length === 0 && (
+                        <tr><td colSpan={6} className="admin-empty">No email logs found</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                <Pagination current={emailPage} total={emailTotalPages} onChange={setEmailPage} count={filteredEmails.length} />
+              </div>
+            </>
+          )}
         </div>
+      </main>
+    </div>
+  );
+}
 
-        {!isEmails && (
-          <>
-            {/* Stats cards */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "16px", marginBottom: "24px" }}>
-              <StatCard label="Total Registrations" value={totalRegistrations} color="var(--navy)" />
-              <StatCard label="Total Attendees" value={totalAttendees} color="var(--gold)" />
-              {isSlf && <StatCard label="First-Time Visitors" value={firstTimeCount} color="#27ae60" />}
-            </div>
+// ═══ SUBCOMPONENTS ═══
+function StatusBadge({ status }: { status: string }) {
+  const cls = status === "sent" ? "sent" : status === "pending" ? "pending" : status === "suppressed" ? "suppressed" : "failed";
+  return <span className={`admin-badge ${cls}`}>{status.toUpperCase()}</span>;
+}
 
-            {/* Chart */}
-            {chartData.length > 0 && (
-              <div style={{ background: "white", borderRadius: "12px", padding: "24px", boxShadow: "0 2px 12px rgba(0,0,0,.04)", marginBottom: "24px" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--navy)", marginBottom: "16px", fontSize: "18px" }}>Registrations Over Time</h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5ded5" />
-                    <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#1e3a6e" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            )}
+function Pagination({ current, total, onChange, count }: { current: number; total: number; onChange: (p: number) => void; count: number }) {
+  if (total <= 1) return null;
 
-            {/* Registrations Table */}
-            <div style={{ background: "white", borderRadius: "12px", padding: "24px", boxShadow: "0 2px 12px rgba(0,0,0,.04)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--navy)", fontSize: "18px" }}>All Registrations</h3>
-                <input type="text" placeholder="Search by name or email..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ padding: "8px 14px", border: "1.5px solid #e5ded5", borderRadius: "8px", fontSize: "13px", width: "260px", background: "var(--cream)" }} />
-              </div>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
-                  <thead>
-                    <tr style={{ borderBottom: "2px solid #e5ded5", textAlign: "left" }}>
-                      <Th>Name</Th>
-                      <Th>Email</Th>
-                      <Th>Phone</Th>
-                      <Th>Attendees</Th>
-                      {isSlf && <Th>First Time</Th>}
-                      {!isSlf && <Th>Conf ✉</Th>}
-                      {!isSlf && <Th>Reminder ✉</Th>}
-                      <Th>Date</Th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filtered.map((r) => (
-                      <tr key={r.id} style={{ borderBottom: "1px solid #f0ebe3" }}>
-                        <Td>{r.name}</Td>
-                        <Td>{r.email}</Td>
-                        <Td>{r.phone || "—"}</Td>
-                        <Td>{r.attendees}</Td>
-                        {isSlf && <Td>{(r as SlfRegistration).first_time ? "✓ Yes" : "No"}</Td>}
-                        {!isSlf && <Td>{(r as Registration).confirmation_sent ? "✅" : "—"}</Td>}
-                        {!isSlf && <Td>{(r as Registration).reminder_sent ? "✅" : "—"}</Td>}
-                        <Td style={{ whiteSpace: "nowrap" }}>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</Td>
-                      </tr>
-                    ))}
-                    {filtered.length === 0 && (
-                      <tr><td colSpan={isSlf ? 6 : 7} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>No registrations found</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </>
+  const pages: (number | "...")[] = [];
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) pages.push(i);
+  } else {
+    pages.push(1);
+    if (current > 3) pages.push("...");
+    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i);
+    if (current < total - 2) pages.push("...");
+    pages.push(total);
+  }
+
+  return (
+    <div className="admin-pagination">
+      <span className="admin-pagination-info">
+        {count} total entries · Page {current} of {total}
+      </span>
+      <div className="admin-pagination-controls">
+        <button className="admin-page-btn" disabled={current <= 1} onClick={() => onChange(current - 1)}>‹</button>
+        {pages.map((p, i) =>
+          p === "..." ? (
+            <span key={`dots-${i}`} style={{ padding: "0 4px", color: "#999" }}>…</span>
+          ) : (
+            <button key={p} className={`admin-page-btn${current === p ? " active" : ""}`} onClick={() => onChange(p as number)}>{p}</button>
+          )
         )}
-
-        {isEmails && (
-          <>
-            {/* Email Stats */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "16px", marginBottom: "24px" }}>
-              <StatCard label="Total Emails" value={uniqueEmailList.length} color="var(--navy)" />
-              <StatCard label="Sent" value={emailStatSent} color="#2e7d32" />
-              <StatCard label="Pending" value={emailStatPending} color="#e65100" />
-              <StatCard label="Failed / DLQ" value={emailStatFailed} color="#c62828" />
-            </div>
-
-            {/* Email Log Table */}
-            <div style={{ background: "white", borderRadius: "12px", padding: "24px", boxShadow: "0 2px 12px rgba(0,0,0,.04)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--navy)", fontSize: "18px" }}>Email Send Log</h3>
-                <input type="text" placeholder="Search by email, template, status..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ padding: "8px 14px", border: "1.5px solid #e5ded5", borderRadius: "8px", fontSize: "13px", width: "300px", background: "var(--cream)" }} />
-              </div>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
-                  <thead>
-                    <tr style={{ borderBottom: "2px solid #e5ded5", textAlign: "left" }}>
-                      <Th>Template</Th>
-                      <Th>Recipient</Th>
-                      <Th>Status</Th>
-                      <Th>Error</Th>
-                      <Th>Timestamp</Th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredEmails.map((e) => (
-                      <tr key={e.id} style={{ borderBottom: "1px solid #f0ebe3" }}>
-                        <Td>{e.template_name}</Td>
-                        <Td>{e.recipient_email}</Td>
-                        <Td>{statusBadge(e.status)}</Td>
-                        <Td style={{ maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.error_message || "—"}</Td>
-                        <Td style={{ whiteSpace: "nowrap" }}>{new Date(e.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</Td>
-                      </tr>
-                    ))}
-                    {filteredEmails.length === 0 && (
-                      <tr><td colSpan={5} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>No email logs found</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </>
-        )}
+        <button className="admin-page-btn" disabled={current >= total} onClick={() => onChange(current + 1)}>›</button>
       </div>
     </div>
   );
-}
-
-function StatCard({ label, value, color }: { label: string; value: number; color: string }) {
-  return (
-    <div style={{ background: "white", borderRadius: "12px", padding: "20px 24px", boxShadow: "0 2px 12px rgba(0,0,0,.04)" }}>
-      <p style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "4px" }}>{label}</p>
-      <p style={{ fontSize: "32px", fontWeight: 700, color, fontFamily: "'Playfair Display', serif" }}>{value}</p>
-    </div>
-  );
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return <th style={{ padding: "10px 8px", color: "var(--navy)", fontWeight: 700 }}>{children}</th>;
-}
-
-function Td({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
-  return <td style={{ padding: "10px 8px", ...style }}>{children}</td>;
 }
