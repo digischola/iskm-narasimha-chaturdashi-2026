@@ -477,7 +477,10 @@ export default function FreePrasadamProgram() {
               <Pic key={`g-${i}`} n={`${i + 1}`} alt={GALLERY_ALTS[i]} width={260} height={190} />
             ))}
             {Array.from({ length: 19 }, (_, i) => (
-              <img key={`gd-${i}`} src={`${IMG}/${i + 1}.jpg`} alt="" loading="lazy" decoding="async" aria-hidden="true" width={260} height={190} />
+              <picture key={`gd-${i}`}>
+                <source srcSet={`${IMG}/${i + 1}.webp`} type="image/webp" />
+                <img src={`${IMG}/${i + 1}.jpg`} alt="" loading="lazy" decoding="async" aria-hidden="true" width={260} height={190} />
+              </picture>
             ))}
           </div>
         </div>
