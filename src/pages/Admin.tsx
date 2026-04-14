@@ -221,7 +221,12 @@ export default function Admin() {
   const handleDownloadCSV = () => {
     let csvContent: string;
     let prefix: string;
-    if (page === "emails") {
+    if (page === "prasadam") {
+      const headers = ["Full Name", "WhatsApp", "Preferred Date", "Occasion", "Tier", "Dedication", "Status", "Submitted At"];
+      const rows = filteredPrasadam.map(r => [r.full_name, r.whatsapp_number, r.preferred_date, r.occasion || "", r.tier, r.dedication || "", r.status, new Date(r.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "prasadam_sponsorships";
+    } else if (page === "emails") {
       const headers = ["Template", "Recipient", "Status", "Error", "Sent At"];
       const rows = filteredEmails.map(e => [e.template_name, e.recipient_email, e.status, e.error_message || "", new Date(e.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -249,6 +254,7 @@ export default function Admin() {
   const navItems = [
     { id: "overview" as Page, label: "Executive Overview", icon: "fas fa-th-large" },
     { id: "registrations" as Page, label: "Registration Logs", icon: "fas fa-users" },
+    { id: "prasadam" as Page, label: "Prasadam Program", icon: "fas fa-hand-holding-heart" },
     { id: "emails" as Page, label: "Email Archive", icon: "fas fa-envelope" },
   ];
 
