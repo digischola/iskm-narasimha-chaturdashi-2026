@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import "./AdminStyles.css";
+import "./admin/AdminStyles.css";
 
 // ═══ TYPES ═══
 interface Registration {
