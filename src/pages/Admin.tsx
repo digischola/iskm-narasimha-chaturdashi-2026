@@ -318,9 +318,9 @@ export default function Admin() {
                 <input
                   type="text"
                   className="admin-search-input"
-                  placeholder={page === "emails" ? "Search emails..." : "Search registrations..."}
+                  placeholder={page === "emails" ? "Search emails..." : page === "prasadam" ? "Search sponsorships..." : "Search registrations..."}
                   value={search}
-                  onChange={e => { setSearch(e.target.value); setRegPage(1); setEmailPage(1); }}
+                  onChange={e => { setSearch(e.target.value); setRegPage(1); setEmailPage(1); setPrasadamPage(1); }}
                 />
               </div>
             )}
