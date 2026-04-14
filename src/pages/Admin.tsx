@@ -213,7 +213,19 @@ export default function Admin() {
   const emailTotalPages = Math.max(1, Math.ceil(filteredEmails.length / ROWS_PER_PAGE));
   const emailSlice = filteredEmails.slice((emailPage - 1) * ROWS_PER_PAGE, emailPage * ROWS_PER_PAGE);
 
-  const getInitials = (name: string) => {
+  // Filtered & paginated prasadam sponsorships
+  const filteredPrasadam = prasadamData.filter(
+    (r: PrasadamSponsorship) => r.full_name.toLowerCase().includes(search.toLowerCase()) ||
+      r.whatsapp_number.toLowerCase().includes(search.toLowerCase()) ||
+      (r.occasion || "").toLowerCase().includes(search.toLowerCase()) ||
+      r.status.toLowerCase().includes(search.toLowerCase())
+  );
+  const prasadamPending = prasadamData.filter(r => r.status === "pending").length;
+  const prasadamConfirmed = prasadamData.filter(r => r.status === "confirmed").length;
+  const prasadamCompleted = prasadamData.filter(r => r.status === "completed").length;
+  const prasadamTotalPages = Math.max(1, Math.ceil(filteredPrasadam.length / ROWS_PER_PAGE));
+  const prasadamSlice = filteredPrasadam.slice((prasadamPage - 1) * ROWS_PER_PAGE, prasadamPage * ROWS_PER_PAGE);
+
     const parts = name.trim().split(/\s+/);
     return parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
   };
