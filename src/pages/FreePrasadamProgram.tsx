@@ -258,7 +258,7 @@ export default function FreePrasadamProgram() {
       {/* Nav */}
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`} aria-label="Main navigation">
         <a href="#" className="nav-brand">
-          <Pic n="logo" alt="ISKM Logo" width={32} height={32} />
+          <img src="/images/logo.webp" alt="ISKM Logo" width={32} height={32} />
           <span>ISKM Singapore</span>
         </a>
         <div className="nav-links">
@@ -463,7 +463,7 @@ export default function FreePrasadamProgram() {
         </div>
       </section>
 
-      {/* Gallery */}
+      {/* Gallery — Two row marquee like SLF */}
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="sec-header reveal">
           <div className="overline">From the Streets of Singapore</div>
@@ -471,16 +471,21 @@ export default function FreePrasadamProgram() {
           <div className="divider"></div>
           <p>Not a festival, not a special occasion — just an ordinary day of feeding people in Little India</p>
         </div>
-        <div className="gallery-marquee" role="region" aria-label="Photo gallery">
-          <div className="gallery-track">
-            {Array.from({ length: 19 }, (_, i) => (
-              <Pic key={`g-${i}`} n={`${i + 1}`} alt={GALLERY_ALTS[i]} width={260} height={190} />
+        <div className="gallery-marquee-wrap" role="region" aria-label="Photo gallery">
+          <div className="gallery-track gallery-ltr">
+            {Array.from({ length: 10 }, (_, i) => (
+              <Pic key={`g1-${i}`} n={`${i + 1}`} alt={GALLERY_ALTS[i]} width={260} height={190} />
             ))}
-            {Array.from({ length: 19 }, (_, i) => (
-              <picture key={`gd-${i}`}>
-                <source srcSet={`${IMG}/${i + 1}.webp`} type="image/webp" />
-                <img src={`${IMG}/${i + 1}.jpg`} alt="" loading="lazy" decoding="async" aria-hidden="true" width={260} height={190} />
-              </picture>
+            {Array.from({ length: 10 }, (_, i) => (
+              <Pic key={`g1d-${i}`} n={`${i + 1}`} alt="" width={260} height={190} />
+            ))}
+          </div>
+          <div className="gallery-track gallery-rtl">
+            {Array.from({ length: 9 }, (_, i) => (
+              <Pic key={`g2-${i}`} n={`${i + 11}`} alt={GALLERY_ALTS[i + 10] || `Prasadam distribution photo ${i + 11}`} width={260} height={190} />
+            ))}
+            {Array.from({ length: 9 }, (_, i) => (
+              <Pic key={`g2d-${i}`} n={`${i + 11}`} alt="" width={260} height={190} />
             ))}
           </div>
         </div>
@@ -675,7 +680,7 @@ export default function FreePrasadamProgram() {
 
       {/* Footer */}
       <footer>
-        <Pic n="logo" alt="ISKM" width={38} height={38} />
+        <img src="/images/logo.webp" alt="ISKM" width={38} height={38} />
         <p>&copy; 2026 International Sri Krishna Mandir &middot; <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">srikrishnamandir.org</a> &middot; <a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a></p>
       </footer>
 
