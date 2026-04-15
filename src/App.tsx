@@ -181,7 +181,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   };
   const isPhoneValid = () => {
     const digits = stripPhoneFormatting(phoneNum);
-    if (!digits) return true; // phone is optional
+    if (!digits) return false; // phone is mandatory
     const total = stripPhoneFormatting(phoneCode).replace("+", "").length + digits.length;
     return /^\d+$/.test(digits) && total >= 8 && total <= 15;
   };
@@ -338,7 +338,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 {emailDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: "0.8rem", marginTop: "0.25rem" }}>This email is already registered</span>}
               </div>
               <div className="form-group">
-                <label>Phone</label>
+                <label>Phone *</label>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <select value={phoneCode} onChange={(e) => { setPhoneCode(e.target.value); setPhoneDupStatus("idle"); }} style={{ width: "90px", flexShrink: 0 }}>
                     <option value="+65">+65</option>
@@ -376,7 +376,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 <option value="5">5+ People</option>
               </select>
             </div>
-            <button type="submit" className="btn-register cta-glow btn-register-navy" disabled={submitting || !nameValid || !emailValid || !attendees || emailDupStatus === "duplicate" || phoneDupStatus === "duplicate" || (phoneNum !== "" && !isPhoneValid())}>
+            <button type="submit" className="btn-register cta-glow btn-register-navy" disabled={submitting || !nameValid || !emailValid || !attendees || !isPhoneValid() || emailDupStatus === "duplicate" || phoneDupStatus === "duplicate"}>
               {submitting ? "Submitting..." : "Register Now — It's Free"}
             </button>
             <div className="form-trust"><i className="fas fa-shield-alt"></i><span>No payment required · We'll send a confirmation email</span></div>
