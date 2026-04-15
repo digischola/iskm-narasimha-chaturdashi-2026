@@ -262,13 +262,9 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
     });
 
     onRegister(numAtt);
+
     setSuccess(true);
     setSubmitting(false);
-
-    const ph = "6562502280";
-    const numAttStr = attendees === "5" ? "5+" : attendees;
-    const msg = `Hare Kṛṣṇa! 🙏\n\nI've registered for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n\n📅 Thursday, 30th April 2026\n🕡 6:30 PM – 10:00 PM\n📍 No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nLooking forward to it!\nJai Śrī Nṛsiṁhadeva! 🦁`;
-    setTimeout(() => window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`, "_blank"), 3000);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -298,10 +294,6 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
             <h3>You're Registered!</h3>
             <p>We've saved your spot for Śrī Nṛsiṁha Caturdaśī 2026.</p>
             <a href={calendarUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginTop: "16px", padding: "12px 24px", background: "var(--navy)", color: "white", borderRadius: "8px", textDecoration: "none", fontWeight: 600, fontSize: "14px", transition: "opacity 0.2s" }} onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")} onMouseLeave={e => (e.currentTarget.style.opacity = "1")}><i className="fas fa-calendar-plus"></i> Add to Google Calendar</a>
-            <div style={{ marginTop: "18px", padding: "14px 20px", background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.3)", borderRadius: "10px", display: "flex", alignItems: "center", gap: "10px", fontSize: "13.5px", color: "var(--navy-deep)" }}>
-              <i className="fab fa-whatsapp" style={{ color: "#25d366", fontSize: "20px" }}></i>
-              <span>Redirecting you to <strong>WhatsApp</strong> in a moment — stay connected for the latest event updates from the team!</span>
-            </div>
           </div>
         </div>
       </div>
