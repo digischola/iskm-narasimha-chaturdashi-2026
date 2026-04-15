@@ -101,6 +101,25 @@ Deno.serve(async (req) => {
       console.error("Failed to trigger confirmation email:", emailErr);
     }
 
+    // Trigger Wabo WhatsApp webhook (fire and forget)
+    try {
+      const waboUrl = Deno.env.get("WABO_WEBHOOK_URL");
+      if (waboUrl) {
+        await fetch(waboUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            first_name: name,
+            email,
+            phone: phone.replace("+", ""),
+            attendees: String(attendees),
+          }),
+        });
+      }
+    } catch (waboErr) {
+      console.error("Failed to trigger Wabo webhook:", waboErr);
+    }
+
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
