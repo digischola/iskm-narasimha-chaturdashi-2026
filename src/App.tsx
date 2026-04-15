@@ -262,13 +262,9 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
     });
 
     onRegister(numAtt);
+
     setSuccess(true);
     setSubmitting(false);
-
-    const ph = "6562502280";
-    const numAttStr = attendees === "5" ? "5+" : attendees;
-    const msg = `Hare Kṛṣṇa! 🙏\n\nI've registered for Śrī Nṛsiṁha Caturdaśī 2026.\n\n*Name:* ${name}\n*Attendees:* ${numAttStr}\n\n📅 Thursday, 30th April 2026\n🕡 6:30 PM – 10:00 PM\n📍 No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nLooking forward to it!\nJai Śrī Nṛsiṁhadeva! 🦁`;
-    setTimeout(() => window.open(`https://wa.me/${ph}?text=${encodeURIComponent(msg)}`, "_blank"), 3000);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
