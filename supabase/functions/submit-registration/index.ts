@@ -101,29 +101,6 @@ Deno.serve(async (req) => {
       console.error("Failed to trigger confirmation email:", emailErr);
     }
 
-    // Sync to Google Sheet (fire and forget)
-    try {
-      await fetch("https://script.google.com/macros/s/AKfycbzZ0BREeF6JzboLVpbNLUnvyKgeWN6KkApe_zngbpz0Ftl_vy6BTgMfIHLHvOQRk_SLRA/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: registrationId,
-          name,
-          email,
-          phone,
-          attendees,
-          is_volunteer: body.is_volunteer || false,
-          age: body.age || "",
-          gender: body.gender || "",
-          remarks: body.remarks || "",
-          volunteer_categories: body.volunteer_categories ? body.volunteer_categories.join(", ") : "",
-          created_at: new Date().toISOString(),
-        }),
-      });
-    } catch (sheetErr) {
-      console.error("Failed to sync to Google Sheet:", sheetErr);
-    }
-
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
