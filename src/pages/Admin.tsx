@@ -317,7 +317,7 @@ export default function Admin() {
                 <input
                   type="text"
                   className="admin-search-input"
-                  placeholder={page === "emails" ? "Search emails..." : page === "prasadam" ? "Search sponsorships..." : "Search registrations..."}
+                  placeholder={page === "emails" ? "Search emails..." : "Search registrations..."}
                   value={search}
                   onChange={e => { setSearch(e.target.value); setRegPage(1); setEmailPage(1); setPrasadamPage(1); }}
                 />
@@ -576,93 +576,7 @@ export default function Admin() {
             </>
           )}
 
-          {/* ═══ PRASADAM PROGRAM PAGE ═══ */}
-          {page === "prasadam" && (
-            <>
-              <div className="admin-page-header">
-                <h1>Free Prasadam Program</h1>
-                <p>Sponsorship requests and status tracking</p>
-              </div>
 
-              <div className="admin-stats-row">
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Total Submissions</div>
-                  <div className="admin-stat-value">{prasadamData.length}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Pending</div>
-                  <div className="admin-stat-value orange">{prasadamPending}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Confirmed</div>
-                  <div className="admin-stat-value green">{prasadamConfirmed}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Completed</div>
-                  <div className="admin-stat-value gold">{prasadamCompleted}</div>
-                </div>
-              </div>
-
-              <div className="admin-table-card">
-                <div className="admin-table-header">
-                  <h3>Sponsorship Requests</h3>
-                  <span style={{ fontSize: "13px", color: "#888" }}>
-                    Showing {Math.min((prasadamPage - 1) * ROWS_PER_PAGE + 1, filteredPrasadam.length)}-{Math.min(prasadamPage * ROWS_PER_PAGE, filteredPrasadam.length)} of {filteredPrasadam.length} entries
-                  </span>
-                </div>
-                <div style={{ overflowX: "auto" }}>
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>WhatsApp</th>
-                        <th>Date</th>
-                        <th>Occasion</th>
-                        <th>Tier</th>
-                        <th>Dedication</th>
-                        <th>Status</th>
-                        <th>Submitted</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {prasadamSlice.map((r) => (
-                        <tr key={r.id}>
-                          <td>
-                            <div className="admin-name-cell">
-                              <div className="admin-avatar">{getInitials(r.full_name)}</div>
-                              <span className="admin-name-text">{r.full_name}</span>
-                            </div>
-                          </td>
-                          <td style={{ color: "#666" }}>{r.whatsapp_number}</td>
-                          <td style={{ whiteSpace: "nowrap", color: "#1e3a6e", fontWeight: 600 }}>
-                            {new Date(r.preferred_date + "T00:00:00").toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", weekday: "short" })}
-                          </td>
-                          <td style={{ color: "#666" }}>{r.occasion || "—"}</td>
-                          <td>
-                            <span className={`admin-badge ${r.tier === "sunday-500" ? "sent" : "pending"}`}>
-                              {r.tier === "sunday-500" ? "Sunday $500" : "Weekday $300"}
-                            </span>
-                          </td>
-                          <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
-                            {r.dedication || "—"}
-                          </td>
-                          <td><StatusBadge status={r.status} /></td>
-                          <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
-                            <div>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short" })}</div>
-                            <div style={{ fontSize: "11px", color: "#aaa" }}>{new Date(r.created_at).toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit" })}</div>
-                          </td>
-                        </tr>
-                      ))}
-                      {prasadamSlice.length === 0 && (
-                        <tr><td colSpan={8} className="admin-empty">No sponsorship requests found</td></tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-                <Pagination current={prasadamPage} total={prasadamTotalPages} onChange={setPrasadamPage} count={filteredPrasadam.length} />
-              </div>
-            </>
-          )}
 
           {page === "emails" && (
             <>
