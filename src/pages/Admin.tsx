@@ -63,7 +63,7 @@ interface TrackingEvent {
   created_at: string;
 }
 
-type Page = "overview" | "registrations" | "emails" | "prasadam";
+type Page = "overview" | "registrations" | "emails";
 
 const ROWS_PER_PAGE = 10;
 
@@ -81,7 +81,7 @@ export default function Admin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
-  const [eventTab, setEventTab] = useState<"nrsimha" | "slf">("nrsimha");
+  const [eventTab, setEventTab] = useState<"nrsimha" | "slf" | "prasadam">("nrsimha");
   const [regPage, setRegPage] = useState(1);
   const [emailPage, setEmailPage] = useState(1);
   const [prasadamPage, setPrasadamPage] = useState(1);
@@ -162,9 +162,9 @@ export default function Admin() {
 
   // ═══ COMPUTED DATA ═══
   const activeRegData = eventTab === "slf" ? slfData : ncData;
-  const totalRegistrations = activeRegData.length;
-  const totalAttendees = activeRegData.reduce((s, r) => s + r.attendees, 0);
-  const avgGroupSize = totalRegistrations > 0 ? (totalAttendees / totalRegistrations).toFixed(1) : "0";
+  const totalRegistrations = eventTab === "prasadam" ? prasadamData.length : activeRegData.length;
+  const totalAttendees = eventTab === "prasadam" ? prasadamData.length : activeRegData.reduce((s, r) => s + r.attendees, 0);
+  const avgGroupSize = eventTab === "prasadam" ? "—" : (totalRegistrations > 0 ? (totalAttendees / totalRegistrations).toFixed(1) : "0");
 
   // Deduplicated emails
   const uniqueEmails = new Map<string, EmailLog>();
@@ -234,7 +234,7 @@ export default function Admin() {
   const handleDownloadCSV = () => {
     let csvContent: string;
     let prefix: string;
-    if (page === "prasadam") {
+    if (eventTab === "prasadam" && page === "overview") {
       const headers = ["Full Name", "WhatsApp", "Preferred Date", "Occasion", "Tier", "Dedication", "Status", "Submitted At"];
       const rows = filteredPrasadam.map(r => [r.full_name, r.whatsapp_number, r.preferred_date, r.occasion || "", r.tier, r.dedication || "", r.status, new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -267,7 +267,6 @@ export default function Admin() {
   const navItems = [
     { id: "overview" as Page, label: "Executive Overview", icon: "fas fa-th-large" },
     { id: "registrations" as Page, label: "Registration Logs", icon: "fas fa-users" },
-    { id: "prasadam" as Page, label: "Prasadam Program", icon: "fas fa-hand-holding-heart" },
     { id: "emails" as Page, label: "Email Archive", icon: "fas fa-envelope" },
   ];
 
@@ -318,7 +317,7 @@ export default function Admin() {
                 <input
                   type="text"
                   className="admin-search-input"
-                  placeholder={page === "emails" ? "Search emails..." : page === "prasadam" ? "Search sponsorships..." : "Search registrations..."}
+                  placeholder={page === "emails" ? "Search emails..." : "Search registrations..."}
                   value={search}
                   onChange={e => { setSearch(e.target.value); setRegPage(1); setEmailPage(1); setPrasadamPage(1); }}
                 />
@@ -342,50 +341,76 @@ export default function Admin() {
               <div className="admin-event-tabs">
                 <button className={`admin-event-tab${eventTab === "nrsimha" ? " active" : ""}`} onClick={() => setEventTab("nrsimha")}>Nṛsiṁha Caturdaśī</button>
                 <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => setEventTab("slf")}>Sunday Love Feast</button>
+                <button className={`admin-event-tab${eventTab === "prasadam" ? " active" : ""}`} onClick={() => setEventTab("prasadam")}>Prasadam Program</button>
               </div>
 
-              <div className="admin-stats-row">
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Total Registrations</div>
-                  <div className="admin-stat-value">{totalRegistrations}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Total Attendees</div>
-                  <div className="admin-stat-value gold">{totalAttendees}</div>
-                  <div className="admin-stat-sub">Avg group: {avgGroupSize}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Email Open Rate</div>
-                  <div className="admin-stat-value green">{openRate}%</div>
-                  <div className="admin-stat-sub">{uniqueOpens} unique opens</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Calendar Saves</div>
-                  <div className="admin-stat-value">{calendarClicks}</div>
-                  <div className="admin-stat-sub">Add to Calendar clicks</div>
-                </div>
-              </div>
+              {eventTab === "prasadam" ? (
+                <>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Submissions</div>
+                      <div className="admin-stat-value">{prasadamData.length}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Pending</div>
+                      <div className="admin-stat-value orange">{prasadamPending}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Confirmed</div>
+                      <div className="admin-stat-value green">{prasadamConfirmed}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Completed</div>
+                      <div className="admin-stat-value gold">{prasadamCompleted}</div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Registrations</div>
+                      <div className="admin-stat-value">{totalRegistrations}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Attendees</div>
+                      <div className="admin-stat-value gold">{totalAttendees}</div>
+                      <div className="admin-stat-sub">Avg group: {avgGroupSize}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Email Open Rate</div>
+                      <div className="admin-stat-value green">{openRate}%</div>
+                      <div className="admin-stat-sub">{uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Calendar Saves</div>
+                      <div className="admin-stat-value">{calendarClicks}</div>
+                      <div className="admin-stat-sub">Add to Calendar clicks</div>
+                    </div>
+                  </div>
 
-              {/* Engagement stats row */}
-              <div className="admin-stats-row">
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Emails Sent</div>
-                  <div className="admin-stat-value green">{emailStatSent}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Pending</div>
-                  <div className="admin-stat-value orange">{emailStatPending}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Failed / DLQ</div>
-                  <div className="admin-stat-value red">{emailStatFailed}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Link Clicks</div>
-                  <div className="admin-stat-value">{clickEvents.length}</div>
-                  <div className="admin-stat-sub">Kavacha: {kavachaClicks} · Directions: {directionsClicks}</div>
-                </div>
-              </div>
+                  {/* Engagement stats row */}
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Emails Sent</div>
+                      <div className="admin-stat-value green">{emailStatSent}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Pending</div>
+                      <div className="admin-stat-value orange">{emailStatPending}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Failed / DLQ</div>
+                      <div className="admin-stat-value red">{emailStatFailed}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Link Clicks</div>
+                      <div className="admin-stat-value">{clickEvents.length}</div>
+                      <div className="admin-stat-sub">Kavacha: {kavachaClicks} · Directions: {directionsClicks}</div>
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* Chart */}
               {chartData.length > 0 && (
@@ -551,93 +576,7 @@ export default function Admin() {
             </>
           )}
 
-          {/* ═══ PRASADAM PROGRAM PAGE ═══ */}
-          {page === "prasadam" && (
-            <>
-              <div className="admin-page-header">
-                <h1>Free Prasadam Program</h1>
-                <p>Sponsorship requests and status tracking</p>
-              </div>
 
-              <div className="admin-stats-row">
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Total Submissions</div>
-                  <div className="admin-stat-value">{prasadamData.length}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Pending</div>
-                  <div className="admin-stat-value orange">{prasadamPending}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Confirmed</div>
-                  <div className="admin-stat-value green">{prasadamConfirmed}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Completed</div>
-                  <div className="admin-stat-value gold">{prasadamCompleted}</div>
-                </div>
-              </div>
-
-              <div className="admin-table-card">
-                <div className="admin-table-header">
-                  <h3>Sponsorship Requests</h3>
-                  <span style={{ fontSize: "13px", color: "#888" }}>
-                    Showing {Math.min((prasadamPage - 1) * ROWS_PER_PAGE + 1, filteredPrasadam.length)}-{Math.min(prasadamPage * ROWS_PER_PAGE, filteredPrasadam.length)} of {filteredPrasadam.length} entries
-                  </span>
-                </div>
-                <div style={{ overflowX: "auto" }}>
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>WhatsApp</th>
-                        <th>Date</th>
-                        <th>Occasion</th>
-                        <th>Tier</th>
-                        <th>Dedication</th>
-                        <th>Status</th>
-                        <th>Submitted</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {prasadamSlice.map((r) => (
-                        <tr key={r.id}>
-                          <td>
-                            <div className="admin-name-cell">
-                              <div className="admin-avatar">{getInitials(r.full_name)}</div>
-                              <span className="admin-name-text">{r.full_name}</span>
-                            </div>
-                          </td>
-                          <td style={{ color: "#666" }}>{r.whatsapp_number}</td>
-                          <td style={{ whiteSpace: "nowrap", color: "#1e3a6e", fontWeight: 600 }}>
-                            {new Date(r.preferred_date + "T00:00:00").toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", weekday: "short" })}
-                          </td>
-                          <td style={{ color: "#666" }}>{r.occasion || "—"}</td>
-                          <td>
-                            <span className={`admin-badge ${r.tier === "sunday-500" ? "sent" : "pending"}`}>
-                              {r.tier === "sunday-500" ? "Sunday $500" : "Weekday $300"}
-                            </span>
-                          </td>
-                          <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
-                            {r.dedication || "—"}
-                          </td>
-                          <td><StatusBadge status={r.status} /></td>
-                          <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
-                            <div>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short" })}</div>
-                            <div style={{ fontSize: "11px", color: "#aaa" }}>{new Date(r.created_at).toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit" })}</div>
-                          </td>
-                        </tr>
-                      ))}
-                      {prasadamSlice.length === 0 && (
-                        <tr><td colSpan={8} className="admin-empty">No sponsorship requests found</td></tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-                <Pagination current={prasadamPage} total={prasadamTotalPages} onChange={setPrasadamPage} count={filteredPrasadam.length} />
-              </div>
-            </>
-          )}
 
           {page === "emails" && (
             <>
