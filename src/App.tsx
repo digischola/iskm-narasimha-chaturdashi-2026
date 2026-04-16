@@ -251,6 +251,23 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
       return;
     }
 
+    // Fire-and-forget sync to Wabo CRM (never blocks success)
+    supabase.functions
+      .invoke("sync-to-wabo", {
+        body: {
+          name: name.trim(),
+          email: email.trim(),
+          country_code: phoneCode,
+          phone: phoneNum,
+          attendees: attendees === "5" ? "5+" : attendees,
+        },
+      })
+      .then(({ data, error }) => {
+        if (error) console.error("Wabo sync error:", error);
+        else if (data && data.success === false) console.error("Wabo sync failed:", data);
+      })
+      .catch((e) => console.error("Wabo sync exception:", e));
+
     // Track Lead event
     const eid = genEventId();
     trackPixelEvent("Lead", {}, eid);
