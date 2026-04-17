@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
           event_id,
           event_time: event_time || Math.floor(Date.now() / 1000),
           action_source: "website",
-          event_source_url: source_url || "https://narasimha-caturdasi-2026.lovable.app",
+          event_source_url: source_url || "https://events.srikrishnamandir.org/nrsimha-caturdasi-2026",
           user_data: userData,
           custom_data: custom_data || {},
         },
