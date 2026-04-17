@@ -808,6 +808,7 @@ function LandingPage() {
       <Gallery />
       <Schedule />
       <Seva />
+      <MilkAbhisekaSection />
       <KavachaSection />
       <FAQ />
       <Location />
