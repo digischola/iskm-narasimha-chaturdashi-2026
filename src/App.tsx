@@ -290,7 +290,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
   };
 
   if (success) {
-    const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Śrī Nṛsiṁha Caturdaśī 2026 – ISKM Singapore")}&dates=20260430T103000Z/20260430T140000Z&details=${encodeURIComponent("Grand Abhisheka, Kirtana, Cultural Programme & Prasādam\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://narasimha-caturdasi-2026.lovable.app")}&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
+    const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("Śrī Nṛsiṁha Caturdaśī 2026 – ISKM Singapore")}&dates=20260430T103000Z/20260430T140000Z&details=${encodeURIComponent("Grand Abhisheka, Kirtana, Cultural Programme & Prasādam\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/nrsimha-caturdasi-2026")}&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
     return (
       <div className="reg-section" id="register">
         <div className="reg-card">
@@ -720,13 +720,13 @@ function Location() {
 function Share() {
   const [copyText, setCopyText] = useState("Copy Link");
   const copyLink = () => {
-    navigator.clipboard.writeText("https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/").then(() => {
+    navigator.clipboard.writeText("https://events.srikrishnamandir.org/nrsimha-caturdasi-2026").then(() => {
       setCopyText("Copied!");
       setTimeout(() => setCopyText("Copy Link"), 2000);
     });
   };
   const openGoogleCalendar = () => {
-    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Śrī+Nṛsiṁha+Caturdaśī+2026+at+ISKM+Singapore&dates=20260430T103000Z/20260430T140000Z&details=Grand+celebration+with+Abhisheka,+Kirtana,+Cultural+Programme+%26+free+Prasadam.+Register:+https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&location=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065";
+    const url = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Śrī+Nṛsiṁha+Caturdaśī+2026+at+ISKM+Singapore&dates=20260430T103000Z/20260430T140000Z&details=Grand+celebration+with+Abhisheka,+Kirtana,+Cultural+Programme+%26+free+Prasadam.+Register:+https://events.srikrishnamandir.org/nrsimha-caturdasi-2026&location=No.9+Lorong+29+Geylang+%2303-02+Singapore+388065";
     window.open(url, "_blank");
   };
 
@@ -734,8 +734,8 @@ function Share() {
     <div className="share-section">
       <div className="sec-header animate-in" style={{ marginBottom: 0 }}><div className="overline">Spread the Word</div><h2>Invite Friends &amp; Family</h2><div className="divider"></div></div>
       <div className="share-row animate-in">
-        <a href="https://wa.me/?text=Join%20me%20for%20Sri%20Nrsimha%20Caturdasi%202026%20at%20ISKM%20Singapore%20on%20April%2030!%20Free%20entry%2C%20prasadam%20%26%20more.%20Register%3A%20https%3A%2F%2Fsrikrishnamandir.org%2Ffestival%2Fsri-nrsimha-caturdasi-2026%2F" target="_blank" rel="noopener noreferrer" className="share-pill pill-wa"><i className="fab fa-whatsapp"></i> WhatsApp</a>
-        <a href="https://t.me/share/url?url=https://srikrishnamandir.org/festival/sri-nrsimha-caturdasi-2026/&text=Join+Sri+Nrsimha+Caturdasi+2026+at+ISKM+Singapore!" target="_blank" rel="noopener noreferrer" className="share-pill pill-tg"><i className="fab fa-telegram"></i> Telegram</a>
+        <a href="https://wa.me/?text=Join%20me%20for%20Sri%20Nrsimha%20Caturdasi%202026%20at%20ISKM%20Singapore%20on%20April%2030!%20Free%20entry%2C%20prasadam%20%26%20more.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fnrsimha-caturdasi-2026" target="_blank" rel="noopener noreferrer" className="share-pill pill-wa"><i className="fab fa-whatsapp"></i> WhatsApp</a>
+        <a href="https://t.me/share/url?url=https://events.srikrishnamandir.org/nrsimha-caturdasi-2026&text=Join+Sri+Nrsimha+Caturdasi+2026+at+ISKM+Singapore!" target="_blank" rel="noopener noreferrer" className="share-pill pill-tg"><i className="fab fa-telegram"></i> Telegram</a>
         <a href="#" onClick={(e) => { e.preventDefault(); openGoogleCalendar(); }} className="share-pill pill-cal"><i className="fas fa-calendar-plus"></i> Add to Calendar</a>
         <a href="#" onClick={(e) => { e.preventDefault(); copyLink(); }} className="share-pill pill-copy"><i className="fas fa-link"></i> <span>{copyText}</span></a>
       </div>
