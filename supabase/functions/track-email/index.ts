@@ -39,9 +39,11 @@ Deno.serve(async (req) => {
 
   // Click → redirect
   if (type === "c" && redirect) {
+    // Re-encode any non-ASCII chars so the Location header stays ByteString-safe
+    const target = encodeURI(decodeURIComponent(redirect));
     return new Response(null, {
       status: 302,
-      headers: { Location: decodeURIComponent(redirect) },
+      headers: { Location: target },
     });
   }
 
