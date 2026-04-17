@@ -613,15 +613,14 @@ function MilkAbhisekaSection() {
   return (
     <div className="kavacha-section">
       <div className="kavacha-inner animate-in">
-        <div className="kavacha-image">
-          <img src="/images/sacred-abhisheka.webp" alt="Śrī Nṛsiṁha Caturdaśī Milk Abhiṣeka" loading="lazy" decoding="async" width="400" height="400" />
+        <div className="kavacha-image abhiseka-image">
+          <img src="/images/sacred-abhisheka.webp" alt="Śrī Nṛsiṁha Caturdaśī Milk Abhiṣeka" loading="lazy" decoding="async" />
         </div>
         <div className="kavacha-content">
           <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--navy-2)", marginBottom: "12px" }}>Sacred Bathing Ceremony</div>
           <h2 className="text-3xl" style={{ color: "var(--navy-deep)", marginBottom: "14px" }}>Śrī Nṛsiṁha Caturdaśī Milk Abhiṣeka 2026</h2>
           <p>In celebration of the most auspicious appearance day of Lord Nṛsiṁha, we have arranged for Milk-Abhiṣeka, wherein we are going to bathe Lord Narasimha.</p>
           <p>You can come personally to perform the milk abhiṣeka, or if you are not able to come, we will do the abhiṣeka on your behalf.</p>
-          <a href="#register" className="btn-kavacha cta-glow"><i className="fas fa-hand-holding-heart"></i> &nbsp;Sponsor Abhiṣeka</a>
         </div>
       </div>
     </div>
