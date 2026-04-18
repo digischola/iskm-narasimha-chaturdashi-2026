@@ -621,6 +621,41 @@ function MilkAbhisekaSection() {
           <h2 className="text-3xl" style={{ color: "var(--navy-deep)", marginBottom: "14px" }}>Śrī Nṛsiṁha Caturdaśī Milk Abhiṣeka 2026</h2>
           <p>In celebration of the most auspicious appearance day of Lord Nṛsiṁha, we have arranged for Milk-Abhiṣeka, wherein we are going to bathe Lord Narasimha.</p>
           <p>You can come personally to perform the milk abhiṣeka, or if you are not able to come, we will do the abhiṣeka on your behalf.</p>
+          <a
+            href="https://srikrishnamandir.org/product/abhiseka-seva-sri-n%e1%b9%9bsi%e1%b9%81ha-caturdasi/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              marginTop: "20px",
+              padding: "14px 28px",
+              background: "var(--pink)",
+              color: "var(--navy-deep)",
+              borderRadius: "8px",
+              fontFamily: "'Source Sans Pro',sans-serif",
+              fontSize: "15px",
+              fontWeight: 700,
+              letterSpacing: ".3px",
+              textDecoration: "none",
+              transition: "all .3s",
+              boxShadow: "0 4px 14px rgba(248,164,192,.35)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "var(--pink-light)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 8px 25px rgba(248,164,192,.45)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "var(--pink)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 4px 14px rgba(248,164,192,.35)";
+            }}
+          >
+            <i className="fas fa-hand-holding-heart"></i>
+            Sponsor Abhiṣeka — $10
+          </a>
         </div>
       </div>
     </div>
