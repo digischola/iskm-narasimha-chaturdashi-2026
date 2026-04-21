@@ -621,7 +621,7 @@ export default function FreePrasadamProgram() {
         </div>
         <div className="faq-list" role="list">
           {FAQ_DATA.map((item, i) => (
-            <div className={`faq-item${openFaq === i ? " open" : ""} reveal${i < 2 ? ` stagger-${i + 1}` : ""}`} role="listitem" key={i}>
+            <div className={`faq-item${openFaq === i ? " open" : ""}`} role="listitem" key={i}>
               <button
                 className="faq-q"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
