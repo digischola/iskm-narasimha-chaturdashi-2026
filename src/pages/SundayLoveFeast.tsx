@@ -575,7 +575,7 @@ export default function SundayLoveFeast() {
           </div>
           <div className="faq-list">
             {FAQS.map((f, i) => (
-              <div className={`faq-item reveal${openFaq === i ? " open" : ""}`} key={i} ref={el => { faqRefs.current[i] = el; }}>
+              <div className={`faq-item${openFaq === i ? " open" : ""}`} key={i} ref={el => { faqRefs.current[i] = el; }}>
                 <button className="faq-question" onClick={() => toggleFaq(i)}>
                   {f.q}
                   <i className="fas fa-chevron-down" />
