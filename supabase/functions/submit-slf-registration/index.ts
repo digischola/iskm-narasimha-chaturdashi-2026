@@ -26,16 +26,17 @@ Deno.serve(async (req) => {
 
     const attendees = Math.min(Math.max(parseInt(body.attendees) || 1, 1), 20);
     const firstTime = body.first_time === true || body.first_time === "yes";
-    const rawPhone = typeof body.phone === "string" ? body.phone.trim().slice(0, 30) : null;
-    const phone = rawPhone && /^\+\d{8,15}$/.test(rawPhone.replace(/[\s\-().]/g, ""))
-      ? rawPhone.replace(/[\s\-().]/g, "")
-      : rawPhone ? null : null;
-
-    if (rawPhone && !phone) {
-      return new Response(JSON.stringify({ error: "Invalid phone number format" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    const rawPhone = typeof body.phone === "string" ? body.phone.trim().slice(0, 30) : "";
+    let phone: string | null = null;
+    if (rawPhone) {
+      const cleaned = rawPhone.replace(/[\s\-().]/g, "");
+      if (!/^\+?\d{8,15}$/.test(cleaned)) {
+        return new Response(JSON.stringify({ error: "Invalid phone number format" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      phone = cleaned;
     }
 
     const supabase = createClient(
