@@ -33,7 +33,11 @@ interface SlfRegistration {
 interface PrasadamSponsorship {
   id: string;
   full_name: string;
-  whatsapp_number: string;
+  email: string;
+  country_code: string;
+  phone: string;
+  email_needs_backfill: boolean;
+  phone_needs_verification: boolean;
   preferred_date: string;
   occasion: string | null;
   tier: string;
@@ -216,7 +220,8 @@ export default function Admin() {
   // Filtered & paginated prasadam sponsorships
   const filteredPrasadam = prasadamData.filter(
     (r: PrasadamSponsorship) => r.full_name.toLowerCase().includes(search.toLowerCase()) ||
-      r.whatsapp_number.toLowerCase().includes(search.toLowerCase()) ||
+      `${r.country_code || ""}${r.phone || ""}`.toLowerCase().includes(search.toLowerCase()) ||
+      (r.email || "").toLowerCase().includes(search.toLowerCase()) ||
       (r.occasion || "").toLowerCase().includes(search.toLowerCase()) ||
       r.status.toLowerCase().includes(search.toLowerCase())
   );
@@ -235,8 +240,8 @@ export default function Admin() {
     let csvContent: string;
     let prefix: string;
     if (eventTab === "prasadam" && page === "overview") {
-      const headers = ["Full Name", "WhatsApp", "Preferred Date", "Occasion", "Tier", "Dedication", "Status", "Submitted At"];
-      const rows = filteredPrasadam.map(r => [r.full_name, r.whatsapp_number, r.preferred_date, r.occasion || "", r.tier, r.dedication || "", r.status, new Date(r.created_at).toLocaleString("en-SG")]);
+      const headers = ["Full Name", "Email", "Country Code", "Phone", "Preferred Date", "Occasion", "Tier", "Dedication", "Status", "Email Needs Backfill", "Phone Needs Verification", "Submitted At"];
+      const rows = filteredPrasadam.map(r => [r.full_name, r.email, r.country_code, r.phone, r.preferred_date, r.occasion || "", r.tier, r.dedication || "", r.status, r.email_needs_backfill ? "yes" : "no", r.phone_needs_verification ? "yes" : "no", new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "prasadam_sponsorships";
     } else if (page === "emails") {

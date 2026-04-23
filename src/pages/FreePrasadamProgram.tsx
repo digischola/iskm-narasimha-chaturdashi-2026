@@ -217,9 +217,19 @@ export default function FreePrasadamProgram() {
     if (dedication) msg += `\nDedication: ${dedication}`;
 
     try {
+      // NOTE: Temporary shim until Phase 1c rebuild of this form (country code split + email field).
+      // Storing the raw whatsapp value in `phone` with a default country_code so the
+      // schema's NOT NULL constraints are satisfied. Email is auto-filled and flagged
+      // for backfill so send-prasadam-confirmation will skip it.
+      const tempId = crypto.randomUUID();
       await supabase.from("prasadam_sponsorships").insert({
+        id: tempId,
         full_name: fullName.trim(),
-        whatsapp_number: whatsapp.trim(),
+        email: `legacy-prasadam-${tempId}@needsbackfill.srikrishnamandir.org`,
+        email_needs_backfill: true,
+        country_code: "+65",
+        phone: whatsapp.trim(),
+        phone_needs_verification: true,
         preferred_date: prefDate,
         occasion: occasion || null,
         tier,

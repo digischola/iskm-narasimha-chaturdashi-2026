@@ -139,40 +139,52 @@ export type Database = {
       }
       prasadam_sponsorships: {
         Row: {
+          country_code: string
           created_at: string
           dedication: string | null
+          email: string
+          email_needs_backfill: boolean
           full_name: string
           id: string
           notes: string | null
           occasion: string | null
+          phone: string
+          phone_needs_verification: boolean
           preferred_date: string
           status: string
           tier: string
-          whatsapp_number: string
         }
         Insert: {
+          country_code: string
           created_at?: string
           dedication?: string | null
+          email: string
+          email_needs_backfill?: boolean
           full_name: string
           id?: string
           notes?: string | null
           occasion?: string | null
+          phone: string
+          phone_needs_verification?: boolean
           preferred_date: string
           status?: string
           tier: string
-          whatsapp_number: string
         }
         Update: {
+          country_code?: string
           created_at?: string
           dedication?: string | null
+          email?: string
+          email_needs_backfill?: boolean
           full_name?: string
           id?: string
           notes?: string | null
           occasion?: string | null
+          phone?: string
+          phone_needs_verification?: boolean
           preferred_date?: string
           status?: string
           tier?: string
-          whatsapp_number?: string
         }
         Relationships: []
       }
@@ -227,30 +239,33 @@ export type Database = {
       slf_registrations: {
         Row: {
           attendees: number
+          country_code: string | null
           created_at: string
           email: string
           first_time: boolean
           id: string
           name: string
-          phone: string | null
+          phone: string
         }
         Insert: {
           attendees?: number
+          country_code?: string | null
           created_at?: string
           email: string
           first_time?: boolean
           id?: string
           name: string
-          phone?: string | null
+          phone: string
         }
         Update: {
           attendees?: number
+          country_code?: string | null
           created_at?: string
           email?: string
           first_time?: boolean
           id?: string
           name?: string
-          phone?: string | null
+          phone?: string
         }
         Relationships: []
       }
