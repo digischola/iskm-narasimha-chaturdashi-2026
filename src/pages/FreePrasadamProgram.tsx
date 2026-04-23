@@ -250,40 +250,91 @@ export default function FreePrasadamProgram() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
-    setSubmitting(true);
+    setSubmitError("");
 
-    const tierLabel = tier === "sunday-500" ? "Sunday ($500)" : "Weekday ($300)";
-    let msg = `Prasadam Sponsorship Request\n\nName: ${fullName}\nPhone: ${whatsapp}\nDate: ${prefDate}\nTier: ${tierLabel}`;
-    if (occasion) msg += `\nOccasion: ${occasion}`;
-    if (dedication) msg += `\nDedication: ${dedication}`;
-
-    try {
-      // NOTE: Temporary shim until Phase 1c rebuild of this form (country code split + email field).
-      // Storing the raw whatsapp value in `phone` with a default country_code so the
-      // schema's NOT NULL constraints are satisfied. Email is auto-filled and flagged
-      // for backfill so send-prasadam-confirmation will skip it.
-      const tempId = crypto.randomUUID();
-      await supabase.from("prasadam_sponsorships").insert({
-        id: tempId,
-        full_name: fullName.trim(),
-        email: `legacy-prasadam-${tempId}@needsbackfill.srikrishnamandir.org`,
-        email_needs_backfill: true,
-        country_code: "+65",
-        phone: whatsapp.trim(),
-        phone_needs_verification: true,
-        preferred_date: prefDate,
-        occasion: occasion || null,
-        tier,
-        dedication: dedication.trim() || null,
-      });
-    } catch (err) {
-      console.error("Failed to save sponsorship:", err);
+    if (emailDupStatus === "duplicate") {
+      setSubmitError("This email has already submitted a sponsorship.");
+      return;
+    }
+    if (phoneDupStatus === "duplicate") {
+      setSubmitError("This phone number has already submitted a sponsorship.");
+      return;
+    }
+    if (!isEmailValid()) {
+      setSubmitError("Please enter a valid email address.");
+      return;
+    }
+    if (!isPhoneValid()) {
+      setSubmitError("Please enter a valid phone number (8–15 digits).");
+      return;
     }
 
-    // Always open WhatsApp
-    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
-    setFormSuccess(true);
-    setSubmitting(false);
+    setSubmitting(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("submit-prasadam-sponsorship", {
+        body: {
+          full_name: fullName.trim(),
+          email: email.trim().toLowerCase(),
+          country_code: phoneCode,
+          phone: stripPhone(phoneNum),
+          preferred_date: prefDate,
+          tier,
+          occasion: occasion || null,
+          dedication: dedication.trim() || null,
+        },
+      });
+
+      if (error) {
+        setSubmitError("Submission failed. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+      if (data?.error) {
+        setSubmitError(data.error);
+        setSubmitting(false);
+        return;
+      }
+      if (!data?.success) {
+        setSubmitError("Something went wrong. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+
+      // Fire-and-forget Wabo sync
+      supabase.functions
+        .invoke("sync-to-wabo", {
+          body: {
+            event_slug: "prasadam_sponsor",
+            source: "Free Prasadam Program - Landing Page",
+            name: fullName.trim(),
+            email: email.trim().toLowerCase(),
+            country_code: phoneCode,
+            phone: stripPhone(phoneNum),
+            extras: {
+              tier,
+              preferred_date: prefDate,
+              occasion: occasion || undefined,
+            },
+          },
+        })
+        .catch((e) => console.error("Wabo sync error (Prasadam):", e));
+
+      setRefId(data.ref || "");
+      setFormSuccess(true);
+
+      // Open WhatsApp with the personal coordination message
+      const tierLabel = tier === "sunday-500" ? "Sunday ($500)" : "Weekday ($300)";
+      let msg = `Prasadam Sponsorship Request (Ref: ${data.ref || ""})\n\nName: ${fullName}\nEmail: ${email}\nPhone: ${phoneCode} ${stripPhone(phoneNum)}\nDate: ${prefDate}\nTier: ${tierLabel}`;
+      if (occasion) msg += `\nOccasion: ${occasion}`;
+      if (dedication) msg += `\nDedication: ${dedication}`;
+      window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+    } catch (err) {
+      console.error("Failed to save sponsorship:", err);
+      setSubmitError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleCopyLink = () => {
