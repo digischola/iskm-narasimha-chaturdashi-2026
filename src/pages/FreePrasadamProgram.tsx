@@ -100,13 +100,54 @@ export default function FreePrasadamProgram() {
 
   // Form state
   const [fullName, setFullName] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneCode, setPhoneCode] = useState("+65");
+  const [phoneNum, setPhoneNum] = useState("");
   const [prefDate, setPrefDate] = useState("");
   const [occasion, setOccasion] = useState("");
   const [tier, setTier] = useState("weekday-300");
   const [dedication, setDedication] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [refId, setRefId] = useState("");
+  const [emailDupStatus, setEmailDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+  const [phoneDupStatus, setPhoneDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+
+  const stripPhone = (v: string) => v.replace(/[\s\-().]/g, "");
+  const isPhoneValid = () => {
+    const digits = stripPhone(phoneNum);
+    if (!digits) return false;
+    const total = phoneCode.replace(/\D/g, "").length + digits.length;
+    return /^\d+$/.test(digits) && total >= 8 && total <= 15;
+  };
+  const isEmailValid = () => /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email.trim());
+
+  const checkEmailDup = async () => {
+    if (!isEmailValid()) return;
+    setEmailDupStatus("checking");
+    try {
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "email", value: email.trim().toLowerCase(), table: "prasadam" },
+      });
+      setEmailDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setEmailDupStatus("idle");
+    }
+  };
+
+  const checkPhoneDup = async () => {
+    if (!isPhoneValid()) return;
+    setPhoneDupStatus("checking");
+    try {
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "phone", value: stripPhone(phoneNum), table: "prasadam" },
+      });
+      setPhoneDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setPhoneDupStatus("idle");
+    }
+  };
 
   // Counter refs
   const counterRefs = useRef<(HTMLDivElement | null)[]>([]);
