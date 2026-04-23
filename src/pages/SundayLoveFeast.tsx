@@ -458,7 +458,17 @@ export default function SundayLoveFeast() {
               <div className="text-center" style={{ padding: "40px 0" }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
                 <h3 style={{ color: "var(--navy)", marginBottom: 8 }}>You're Registered!</h3>
-                <p style={{ color: "var(--text-muted)", maxWidth: 360, margin: "0 auto" }}>We look forward to seeing you this Sunday. Walk in with a smile — Prasadam awaits!</p>
+                <p style={{ color: "var(--text-muted)", maxWidth: 360, margin: "0 auto 20px" }}>We look forward to seeing you this Sunday. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</p>
+                {successEventDate && (
+                  <a
+                    href={buildSlfCalendarUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--navy)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 600, fontSize: 14 }}
+                  >
+                    <i className="fas fa-calendar-plus" /> Add to Google Calendar
+                  </a>
+                )}
               </div>
             ) : (
             <form onSubmit={handleFormSubmit}>
@@ -472,11 +482,49 @@ export default function SundayLoveFeast() {
               <div className="form-row two-col">
                 <div className="form-group">
                   <label>Email <span className="req">*</span></label>
-                  <input type="email" placeholder="you@email.com" required value={formEmail} onChange={e => setFormEmail(e.target.value)} />
+                  <input
+                    type="email"
+                    placeholder="you@email.com"
+                    required
+                    value={formEmail}
+                    onChange={e => { setFormEmail(e.target.value); setEmailDupStatus("idle"); }}
+                    onBlur={checkEmailDup}
+                  />
+                  {emailDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This email is already registered</span>}
                 </div>
                 <div className="form-group">
-                  <label>Phone</label>
-                  <input type="tel" placeholder="+65 XXXX XXXX" value={formPhone} onChange={e => setFormPhone(e.target.value)} />
+                  <label>Phone <span className="req">*</span></label>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <select
+                      value={formPhoneCode}
+                      onChange={e => { setFormPhoneCode(e.target.value); setPhoneDupStatus("idle"); }}
+                      style={{ width: 90, flexShrink: 0 }}
+                    >
+                      <option value="+65">+65</option>
+                      <option value="+91">+91</option>
+                      <option value="+60">+60</option>
+                      <option value="+62">+62</option>
+                      <option value="+63">+63</option>
+                      <option value="+66">+66</option>
+                      <option value="+1">+1</option>
+                      <option value="+44">+44</option>
+                      <option value="+61">+61</option>
+                      <option value="+81">+81</option>
+                      <option value="+82">+82</option>
+                      <option value="+86">+86</option>
+                    </select>
+                    <input
+                      type="tel"
+                      placeholder="XXXX XXXX"
+                      required
+                      value={formPhoneNum}
+                      onChange={e => { setFormPhoneNum(e.target.value); setPhoneDupStatus("idle"); }}
+                      onBlur={checkPhoneDup}
+                      style={{ flex: 1 }}
+                    />
+                  </div>
+                  {formPhoneNum && !isPhoneValid() && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>Enter 8–15 digits</span>}
+                  {phoneDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This phone number is already registered</span>}
                 </div>
               </div>
               <div className="form-row two-col">
