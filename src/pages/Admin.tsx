@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell, Legend } from "recharts";
 import "./admin/AdminStyles.css";
 
 // ═══ TYPES ═══
@@ -24,7 +24,8 @@ interface SlfRegistration {
   id: string;
   name: string;
   email: string;
-  phone: string | null;
+  phone: string;
+  country_code: string | null;
   attendees: number;
   first_time: boolean;
   created_at: string;
@@ -67,9 +68,24 @@ interface TrackingEvent {
   created_at: string;
 }
 
-type Page = "overview" | "registrations" | "emails";
+type Page = "overview" | "registrations" | "prasadam" | "emails";
+type EventTab = "all" | "nrsimha" | "slf" | "prasadam";
 
 const ROWS_PER_PAGE = 10;
+
+const TIER_PRICE: Record<string, number> = {
+  full: 1500,
+  half: 750,
+  quarter: 350,
+  blessing: 100,
+};
+
+const TIER_LABEL: Record<string, string> = {
+  full: "Full Sponsor",
+  half: "Half Sponsor",
+  quarter: "Quarter Sponsor",
+  blessing: "Blessing",
+};
 
 // ═══ MAIN COMPONENT ═══
 export default function Admin() {
@@ -85,10 +101,13 @@ export default function Admin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
-  const [eventTab, setEventTab] = useState<"nrsimha" | "slf" | "prasadam">("nrsimha");
+  const [eventTab, setEventTab] = useState<EventTab>("all");
+  const [regEventTab, setRegEventTab] = useState<"nrsimha" | "slf" | "prasadam">("nrsimha");
   const [regPage, setRegPage] = useState(1);
   const [emailPage, setEmailPage] = useState(1);
   const [prasadamPage, setPrasadamPage] = useState(1);
+  const [prasadamFilter, setPrasadamFilter] = useState<"all" | "pending" | "confirmed" | "completed" | "needs_backfill">("all");
+  const [selectedSponsor, setSelectedSponsor] = useState<PrasadamSponsorship | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -164,13 +183,91 @@ export default function Admin() {
 
   const handleLogout = async () => { await supabase.auth.signOut(); };
 
-  // ═══ COMPUTED DATA ═══
-  const activeRegData = eventTab === "slf" ? slfData : ncData;
-  const totalRegistrations = eventTab === "prasadam" ? prasadamData.length : activeRegData.length;
-  const totalAttendees = eventTab === "prasadam" ? prasadamData.length : activeRegData.reduce((s, r) => s + r.attendees, 0);
-  const avgGroupSize = eventTab === "prasadam" ? "—" : (totalRegistrations > 0 ? (totalAttendees / totalRegistrations).toFixed(1) : "0");
+  // ═══ CROSS-EVENT METRICS ═══
+  // Normalize email for cross-event matching (lowercase, trim).
+  // Exclude legacy backfill placeholders so they don't fake-merge as the same person.
+  const normEmail = (e: string | null | undefined) =>
+    (e || "").trim().toLowerCase();
+  const isPlaceholder = (e: string) =>
+    e.endsWith("@needsbackfill.srikrishnamandir.org");
 
-  // Deduplicated emails
+  const ncEmails = new Set(
+    ncData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
+  );
+  const slfEmails = new Set(
+    slfData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
+  );
+  const prasadamEmails = new Set(
+    prasadamData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
+  );
+
+  const allEmailsUnion = new Set<string>([...ncEmails, ...slfEmails, ...prasadamEmails]);
+  const uniquePeopleCount = allEmailsUnion.size;
+
+  // Overlap: emails appearing in 2+ tables
+  const overlapEmails = [...allEmailsUnion].filter(e => {
+    let count = 0;
+    if (ncEmails.has(e)) count++;
+    if (slfEmails.has(e)) count++;
+    if (prasadamEmails.has(e)) count++;
+    return count >= 2;
+  });
+  const overlapCount = overlapEmails.length;
+
+  // Triple overlap (devotees engaged across all 3 surfaces)
+  const tripleOverlap = [...allEmailsUnion].filter(e =>
+    ncEmails.has(e) && slfEmails.has(e) && prasadamEmails.has(e)
+  ).length;
+
+  const totalRegistrationsAcross = ncData.length + slfData.length + prasadamData.length;
+  const totalAttendeesAcross =
+    ncData.reduce((s, r) => s + r.attendees, 0) +
+    slfData.reduce((s, r) => s + r.attendees, 0);
+
+  const totalSponsorshipValue = prasadamData
+    .filter(r => r.status === "confirmed" || r.status === "completed")
+    .reduce((s, r) => s + (TIER_PRICE[r.tier] || 0), 0);
+
+  // ═══ EVENT-SPECIFIC KPIs ═══
+  // NC
+  const ncTotal = ncData.length;
+  const ncAttendees = ncData.reduce((s, r) => s + r.attendees, 0);
+  const ncAvgGroup = ncTotal > 0 ? (ncAttendees / ncTotal).toFixed(1) : "0";
+  const ncConfirmed = ncData.filter(r => r.confirmation_sent).length;
+  const ncRemindersSent = ncData.filter(r => r.reminder_sent).length;
+  const ncVolunteers = ncData.filter(r => r.is_volunteer).length;
+
+  // SLF
+  const slfTotal = slfData.length;
+  const slfAttendees = slfData.reduce((s, r) => s + r.attendees, 0);
+  const slfAvgGroup = slfTotal > 0 ? (slfAttendees / slfTotal).toFixed(1) : "0";
+  const slfFirstTime = slfData.filter(r => r.first_time).length;
+  const slfReturning = slfTotal - slfFirstTime;
+
+  // Prasadam
+  const prasadamTotal = prasadamData.length;
+  const prasadamPending = prasadamData.filter(r => r.status === "pending").length;
+  const prasadamConfirmed = prasadamData.filter(r => r.status === "confirmed").length;
+  const prasadamCompleted = prasadamData.filter(r => r.status === "completed").length;
+  const prasadamNeedsBackfill = prasadamData.filter(
+    r => r.email_needs_backfill || r.phone_needs_verification
+  );
+  const prasadamConfirmedRate = prasadamTotal > 0
+    ? (((prasadamConfirmed + prasadamCompleted) / prasadamTotal) * 100).toFixed(0)
+    : "0";
+
+  // Tier breakdown for prasadam (pie chart)
+  const tierCounts: Record<string, number> = {};
+  prasadamData.forEach(r => {
+    tierCounts[r.tier] = (tierCounts[r.tier] || 0) + 1;
+  });
+  const tierChartData = Object.entries(tierCounts).map(([tier, count]) => ({
+    name: TIER_LABEL[tier] || tier,
+    value: count,
+    tier,
+  }));
+
+  // ═══ EMAIL DEDUPLICATION (latest status per message_id) ═══
   const uniqueEmails = new Map<string, EmailLog>();
   emailLogs.forEach((e) => {
     const key = e.message_id || e.id;
@@ -183,6 +280,7 @@ export default function Admin() {
   const emailStatSent = uniqueEmailList.filter(e => e.status === "sent").length;
   const emailStatPending = uniqueEmailList.filter(e => e.status === "pending").length;
   const emailStatFailed = uniqueEmailList.filter(e => e.status === "failed" || e.status === "dlq").length;
+  const emailStatSuppressed = uniqueEmailList.filter(e => e.status === "suppressed").length;
 
   // Tracking stats
   const openEvents = trackingEvents.filter(t => t.event_type === "open");
@@ -193,22 +291,41 @@ export default function Admin() {
   const directionsClicks = clickEvents.filter(t => t.link_name === "directions").length;
   const openRate = emailStatSent > 0 ? ((uniqueOpens / emailStatSent) * 100).toFixed(1) : "0";
 
-  // Chart data
-  const dayMap: Record<string, number> = {};
-  activeRegData.forEach((r) => {
-    const day = new Date(r.created_at).toLocaleDateString("en-SG", { month: "short", day: "numeric" });
-    dayMap[day] = (dayMap[day] || 0) + 1;
-  });
-  const chartData = Object.entries(dayMap).reverse().map(([date, count]) => ({ date, count }));
+  // ═══ CHART: Registrations over time (combined) ═══
+  const buildChartData = (tab: EventTab) => {
+    const dayMap: Record<string, number> = {};
+    const sources: Array<{ created_at: string; count: number }> = [];
+    if (tab === "all" || tab === "nrsimha")
+      ncData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
+    if (tab === "all" || tab === "slf")
+      slfData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
+    if (tab === "all" || tab === "prasadam")
+      prasadamData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
+    sources.forEach(s => {
+      const day = new Date(s.created_at).toLocaleDateString("en-SG", { month: "short", day: "numeric" });
+      dayMap[day] = (dayMap[day] || 0) + s.count;
+    });
+    return Object.entries(dayMap).reverse().map(([date, count]) => ({ date, count }));
+  };
+  const chartData = buildChartData(eventTab);
 
-  // Filtered & paginated registrations
-  const filteredReg = activeRegData.filter(
-    (r) => r.name.toLowerCase().includes(search.toLowerCase()) || r.email.toLowerCase().includes(search.toLowerCase())
-  );
+  // ═══ FILTERED VIEWS ═══
+  const activeRegList: (Registration | SlfRegistration | PrasadamSponsorship)[] =
+    regEventTab === "slf" ? slfData
+      : regEventTab === "prasadam" ? prasadamData
+      : ncData;
+
+  const filteredReg = activeRegList.filter((r: any) => {
+    const name = r.name || r.full_name || "";
+    return (
+      name.toLowerCase().includes(search.toLowerCase()) ||
+      (r.email || "").toLowerCase().includes(search.toLowerCase())
+    );
+  });
   const regTotalPages = Math.max(1, Math.ceil(filteredReg.length / ROWS_PER_PAGE));
   const regSlice = filteredReg.slice((regPage - 1) * ROWS_PER_PAGE, regPage * ROWS_PER_PAGE);
 
-  // Filtered & paginated emails
+  // Filtered emails
   const filteredEmails = uniqueEmailList.filter(
     (e) => e.recipient_email.toLowerCase().includes(search.toLowerCase()) ||
       e.template_name.toLowerCase().includes(search.toLowerCase()) ||
@@ -217,17 +334,23 @@ export default function Admin() {
   const emailTotalPages = Math.max(1, Math.ceil(filteredEmails.length / ROWS_PER_PAGE));
   const emailSlice = filteredEmails.slice((emailPage - 1) * ROWS_PER_PAGE, emailPage * ROWS_PER_PAGE);
 
-  // Filtered & paginated prasadam sponsorships
-  const filteredPrasadam = prasadamData.filter(
-    (r: PrasadamSponsorship) => r.full_name.toLowerCase().includes(search.toLowerCase()) ||
-      `${r.country_code || ""}${r.phone || ""}`.toLowerCase().includes(search.toLowerCase()) ||
-      (r.email || "").toLowerCase().includes(search.toLowerCase()) ||
-      (r.occasion || "").toLowerCase().includes(search.toLowerCase()) ||
-      r.status.toLowerCase().includes(search.toLowerCase())
-  );
-  const prasadamPending = prasadamData.filter(r => r.status === "pending").length;
-  const prasadamConfirmed = prasadamData.filter(r => r.status === "confirmed").length;
-  const prasadamCompleted = prasadamData.filter(r => r.status === "completed").length;
+  // Filtered prasadam (with status filter)
+  const filteredPrasadam = prasadamData.filter((r) => {
+    if (prasadamFilter === "needs_backfill") {
+      if (!r.email_needs_backfill && !r.phone_needs_verification) return false;
+    } else if (prasadamFilter !== "all") {
+      if (r.status !== prasadamFilter) return false;
+    }
+    const q = search.toLowerCase();
+    return (
+      r.full_name.toLowerCase().includes(q) ||
+      `${r.country_code || ""}${r.phone || ""}`.toLowerCase().includes(q) ||
+      (r.email || "").toLowerCase().includes(q) ||
+      (r.occasion || "").toLowerCase().includes(q) ||
+      r.status.toLowerCase().includes(q) ||
+      r.tier.toLowerCase().includes(q)
+    );
+  });
   const prasadamTotalPages = Math.max(1, Math.ceil(filteredPrasadam.length / ROWS_PER_PAGE));
   const prasadamSlice = filteredPrasadam.slice((prasadamPage - 1) * ROWS_PER_PAGE, prasadamPage * ROWS_PER_PAGE);
 
@@ -236,12 +359,25 @@ export default function Admin() {
     return parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].slice(0, 2).toUpperCase();
   };
 
+  const updatePrasadamStatus = async (id: string, newStatus: string) => {
+    const { error } = await supabase
+      .from("prasadam_sponsorships")
+      .update({ status: newStatus })
+      .eq("id", id);
+    if (error) {
+      alert("Failed to update status: " + error.message);
+      return;
+    }
+    setPrasadamData(prev => prev.map(r => r.id === id ? { ...r, status: newStatus } : r));
+    if (selectedSponsor?.id === id) setSelectedSponsor({ ...selectedSponsor, status: newStatus });
+  };
+
   const handleDownloadCSV = () => {
     let csvContent: string;
     let prefix: string;
-    if (eventTab === "prasadam" && page === "overview") {
-      const headers = ["Full Name", "Email", "Country Code", "Phone", "Preferred Date", "Occasion", "Tier", "Dedication", "Status", "Email Needs Backfill", "Phone Needs Verification", "Submitted At"];
-      const rows = filteredPrasadam.map(r => [r.full_name, r.email, r.country_code, r.phone, r.preferred_date, r.occasion || "", r.tier, r.dedication || "", r.status, r.email_needs_backfill ? "yes" : "no", r.phone_needs_verification ? "yes" : "no", new Date(r.created_at).toLocaleString("en-SG")]);
+    if (page === "prasadam") {
+      const headers = ["Full Name", "Email", "Country Code", "Phone", "Preferred Date", "Occasion", "Tier", "Tier Price (SGD)", "Dedication", "Status", "Email Needs Backfill", "Phone Needs Verification", "Notes", "Submitted At"];
+      const rows = filteredPrasadam.map(r => [r.full_name, r.email, r.country_code, r.phone, r.preferred_date, r.occasion || "", r.tier, TIER_PRICE[r.tier] || 0, r.dedication || "", r.status, r.email_needs_backfill ? "yes" : "no", r.phone_needs_verification ? "yes" : "no", r.notes || "", new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "prasadam_sponsorships";
     } else if (page === "emails") {
@@ -249,14 +385,19 @@ export default function Admin() {
       const rows = filteredEmails.map(e => [e.template_name, e.recipient_email, e.status, e.error_message || "", new Date(e.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "email_log";
-    } else if (eventTab === "slf") {
-      const headers = ["Name", "Email", "Phone", "Attendees", "First Time", "Registered At"];
-      const rows = slfData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+    } else if (page === "registrations" && regEventTab === "slf") {
+      const headers = ["Name", "Email", "Country Code", "Phone", "Attendees", "First Time", "Registered At"];
+      const rows = slfData.map(r => [r.name, r.email, r.country_code || "", r.phone || "", r.attendees, r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "slf_registrations";
+    } else if (page === "registrations" && regEventTab === "prasadam") {
+      const headers = ["Full Name", "Email", "Country Code", "Phone", "Tier", "Preferred Date", "Status", "Submitted At"];
+      const rows = prasadamData.map(r => [r.full_name, r.email, r.country_code, r.phone, r.tier, r.preferred_date, r.status, new Date(r.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "prasadam_sponsorships";
     } else {
-      const headers = ["Name", "Email", "Phone", "Attendees", "Confirmation", "Reminder", "Registered At"];
-      const rows = ncData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      const headers = ["Name", "Email", "Phone", "Attendees", "Volunteer", "Confirmation", "Reminder", "Registered At"];
+      const rows = ncData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.is_volunteer ? "Yes" : "No", r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "nc_registrations";
     }
@@ -272,8 +413,11 @@ export default function Admin() {
   const navItems = [
     { id: "overview" as Page, label: "Executive Overview", icon: "fas fa-th-large" },
     { id: "registrations" as Page, label: "Registration Logs", icon: "fas fa-users" },
+    { id: "prasadam" as Page, label: "Prasadam Sponsors", icon: "fas fa-utensils" },
     { id: "emails" as Page, label: "Email Archive", icon: "fas fa-envelope" },
   ];
+
+  const TIER_COLORS = ["#1e3a6e", "#d4a012", "#27ae60", "#e67e22"];
 
   return (
     <div className="admin-wrapper">
@@ -288,7 +432,7 @@ export default function Admin() {
             <button
               key={item.id}
               className={`admin-nav-item${page === item.id ? " active" : ""}`}
-              onClick={() => { setPage(item.id); setSearch(""); setRegPage(1); setEmailPage(1); }}
+              onClick={() => { setPage(item.id); setSearch(""); setRegPage(1); setEmailPage(1); setPrasadamPage(1); }}
             >
               <i className={item.icon}></i>
               {item.label}
@@ -322,14 +466,19 @@ export default function Admin() {
                 <input
                   type="text"
                   className="admin-search-input"
-                  placeholder={page === "emails" ? "Search emails..." : "Search registrations..."}
+                  placeholder={page === "emails" ? "Search emails..." : "Search by name, email, phone..."}
                   value={search}
                   onChange={e => { setSearch(e.target.value); setRegPage(1); setEmailPage(1); setPrasadamPage(1); }}
                 />
               </div>
             )}
-            <button className="admin-btn-primary" onClick={handleDownloadCSV}>
-              <i className="fas fa-download"></i> Export CSV
+            {page !== "overview" && (
+              <button className="admin-btn-primary" onClick={handleDownloadCSV}>
+                <i className="fas fa-download"></i> Export CSV
+              </button>
+            )}
+            <button className="admin-btn-secondary" onClick={fetchAll} title="Refresh data">
+              <i className="fas fa-sync"></i>
             </button>
           </div>
         </div>
@@ -339,49 +488,134 @@ export default function Admin() {
           {page === "overview" && (
             <>
               <div className="admin-page-header">
-                <h1>Executive Summary</h1>
-                <p>Real-time overview of registrations and email engagement</p>
+                <h1>Executive Overview</h1>
+                <p>Real-time metrics across all ISKM Singapore event surfaces</p>
               </div>
 
               <div className="admin-event-tabs">
+                <button className={`admin-event-tab${eventTab === "all" ? " active" : ""}`} onClick={() => setEventTab("all")}>All Events</button>
                 <button className={`admin-event-tab${eventTab === "nrsimha" ? " active" : ""}`} onClick={() => setEventTab("nrsimha")}>Nṛsiṁha Caturdaśī</button>
                 <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => setEventTab("slf")}>Sunday Love Feast</button>
                 <button className={`admin-event-tab${eventTab === "prasadam" ? " active" : ""}`} onClick={() => setEventTab("prasadam")}>Prasadam Program</button>
               </div>
 
-              {eventTab === "prasadam" ? (
+              {/* ═══ ALL EVENTS ═══ */}
+              {eventTab === "all" && (
                 <>
                   <div className="admin-stats-row">
                     <div className="admin-stat-card">
+                      <div className="admin-stat-label">Unique People</div>
+                      <div className="admin-stat-value">{uniquePeopleCount}</div>
+                      <div className="admin-stat-sub">Distinct emails across all 3 events</div>
+                    </div>
+                    <div className="admin-stat-card">
                       <div className="admin-stat-label">Total Submissions</div>
-                      <div className="admin-stat-value">{prasadamData.length}</div>
+                      <div className="admin-stat-value gold">{totalRegistrationsAcross}</div>
+                      <div className="admin-stat-sub">NC: {ncTotal} · SLF: {slfTotal} · Prasadam: {prasadamTotal}</div>
                     </div>
                     <div className="admin-stat-card">
-                      <div className="admin-stat-label">Pending</div>
-                      <div className="admin-stat-value orange">{prasadamPending}</div>
+                      <div className="admin-stat-label">Cross-Event Overlap</div>
+                      <div className="admin-stat-value green">{overlapCount}</div>
+                      <div className="admin-stat-sub">Engaged on 2+ events · {tripleOverlap} on all 3</div>
                     </div>
                     <div className="admin-stat-card">
-                      <div className="admin-stat-label">Confirmed</div>
-                      <div className="admin-stat-value green">{prasadamConfirmed}</div>
+                      <div className="admin-stat-label">Sponsorship Value</div>
+                      <div className="admin-stat-value gold">${totalSponsorshipValue.toLocaleString()}</div>
+                      <div className="admin-stat-sub">Confirmed + completed</div>
+                    </div>
+                  </div>
+
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Emails Sent</div>
+                      <div className="admin-stat-value green">{emailStatSent}</div>
                     </div>
                     <div className="admin-stat-card">
-                      <div className="admin-stat-label">Completed</div>
-                      <div className="admin-stat-value gold">{prasadamCompleted}</div>
+                      <div className="admin-stat-label">Open Rate</div>
+                      <div className="admin-stat-value green">{openRate}%</div>
+                      <div className="admin-stat-sub">{uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Failed / DLQ</div>
+                      <div className="admin-stat-value red">{emailStatFailed}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Backfill Needed</div>
+                      <div className="admin-stat-value orange">{prasadamNeedsBackfill.length}</div>
+                      <div className="admin-stat-sub">Prasadam rows to verify</div>
+                    </div>
+                  </div>
+
+                  {/* Cross-event matrix */}
+                  <div className="admin-table-card">
+                    <div className="admin-table-header">
+                      <h3>Event Participation Matrix</h3>
+                      <span style={{ fontSize: "12px", color: "#888" }}>Counted by unique email (legacy backfill rows excluded)</span>
+                    </div>
+                    <div style={{ overflowX: "auto" }}>
+                      <table className="admin-table">
+                        <thead>
+                          <tr>
+                            <th>Event</th>
+                            <th>Unique Emails</th>
+                            <th>Total Submissions</th>
+                            <th>Total Attendees</th>
+                            <th>Share of Audience</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><span className="admin-name-text">Nṛsiṁha Caturdaśī</span></td>
+                            <td>{ncEmails.size}</td>
+                            <td>{ncTotal}</td>
+                            <td>{ncAttendees}</td>
+                            <td>{uniquePeopleCount > 0 ? `${((ncEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
+                          </tr>
+                          <tr>
+                            <td><span className="admin-name-text">Sunday Love Feast</span></td>
+                            <td>{slfEmails.size}</td>
+                            <td>{slfTotal}</td>
+                            <td>{slfAttendees}</td>
+                            <td>{uniquePeopleCount > 0 ? `${((slfEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
+                          </tr>
+                          <tr>
+                            <td><span className="admin-name-text">Prasadam Program</span></td>
+                            <td>{prasadamEmails.size}</td>
+                            <td>{prasadamTotal}</td>
+                            <td>—</td>
+                            <td>{uniquePeopleCount > 0 ? `${((prasadamEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </>
-              ) : (
+              )}
+
+              {/* ═══ NC ═══ */}
+              {eventTab === "nrsimha" && (
                 <>
                   <div className="admin-stats-row">
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Total Registrations</div>
-                      <div className="admin-stat-value">{totalRegistrations}</div>
+                      <div className="admin-stat-value">{ncTotal}</div>
                     </div>
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Total Attendees</div>
-                      <div className="admin-stat-value gold">{totalAttendees}</div>
-                      <div className="admin-stat-sub">Avg group: {avgGroupSize}</div>
+                      <div className="admin-stat-value gold">{ncAttendees}</div>
+                      <div className="admin-stat-sub">Avg group: {ncAvgGroup}</div>
                     </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Confirmations Sent</div>
+                      <div className="admin-stat-value green">{ncConfirmed}</div>
+                      <div className="admin-stat-sub">{ncTotal > 0 ? `${((ncConfirmed / ncTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Volunteers</div>
+                      <div className="admin-stat-value">{ncVolunteers}</div>
+                    </div>
+                  </div>
+                  <div className="admin-stats-row">
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Email Open Rate</div>
                       <div className="admin-stat-value green">{openRate}%</div>
@@ -390,37 +624,113 @@ export default function Admin() {
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Calendar Saves</div>
                       <div className="admin-stat-value">{calendarClicks}</div>
-                      <div className="admin-stat-sub">Add to Calendar clicks</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Kavacha Clicks</div>
+                      <div className="admin-stat-value">{kavachaClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Reminders Sent</div>
+                      <div className="admin-stat-value">{ncRemindersSent}</div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* ═══ SLF ═══ */}
+              {eventTab === "slf" && (
+                <div className="admin-stats-row">
+                  <div className="admin-stat-card">
+                    <div className="admin-stat-label">Total Registrations</div>
+                    <div className="admin-stat-value">{slfTotal}</div>
+                  </div>
+                  <div className="admin-stat-card">
+                    <div className="admin-stat-label">Total Attendees</div>
+                    <div className="admin-stat-value gold">{slfAttendees}</div>
+                    <div className="admin-stat-sub">Avg group: {slfAvgGroup}</div>
+                  </div>
+                  <div className="admin-stat-card">
+                    <div className="admin-stat-label">First-Time Visitors</div>
+                    <div className="admin-stat-value green">{slfFirstTime}</div>
+                    <div className="admin-stat-sub">{slfTotal > 0 ? `${((slfFirstTime / slfTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
+                  </div>
+                  <div className="admin-stat-card">
+                    <div className="admin-stat-label">Returning</div>
+                    <div className="admin-stat-value">{slfReturning}</div>
+                  </div>
+                </div>
+              )}
+
+              {/* ═══ PRASADAM ═══ */}
+              {eventTab === "prasadam" && (
+                <>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Submissions</div>
+                      <div className="admin-stat-value">{prasadamTotal}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Pending Review</div>
+                      <div className="admin-stat-value orange">{prasadamPending}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Confirmed + Completed</div>
+                      <div className="admin-stat-value green">{prasadamConfirmed + prasadamCompleted}</div>
+                      <div className="admin-stat-sub">{prasadamConfirmedRate}% conversion</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Sponsorship Value</div>
+                      <div className="admin-stat-value gold">${totalSponsorshipValue.toLocaleString()}</div>
+                      <div className="admin-stat-sub">Confirmed + completed</div>
                     </div>
                   </div>
 
-                  {/* Engagement stats row */}
-                  <div className="admin-stats-row">
-                    <div className="admin-stat-card">
-                      <div className="admin-stat-label">Emails Sent</div>
-                      <div className="admin-stat-value green">{emailStatSent}</div>
+                  {prasadamNeedsBackfill.length > 0 && (
+                    <div className="admin-nudge-banner">
+                      <i className="fas fa-exclamation-triangle"></i>
+                      <div>
+                        <strong>{prasadamNeedsBackfill.length} sponsor{prasadamNeedsBackfill.length > 1 ? "s" : ""} need follow-up</strong>
+                        <span> — missing email or unverified phone. </span>
+                        <button
+                          className="admin-link-btn"
+                          onClick={() => { setPage("prasadam"); setPrasadamFilter("needs_backfill"); }}
+                        >
+                          Review now →
+                        </button>
+                      </div>
                     </div>
-                    <div className="admin-stat-card">
-                      <div className="admin-stat-label">Pending</div>
-                      <div className="admin-stat-value orange">{emailStatPending}</div>
+                  )}
+
+                  {tierChartData.length > 0 && (
+                    <div className="admin-chart-card">
+                      <h3>Sponsorship Tier Distribution</h3>
+                      <ResponsiveContainer width="100%" height={240}>
+                        <PieChart>
+                          <Pie
+                            data={tierChartData}
+                            dataKey="value"
+                            nameKey="name"
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={80}
+                            label={({ name, value }) => `${name}: ${value}`}
+                          >
+                            {tierChartData.map((_, i) => (
+                              <Cell key={i} fill={TIER_COLORS[i % TIER_COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                        </PieChart>
+                      </ResponsiveContainer>
                     </div>
-                    <div className="admin-stat-card">
-                      <div className="admin-stat-label">Failed / DLQ</div>
-                      <div className="admin-stat-value red">{emailStatFailed}</div>
-                    </div>
-                    <div className="admin-stat-card">
-                      <div className="admin-stat-label">Link Clicks</div>
-                      <div className="admin-stat-value">{clickEvents.length}</div>
-                      <div className="admin-stat-sub">Kavacha: {kavachaClicks} · Directions: {directionsClicks}</div>
-                    </div>
-                  </div>
+                  )}
                 </>
               )}
 
               {/* Chart */}
               {chartData.length > 0 && (
                 <div className="admin-chart-card">
-                  <h3>Registrations Over Time</h3>
+                  <h3>Submissions Over Time</h3>
                   <ResponsiveContainer width="100%" height={220}>
                     <BarChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e8e2d9" />
@@ -432,53 +742,6 @@ export default function Admin() {
                   </ResponsiveContainer>
                 </div>
               )}
-
-              {/* Recent Registrations */}
-              <div className="admin-table-card">
-                <div className="admin-table-header">
-                  <h3>Recent Registrations</h3>
-                  <button className="admin-btn-secondary" onClick={() => setPage("registrations")}>View Full Log →</button>
-                </div>
-                <div style={{ overflowX: "auto" }}>
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th>Registrant</th>
-                        <th>Email</th>
-                        <th>Attendees</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {activeRegData.slice(0, 5).map((r) => (
-                        <tr key={r.id}>
-                          <td>
-                            <div className="admin-name-cell">
-                              <div className="admin-avatar">{getInitials(r.name)}</div>
-                              <span className="admin-name-text">{r.name}</span>
-                            </div>
-                          </td>
-                          <td style={{ color: "#666" }}>{r.email}</td>
-                          <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
-                          <td>
-                            {eventTab === "nrsimha" ? (
-                              <span className="admin-badge-icon yes">
-                                {(r as Registration).confirmation_sent ? "✅" : "⏳"}
-                              </span>
-                            ) : (
-                              <span>{(r as SlfRegistration).first_time ? "🆕 First time" : "Returning"}</span>
-                            )}
-                          </td>
-                          <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
-                            {new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
             </>
           )}
 
@@ -487,44 +750,18 @@ export default function Admin() {
             <>
               <div className="admin-page-header">
                 <h1>Registration Logs</h1>
-                <p>All registrations with confirmation and reminder status</p>
+                <p>Browse all submissions across the three event surfaces</p>
               </div>
 
               <div className="admin-event-tabs">
-                <button className={`admin-event-tab${eventTab === "nrsimha" ? " active" : ""}`} onClick={() => { setEventTab("nrsimha"); setRegPage(1); }}>Nṛsiṁha Caturdaśī</button>
-                <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => { setEventTab("slf"); setRegPage(1); }}>Sunday Love Feast</button>
-              </div>
-
-              <div className="admin-stats-row">
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Total Registrations</div>
-                  <div className="admin-stat-value">{totalRegistrations}</div>
-                </div>
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Total Attendees</div>
-                  <div className="admin-stat-value gold">{totalAttendees}</div>
-                </div>
-                {eventTab === "slf" && (
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">First-Time Visitors</div>
-                    <div className="admin-stat-value green">{slfData.filter(r => r.first_time).length}</div>
-                  </div>
-                )}
-                {eventTab === "nrsimha" && (
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">Confirmations Sent</div>
-                    <div className="admin-stat-value green">{ncData.filter(r => r.confirmation_sent).length}</div>
-                  </div>
-                )}
-                <div className="admin-stat-card">
-                  <div className="admin-stat-label">Avg Group Size</div>
-                  <div className="admin-stat-value">{avgGroupSize}</div>
-                </div>
+                <button className={`admin-event-tab${regEventTab === "nrsimha" ? " active" : ""}`} onClick={() => { setRegEventTab("nrsimha"); setRegPage(1); }}>Nṛsiṁha Caturdaśī ({ncTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "slf" ? " active" : ""}`} onClick={() => { setRegEventTab("slf"); setRegPage(1); }}>Sunday Love Feast ({slfTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "prasadam" ? " active" : ""}`} onClick={() => { setRegEventTab("prasadam"); setRegPage(1); }}>Prasadam ({prasadamTotal})</button>
               </div>
 
               <div className="admin-table-card">
                 <div className="admin-table-header">
-                  <h3>All Registrations</h3>
+                  <h3>{regEventTab === "nrsimha" ? "Nṛsiṁha Registrations" : regEventTab === "slf" ? "Sunday Love Feast Registrations" : "Prasadam Sponsorships"}</h3>
                   <span style={{ fontSize: "13px", color: "#888" }}>
                     Showing {Math.min((regPage - 1) * ROWS_PER_PAGE + 1, filteredReg.length)}-{Math.min(regPage * ROWS_PER_PAGE, filteredReg.length)} of {filteredReg.length} entries
                   </span>
@@ -536,42 +773,62 @@ export default function Admin() {
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <th>Attendees</th>
-                        {eventTab === "nrsimha" && <th>Conf</th>}
-                        {eventTab === "nrsimha" && <th>Reminder</th>}
-                        {eventTab === "slf" && <th>First Time</th>}
-                        <th>Date</th>
+                        {regEventTab === "nrsimha" && <><th>Pax</th><th>Conf</th><th>Reminder</th></>}
+                        {regEventTab === "slf" && <><th>Pax</th><th>First Time</th></>}
+                        {regEventTab === "prasadam" && <><th>Tier</th><th>Date</th><th>Status</th></>}
+                        <th>Submitted</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {regSlice.map((r) => (
-                        <tr key={r.id}>
-                          <td>
-                            <div className="admin-name-cell">
-                              <div className="admin-avatar">{getInitials(r.name)}</div>
-                              <span className="admin-name-text">{r.name}</span>
-                            </div>
-                          </td>
-                          <td style={{ color: "#666" }}>{r.email}</td>
-                          <td style={{ color: "#666" }}>{r.phone || "—"}</td>
-                          <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
-                          {eventTab === "nrsimha" && (
-                            <>
-                              <td><span className={`admin-badge-icon ${(r as Registration).confirmation_sent ? "yes" : "no"}`}>{(r as Registration).confirmation_sent ? "✅" : "—"}</span></td>
-                              <td><span className={`admin-badge-icon ${(r as Registration).reminder_sent ? "yes" : "no"}`}>{(r as Registration).reminder_sent ? "🔔" : "—"}</span></td>
-                            </>
-                          )}
-                          {eventTab === "slf" && (
-                            <td>{(r as SlfRegistration).first_time ? <span className="admin-badge sent">Yes</span> : "No"}</td>
-                          )}
-                          <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
-                            <div>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })}</div>
-                            <div style={{ fontSize: "11px", color: "#aaa" }}>{new Date(r.created_at).toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit" })}</div>
-                          </td>
-                        </tr>
-                      ))}
+                      {regSlice.map((r: any) => {
+                        const name = r.name || r.full_name;
+                        const phone = r.country_code ? `${r.country_code} ${r.phone}` : (r.phone || "—");
+                        return (
+                          <tr key={r.id}>
+                            <td>
+                              <div className="admin-name-cell">
+                                <div className="admin-avatar">{getInitials(name)}</div>
+                                <span className="admin-name-text">{name}</span>
+                              </div>
+                            </td>
+                            <td style={{ color: "#666" }}>
+                              {r.email_needs_backfill
+                                ? <span className="admin-badge pending"><i className="fas fa-exclamation-triangle"></i> Needs email</span>
+                                : r.email}
+                            </td>
+                            <td style={{ color: "#666" }}>
+                              {phone}
+                              {r.phone_needs_verification && <span className="admin-badge pending" style={{ marginLeft: 6 }}>verify</span>}
+                            </td>
+                            {regEventTab === "nrsimha" && (
+                              <>
+                                <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
+                                <td><span className={`admin-badge-icon ${r.confirmation_sent ? "yes" : "no"}`}>{r.confirmation_sent ? "✅" : "—"}</span></td>
+                                <td><span className={`admin-badge-icon ${r.reminder_sent ? "yes" : "no"}`}>{r.reminder_sent ? "🔔" : "—"}</span></td>
+                              </>
+                            )}
+                            {regEventTab === "slf" && (
+                              <>
+                                <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
+                                <td>{r.first_time ? <span className="admin-badge sent">Yes</span> : "No"}</td>
+                              </>
+                            )}
+                            {regEventTab === "prasadam" && (
+                              <>
+                                <td><span style={{ fontWeight: 600, color: "#1e3a6e" }}>{TIER_LABEL[r.tier] || r.tier}</span></td>
+                                <td style={{ color: "#666", fontSize: "12px" }}>{r.preferred_date}</td>
+                                <td><StatusBadge status={r.status} /></td>
+                              </>
+                            )}
+                            <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: "12px" }}>
+                              <div>{new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })}</div>
+                              <div style={{ fontSize: "11px", color: "#aaa" }}>{new Date(r.created_at).toLocaleTimeString("en-SG", { hour: "2-digit", minute: "2-digit" })}</div>
+                            </td>
+                          </tr>
+                        );
+                      })}
                       {regSlice.length === 0 && (
-                        <tr><td colSpan={eventTab === "nrsimha" ? 7 : 6} className="admin-empty">No registrations found</td></tr>
+                        <tr><td colSpan={regEventTab === "nrsimha" ? 7 : 6} className="admin-empty">No registrations found</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -581,7 +838,120 @@ export default function Admin() {
             </>
           )}
 
+          {/* ═══ PRASADAM MANAGEMENT PAGE ═══ */}
+          {page === "prasadam" && (
+            <>
+              <div className="admin-page-header">
+                <h1>Prasadam Sponsorships</h1>
+                <p>Manage incoming sponsor requests · update status · follow up on backfill needs</p>
+              </div>
 
+              <div className="admin-stats-row">
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Total</div>
+                  <div className="admin-stat-value">{prasadamTotal}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Pending</div>
+                  <div className="admin-stat-value orange">{prasadamPending}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Confirmed</div>
+                  <div className="admin-stat-value green">{prasadamConfirmed}</div>
+                </div>
+                <div className="admin-stat-card">
+                  <div className="admin-stat-label">Completed</div>
+                  <div className="admin-stat-value gold">{prasadamCompleted}</div>
+                </div>
+              </div>
+
+              {prasadamNeedsBackfill.length > 0 && (
+                <div className="admin-nudge-banner">
+                  <i className="fas fa-exclamation-triangle"></i>
+                  <div>
+                    <strong>{prasadamNeedsBackfill.length} sponsor{prasadamNeedsBackfill.length > 1 ? "s" : ""} need follow-up.</strong>
+                    <span> WhatsApp them to confirm email or phone, then update the row directly in the database.</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="admin-table-card">
+                <div className="admin-table-header">
+                  <h3>All Sponsorships</h3>
+                  <div className="admin-table-actions">
+                    <div className="admin-filter-tabs">
+                      <button className={`admin-filter-tab${prasadamFilter === "all" ? " active" : ""}`} onClick={() => { setPrasadamFilter("all"); setPrasadamPage(1); }}>All</button>
+                      <button className={`admin-filter-tab${prasadamFilter === "pending" ? " active" : ""}`} onClick={() => { setPrasadamFilter("pending"); setPrasadamPage(1); }}>Pending</button>
+                      <button className={`admin-filter-tab${prasadamFilter === "confirmed" ? " active" : ""}`} onClick={() => { setPrasadamFilter("confirmed"); setPrasadamPage(1); }}>Confirmed</button>
+                      <button className={`admin-filter-tab${prasadamFilter === "completed" ? " active" : ""}`} onClick={() => { setPrasadamFilter("completed"); setPrasadamPage(1); }}>Completed</button>
+                      <button className={`admin-filter-tab${prasadamFilter === "needs_backfill" ? " active" : ""}`} onClick={() => { setPrasadamFilter("needs_backfill"); setPrasadamPage(1); }}>Needs Backfill</button>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ overflowX: "auto" }}>
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Sponsor</th>
+                        <th>Contact</th>
+                        <th>Tier</th>
+                        <th>Preferred Date</th>
+                        <th>Occasion</th>
+                        <th>Status</th>
+                        <th>Submitted</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {prasadamSlice.map((r) => (
+                        <tr key={r.id}>
+                          <td>
+                            <div className="admin-name-cell">
+                              <div className="admin-avatar">{getInitials(r.full_name)}</div>
+                              <div>
+                                <div className="admin-name-text">{r.full_name}</div>
+                                {(r.email_needs_backfill || r.phone_needs_verification) && (
+                                  <div style={{ fontSize: 10, color: "#e67e22", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5 }}>
+                                    <i className="fas fa-exclamation-triangle"></i> Needs follow-up
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                          <td style={{ fontSize: 12, color: "#666" }}>
+                            <div>{r.email_needs_backfill ? <span style={{ color: "#e67e22" }}>Email pending</span> : r.email}</div>
+                            <div>
+                              {r.country_code} {r.phone}
+                              {r.phone_needs_verification && <span style={{ color: "#e67e22", marginLeft: 4 }}>(verify)</span>}
+                            </div>
+                          </td>
+                          <td>
+                            <span style={{ fontWeight: 600, color: "#1e3a6e" }}>{TIER_LABEL[r.tier] || r.tier}</span>
+                            <div style={{ fontSize: 11, color: "#888" }}>${TIER_PRICE[r.tier] || 0}</div>
+                          </td>
+                          <td style={{ fontSize: 12, color: "#666" }}>{r.preferred_date}</td>
+                          <td style={{ fontSize: 12, color: "#666" }}>{r.occasion || "—"}</td>
+                          <td><StatusBadge status={r.status} /></td>
+                          <td style={{ whiteSpace: "nowrap", color: "#888", fontSize: 12 }}>
+                            {new Date(r.created_at).toLocaleDateString("en-SG", { day: "numeric", month: "short" })}
+                          </td>
+                          <td>
+                            <button className="admin-btn-secondary" style={{ padding: "4px 10px", fontSize: 12 }} onClick={() => setSelectedSponsor(r)}>
+                              View
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                      {prasadamSlice.length === 0 && (
+                        <tr><td colSpan={8} className="admin-empty">No sponsorships match this filter</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+                <Pagination current={prasadamPage} total={prasadamTotalPages} onChange={setPrasadamPage} count={filteredPrasadam.length} />
+              </div>
+            </>
+          )}
 
           {page === "emails" && (
             <>
@@ -607,6 +977,7 @@ export default function Admin() {
                 <div className="admin-stat-card">
                   <div className="admin-stat-label">Failed / DLQ</div>
                   <div className="admin-stat-value red">{emailStatFailed}</div>
+                  <div className="admin-stat-sub">{emailStatSuppressed} suppressed</div>
                 </div>
               </div>
 
@@ -634,7 +1005,7 @@ export default function Admin() {
                 <div className="admin-table-header">
                   <h3>Email Send Log</h3>
                   <span style={{ fontSize: "13px", color: "#888" }}>
-                    Showing {Math.min((emailPage - 1) * ROWS_PER_PAGE + 1, filteredEmails.length)}-{Math.min(emailPage * ROWS_PER_PAGE, filteredEmails.length)} of {filteredEmails.length} entries
+                    Showing {Math.min((emailPage - 1) * ROWS_PER_PAGE + 1, filteredEmails.length)}-{Math.min(emailPage * ROWS_PER_PAGE, filteredEmails.length)} of {filteredEmails.length} entries (deduplicated by message)
                   </span>
                 </div>
                 <div style={{ overflowX: "auto" }}>
@@ -678,13 +1049,108 @@ export default function Admin() {
           )}
         </div>
       </main>
+
+      {/* ═══ SPONSOR DETAIL DRAWER ═══ */}
+      {selectedSponsor && (
+        <div className="admin-drawer-backdrop" onClick={() => setSelectedSponsor(null)}>
+          <div className="admin-drawer" onClick={e => e.stopPropagation()}>
+            <div className="admin-drawer-header">
+              <h2>{selectedSponsor.full_name}</h2>
+              <button className="admin-drawer-close" onClick={() => setSelectedSponsor(null)}>×</button>
+            </div>
+            <div className="admin-drawer-body">
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Status</span>
+                <StatusBadge status={selectedSponsor.status} />
+              </div>
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Tier</span>
+                <span><strong>{TIER_LABEL[selectedSponsor.tier] || selectedSponsor.tier}</strong> · ${TIER_PRICE[selectedSponsor.tier] || 0}</span>
+              </div>
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Email</span>
+                <span>
+                  {selectedSponsor.email_needs_backfill
+                    ? <span style={{ color: "#e67e22" }}>⚠ Placeholder — needs real email</span>
+                    : selectedSponsor.email}
+                </span>
+              </div>
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Phone</span>
+                <span>
+                  {selectedSponsor.country_code} {selectedSponsor.phone}
+                  {selectedSponsor.phone_needs_verification && <span style={{ color: "#e67e22", marginLeft: 8 }}>⚠ Verify country code</span>}
+                </span>
+              </div>
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Preferred Date</span>
+                <span>{selectedSponsor.preferred_date}</span>
+              </div>
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Occasion</span>
+                <span>{selectedSponsor.occasion || "—"}</span>
+              </div>
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Dedication</span>
+                <span style={{ whiteSpace: "pre-wrap" }}>{selectedSponsor.dedication || "—"}</span>
+              </div>
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Notes</span>
+                <span style={{ whiteSpace: "pre-wrap" }}>{selectedSponsor.notes || "—"}</span>
+              </div>
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Submitted</span>
+                <span>{new Date(selectedSponsor.created_at).toLocaleString("en-SG")}</span>
+              </div>
+              <div className="admin-drawer-row">
+                <span className="admin-drawer-label">Reference</span>
+                <span style={{ fontFamily: "monospace", fontSize: 11 }}>{selectedSponsor.id.slice(0, 8).toUpperCase()}</span>
+              </div>
+
+              <div className="admin-drawer-actions">
+                <a
+                  className="admin-btn-secondary"
+                  href={`https://wa.me/${(selectedSponsor.country_code + selectedSponsor.phone).replace(/[^0-9]/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className="fab fa-whatsapp"></i> WhatsApp Sponsor
+                </a>
+                {!selectedSponsor.email_needs_backfill && (
+                  <a className="admin-btn-secondary" href={`mailto:${selectedSponsor.email}`}>
+                    <i className="fas fa-envelope"></i> Email
+                  </a>
+                )}
+              </div>
+
+              <div className="admin-drawer-section">
+                <div className="admin-drawer-label" style={{ marginBottom: 8 }}>Update Status</div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {["pending", "confirmed", "completed", "cancelled"].map(s => (
+                    <button
+                      key={s}
+                      className={`admin-event-tab${selectedSponsor.status === s ? " active" : ""}`}
+                      onClick={() => updatePrasadamStatus(selectedSponsor.id, s)}
+                    >
+                      {s.charAt(0).toUpperCase() + s.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 // ═══ SUBCOMPONENTS ═══
 function StatusBadge({ status }: { status: string }) {
-  const cls = status === "sent" ? "sent" : status === "pending" ? "pending" : status === "suppressed" ? "suppressed" : "failed";
+  const cls = status === "sent" || status === "confirmed" || status === "completed" ? "sent"
+    : status === "pending" ? "pending"
+    : status === "suppressed" ? "suppressed"
+    : "failed";
   return <span className={`admin-badge ${cls}`}>{status.toUpperCase()}</span>;
 }
 
