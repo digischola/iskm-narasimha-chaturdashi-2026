@@ -87,12 +87,52 @@ export default function SundayLoveFeast() {
   // Form state
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
-  const [formPhone, setFormPhone] = useState("");
+  const [formPhoneCode, setFormPhoneCode] = useState("+65");
+  const [formPhoneNum, setFormPhoneNum] = useState("");
   const [formAttendees, setFormAttendees] = useState("2");
   const [formFirstTime, setFormFirstTime] = useState("no");
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
+  const [emailDupStatus, setEmailDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+  const [phoneDupStatus, setPhoneDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+  const [successEventDate, setSuccessEventDate] = useState<string>("");
+
+  const stripPhone = (v: string) => v.replace(/[\s\-().]/g, "");
+  const isPhoneValid = () => {
+    const digits = stripPhone(formPhoneNum);
+    if (!digits) return false;
+    const total = formPhoneCode.replace(/\D/g, "").length + digits.length;
+    return /^\d+$/.test(digits) && total >= 8 && total <= 15;
+  };
+  const fullPhone = () => formPhoneCode + stripPhone(formPhoneNum);
+
+  const checkEmailDup = async () => {
+    const v = formEmail.trim();
+    if (!v || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)) return;
+    setEmailDupStatus("checking");
+    try {
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "email", value: v, table: "slf" },
+      });
+      setEmailDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setEmailDupStatus("idle");
+    }
+  };
+
+  const checkPhoneDup = async () => {
+    if (!isPhoneValid()) return;
+    setPhoneDupStatus("checking");
+    try {
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "phone", value: stripPhone(formPhoneNum), table: "slf" },
+      });
+      setPhoneDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setPhoneDupStatus("idle");
+    }
+  };
 
   const ribbonRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -240,13 +280,26 @@ export default function SundayLoveFeast() {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
+    if (emailDupStatus === "duplicate") {
+      setFormError("This email is already registered.");
+      return;
+    }
+    if (phoneDupStatus === "duplicate") {
+      setFormError("This phone number is already registered.");
+      return;
+    }
+    if (!isPhoneValid()) {
+      setFormError("Please enter a valid phone number (8–15 digits).");
+      return;
+    }
     setFormSubmitting(true);
     try {
       const res = await supabase.functions.invoke("submit-slf-registration", {
         body: {
           name: formName,
           email: formEmail,
-          phone: formPhone || null,
+          country_code: formPhoneCode,
+          phone: stripPhone(formPhoneNum),
           attendees: parseInt(formAttendees) || 2,
           first_time: formFirstTime === "yes",
         },
@@ -255,17 +308,17 @@ export default function SundayLoveFeast() {
       if (data?.error) {
         setFormError(data.error);
       } else if (data?.success) {
-        // Track Lead event
         const eid = genEventId();
         trackPixelEvent("Lead", {}, eid);
         trackCapiEvent({
           eventName: "Lead",
           eventId: eid,
           userEmail: formEmail.trim(),
-          userPhone: formPhone || undefined,
+          userPhone: fullPhone() || undefined,
         });
 
         setFormSuccess(true);
+        setSuccessEventDate(data.event_date || "");
         if (data.count) setRegCounter(data.count);
       } else {
         setFormError("Something went wrong. Please try again.");
@@ -275,6 +328,17 @@ export default function SundayLoveFeast() {
     } finally {
       setFormSubmitting(false);
     }
+  };
+
+  const buildSlfCalendarUrl = () => {
+    const iso = successEventDate || "";
+    if (!iso) return "#";
+    const ymd = iso.replace(/-/g, "");
+    return `https://www.google.com/calendar/render?action=TEMPLATE` +
+      `&text=${encodeURIComponent("Sunday Love Feast — ISKM Singapore")}` +
+      `&dates=${ymd}T090000Z/${ymd}T113000Z` +
+      `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/sunday-love-feast")}` +
+      `&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
   };
 
   const toggleFaq = (idx: number) => {
