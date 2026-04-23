@@ -87,12 +87,52 @@ export default function SundayLoveFeast() {
   // Form state
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
-  const [formPhone, setFormPhone] = useState("");
+  const [formPhoneCode, setFormPhoneCode] = useState("+65");
+  const [formPhoneNum, setFormPhoneNum] = useState("");
   const [formAttendees, setFormAttendees] = useState("2");
   const [formFirstTime, setFormFirstTime] = useState("no");
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
+  const [emailDupStatus, setEmailDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+  const [phoneDupStatus, setPhoneDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+  const [successEventDate, setSuccessEventDate] = useState<string>("");
+
+  const stripPhone = (v: string) => v.replace(/[\s\-().]/g, "");
+  const isPhoneValid = () => {
+    const digits = stripPhone(formPhoneNum);
+    if (!digits) return false;
+    const total = formPhoneCode.replace(/\D/g, "").length + digits.length;
+    return /^\d+$/.test(digits) && total >= 8 && total <= 15;
+  };
+  const fullPhone = () => formPhoneCode + stripPhone(formPhoneNum);
+
+  const checkEmailDup = async () => {
+    const v = formEmail.trim();
+    if (!v || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)) return;
+    setEmailDupStatus("checking");
+    try {
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "email", value: v, table: "slf" },
+      });
+      setEmailDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setEmailDupStatus("idle");
+    }
+  };
+
+  const checkPhoneDup = async () => {
+    if (!isPhoneValid()) return;
+    setPhoneDupStatus("checking");
+    try {
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "phone", value: stripPhone(formPhoneNum), table: "slf" },
+      });
+      setPhoneDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setPhoneDupStatus("idle");
+    }
+  };
 
   const ribbonRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -240,13 +280,26 @@ export default function SundayLoveFeast() {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
+    if (emailDupStatus === "duplicate") {
+      setFormError("This email is already registered.");
+      return;
+    }
+    if (phoneDupStatus === "duplicate") {
+      setFormError("This phone number is already registered.");
+      return;
+    }
+    if (!isPhoneValid()) {
+      setFormError("Please enter a valid phone number (8–15 digits).");
+      return;
+    }
     setFormSubmitting(true);
     try {
       const res = await supabase.functions.invoke("submit-slf-registration", {
         body: {
           name: formName,
           email: formEmail,
-          phone: formPhone || null,
+          country_code: formPhoneCode,
+          phone: stripPhone(formPhoneNum),
           attendees: parseInt(formAttendees) || 2,
           first_time: formFirstTime === "yes",
         },
@@ -255,17 +308,17 @@ export default function SundayLoveFeast() {
       if (data?.error) {
         setFormError(data.error);
       } else if (data?.success) {
-        // Track Lead event
         const eid = genEventId();
         trackPixelEvent("Lead", {}, eid);
         trackCapiEvent({
           eventName: "Lead",
           eventId: eid,
           userEmail: formEmail.trim(),
-          userPhone: formPhone || undefined,
+          userPhone: fullPhone() || undefined,
         });
 
         setFormSuccess(true);
+        setSuccessEventDate(data.event_date || "");
         if (data.count) setRegCounter(data.count);
       } else {
         setFormError("Something went wrong. Please try again.");
@@ -275,6 +328,17 @@ export default function SundayLoveFeast() {
     } finally {
       setFormSubmitting(false);
     }
+  };
+
+  const buildSlfCalendarUrl = () => {
+    const iso = successEventDate || "";
+    if (!iso) return "#";
+    const ymd = iso.replace(/-/g, "");
+    return `https://www.google.com/calendar/render?action=TEMPLATE` +
+      `&text=${encodeURIComponent("Sunday Love Feast — ISKM Singapore")}` +
+      `&dates=${ymd}T090000Z/${ymd}T113000Z` +
+      `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/sunday-love-feast")}` +
+      `&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
   };
 
   const toggleFaq = (idx: number) => {
@@ -394,7 +458,17 @@ export default function SundayLoveFeast() {
               <div className="text-center" style={{ padding: "40px 0" }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
                 <h3 style={{ color: "var(--navy)", marginBottom: 8 }}>You're Registered!</h3>
-                <p style={{ color: "var(--text-muted)", maxWidth: 360, margin: "0 auto" }}>We look forward to seeing you this Sunday. Walk in with a smile — Prasadam awaits!</p>
+                <p style={{ color: "var(--text-muted)", maxWidth: 360, margin: "0 auto 20px" }}>We look forward to seeing you this Sunday. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</p>
+                {successEventDate && (
+                  <a
+                    href={buildSlfCalendarUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--navy)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 600, fontSize: 14 }}
+                  >
+                    <i className="fas fa-calendar-plus" /> Add to Google Calendar
+                  </a>
+                )}
               </div>
             ) : (
             <form onSubmit={handleFormSubmit}>
@@ -408,11 +482,49 @@ export default function SundayLoveFeast() {
               <div className="form-row two-col">
                 <div className="form-group">
                   <label>Email <span className="req">*</span></label>
-                  <input type="email" placeholder="you@email.com" required value={formEmail} onChange={e => setFormEmail(e.target.value)} />
+                  <input
+                    type="email"
+                    placeholder="you@email.com"
+                    required
+                    value={formEmail}
+                    onChange={e => { setFormEmail(e.target.value); setEmailDupStatus("idle"); }}
+                    onBlur={checkEmailDup}
+                  />
+                  {emailDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This email is already registered</span>}
                 </div>
                 <div className="form-group">
-                  <label>Phone</label>
-                  <input type="tel" placeholder="+65 XXXX XXXX" value={formPhone} onChange={e => setFormPhone(e.target.value)} />
+                  <label>Phone <span className="req">*</span></label>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <select
+                      value={formPhoneCode}
+                      onChange={e => { setFormPhoneCode(e.target.value); setPhoneDupStatus("idle"); }}
+                      style={{ width: 90, flexShrink: 0 }}
+                    >
+                      <option value="+65">+65</option>
+                      <option value="+91">+91</option>
+                      <option value="+60">+60</option>
+                      <option value="+62">+62</option>
+                      <option value="+63">+63</option>
+                      <option value="+66">+66</option>
+                      <option value="+1">+1</option>
+                      <option value="+44">+44</option>
+                      <option value="+61">+61</option>
+                      <option value="+81">+81</option>
+                      <option value="+82">+82</option>
+                      <option value="+86">+86</option>
+                    </select>
+                    <input
+                      type="tel"
+                      placeholder="XXXX XXXX"
+                      required
+                      value={formPhoneNum}
+                      onChange={e => { setFormPhoneNum(e.target.value); setPhoneDupStatus("idle"); }}
+                      onBlur={checkPhoneDup}
+                      style={{ flex: 1 }}
+                    />
+                  </div>
+                  {formPhoneNum && !isPhoneValid() && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>Enter 8–15 digits</span>}
+                  {phoneDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This phone number is already registered</span>}
                 </div>
               </div>
               <div className="form-row two-col">

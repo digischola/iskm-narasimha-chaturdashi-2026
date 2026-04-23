@@ -100,13 +100,54 @@ export default function FreePrasadamProgram() {
 
   // Form state
   const [fullName, setFullName] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneCode, setPhoneCode] = useState("+65");
+  const [phoneNum, setPhoneNum] = useState("");
   const [prefDate, setPrefDate] = useState("");
   const [occasion, setOccasion] = useState("");
   const [tier, setTier] = useState("weekday-300");
   const [dedication, setDedication] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [refId, setRefId] = useState("");
+  const [emailDupStatus, setEmailDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+  const [phoneDupStatus, setPhoneDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+
+  const stripPhone = (v: string) => v.replace(/[\s\-().]/g, "");
+  const isPhoneValid = () => {
+    const digits = stripPhone(phoneNum);
+    if (!digits) return false;
+    const total = phoneCode.replace(/\D/g, "").length + digits.length;
+    return /^\d+$/.test(digits) && total >= 8 && total <= 15;
+  };
+  const isEmailValid = () => /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email.trim());
+
+  const checkEmailDup = async () => {
+    if (!isEmailValid()) return;
+    setEmailDupStatus("checking");
+    try {
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "email", value: email.trim().toLowerCase(), table: "prasadam" },
+      });
+      setEmailDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setEmailDupStatus("idle");
+    }
+  };
+
+  const checkPhoneDup = async () => {
+    if (!isPhoneValid()) return;
+    setPhoneDupStatus("checking");
+    try {
+      const { data } = await supabase.functions.invoke("check-duplicate", {
+        body: { field: "phone", value: stripPhone(phoneNum), table: "prasadam" },
+      });
+      setPhoneDupStatus(data?.exists ? "duplicate" : "ok");
+    } catch {
+      setPhoneDupStatus("idle");
+    }
+  };
 
   // Counter refs
   const counterRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -209,40 +250,91 @@ export default function FreePrasadamProgram() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
-    setSubmitting(true);
+    setSubmitError("");
 
-    const tierLabel = tier === "sunday-500" ? "Sunday ($500)" : "Weekday ($300)";
-    let msg = `Prasadam Sponsorship Request\n\nName: ${fullName}\nPhone: ${whatsapp}\nDate: ${prefDate}\nTier: ${tierLabel}`;
-    if (occasion) msg += `\nOccasion: ${occasion}`;
-    if (dedication) msg += `\nDedication: ${dedication}`;
-
-    try {
-      // NOTE: Temporary shim until Phase 1c rebuild of this form (country code split + email field).
-      // Storing the raw whatsapp value in `phone` with a default country_code so the
-      // schema's NOT NULL constraints are satisfied. Email is auto-filled and flagged
-      // for backfill so send-prasadam-confirmation will skip it.
-      const tempId = crypto.randomUUID();
-      await supabase.from("prasadam_sponsorships").insert({
-        id: tempId,
-        full_name: fullName.trim(),
-        email: `legacy-prasadam-${tempId}@needsbackfill.srikrishnamandir.org`,
-        email_needs_backfill: true,
-        country_code: "+65",
-        phone: whatsapp.trim(),
-        phone_needs_verification: true,
-        preferred_date: prefDate,
-        occasion: occasion || null,
-        tier,
-        dedication: dedication.trim() || null,
-      });
-    } catch (err) {
-      console.error("Failed to save sponsorship:", err);
+    if (emailDupStatus === "duplicate") {
+      setSubmitError("This email has already submitted a sponsorship.");
+      return;
+    }
+    if (phoneDupStatus === "duplicate") {
+      setSubmitError("This phone number has already submitted a sponsorship.");
+      return;
+    }
+    if (!isEmailValid()) {
+      setSubmitError("Please enter a valid email address.");
+      return;
+    }
+    if (!isPhoneValid()) {
+      setSubmitError("Please enter a valid phone number (8–15 digits).");
+      return;
     }
 
-    // Always open WhatsApp
-    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
-    setFormSuccess(true);
-    setSubmitting(false);
+    setSubmitting(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("submit-prasadam-sponsorship", {
+        body: {
+          full_name: fullName.trim(),
+          email: email.trim().toLowerCase(),
+          country_code: phoneCode,
+          phone: stripPhone(phoneNum),
+          preferred_date: prefDate,
+          tier,
+          occasion: occasion || null,
+          dedication: dedication.trim() || null,
+        },
+      });
+
+      if (error) {
+        setSubmitError("Submission failed. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+      if (data?.error) {
+        setSubmitError(data.error);
+        setSubmitting(false);
+        return;
+      }
+      if (!data?.success) {
+        setSubmitError("Something went wrong. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+
+      // Fire-and-forget Wabo sync
+      supabase.functions
+        .invoke("sync-to-wabo", {
+          body: {
+            event_slug: "prasadam_sponsor",
+            source: "Free Prasadam Program - Landing Page",
+            name: fullName.trim(),
+            email: email.trim().toLowerCase(),
+            country_code: phoneCode,
+            phone: stripPhone(phoneNum),
+            extras: {
+              tier,
+              preferred_date: prefDate,
+              occasion: occasion || undefined,
+            },
+          },
+        })
+        .catch((e) => console.error("Wabo sync error (Prasadam):", e));
+
+      setRefId(data.ref || "");
+      setFormSuccess(true);
+
+      // Open WhatsApp with the personal coordination message
+      const tierLabel = tier === "sunday-500" ? "Sunday ($500)" : "Weekday ($300)";
+      let msg = `Prasadam Sponsorship Request (Ref: ${data.ref || ""})\n\nName: ${fullName}\nEmail: ${email}\nPhone: ${phoneCode} ${stripPhone(phoneNum)}\nDate: ${prefDate}\nTier: ${tierLabel}`;
+      if (occasion) msg += `\nOccasion: ${occasion}`;
+      if (dedication) msg += `\nDedication: ${dedication}`;
+      window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+    } catch (err) {
+      console.error("Failed to save sponsorship:", err);
+      setSubmitError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleCopyLink = () => {
@@ -313,7 +405,12 @@ export default function FreePrasadamProgram() {
               <div className="form-success" role="alert">
                 <div className="check-icon"><i className="fas fa-check" aria-hidden="true"></i></div>
                 <h3>Request Sent!</h3>
-                <p>Our Prasadam coordinator will confirm your date and share payment details via WhatsApp shortly.</p>
+                {refId && (
+                  <p style={{ marginTop: 8, fontSize: 14 }}>
+                    Reference: <strong style={{ fontFamily: "monospace", color: "var(--navy)" }}>{refId}</strong>
+                  </p>
+                )}
+                <p>A confirmation email is on its way. Our Prasadam coordinator will also reach out on WhatsApp within 24 hours with payment details.</p>
               </div>
             ) : (
               <>
@@ -323,14 +420,70 @@ export default function FreePrasadamProgram() {
                   <p>Pick a date, add a dedication — we handle the rest</p>
                 </div>
                 <form onSubmit={handleSubmit} aria-label="Sponsorship request form">
+                  {submitError && (
+                    <p style={{ color: "#c0392b", fontSize: 13, textAlign: "center", marginBottom: 12, padding: "8px 12px", background: "#fdecea", borderRadius: 6 }}>{submitError}</p>
+                  )}
                   <div className="form-group">
                     <label htmlFor="fpp-name">Full Name *</label>
                     <input type="text" id="fpp-name" placeholder="Your full name" required autoComplete="name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
                   </div>
+                  <div className="form-group">
+                    <label htmlFor="fpp-email">Email *</label>
+                    <input
+                      type="email"
+                      id="fpp-email"
+                      placeholder="you@email.com"
+                      required
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); setEmailDupStatus("idle"); }}
+                      onBlur={checkEmailDup}
+                    />
+                    {emailDupStatus === "duplicate" && (
+                      <span style={{ color: "#c0392b", fontSize: 12, marginTop: 4, display: "block" }}>This email has already submitted a sponsorship</span>
+                    )}
+                  </div>
                   <div className="form-row">
                     <div className="form-group">
                       <label htmlFor="fpp-phone">WhatsApp Number *</label>
-                      <input type="tel" id="fpp-phone" placeholder="+65 XXXX XXXX" required autoComplete="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
+                      <div style={{ display: "flex", gap: 6 }}>
+                        <select
+                          value={phoneCode}
+                          onChange={(e) => { setPhoneCode(e.target.value); setPhoneDupStatus("idle"); }}
+                          style={{ width: 90, flexShrink: 0 }}
+                          aria-label="Country code"
+                        >
+                          <option value="+65">+65</option>
+                          <option value="+91">+91</option>
+                          <option value="+60">+60</option>
+                          <option value="+62">+62</option>
+                          <option value="+63">+63</option>
+                          <option value="+66">+66</option>
+                          <option value="+1">+1</option>
+                          <option value="+44">+44</option>
+                          <option value="+61">+61</option>
+                          <option value="+81">+81</option>
+                          <option value="+82">+82</option>
+                          <option value="+86">+86</option>
+                        </select>
+                        <input
+                          type="tel"
+                          id="fpp-phone"
+                          placeholder="XXXX XXXX"
+                          required
+                          autoComplete="tel"
+                          value={phoneNum}
+                          onChange={(e) => { setPhoneNum(e.target.value); setPhoneDupStatus("idle"); }}
+                          onBlur={checkPhoneDup}
+                          style={{ flex: 1 }}
+                        />
+                      </div>
+                      {phoneNum && !isPhoneValid() && (
+                        <span style={{ color: "#c0392b", fontSize: 12, marginTop: 4, display: "block" }}>Enter 8–15 digits</span>
+                      )}
+                      {phoneDupStatus === "duplicate" && (
+                        <span style={{ color: "#c0392b", fontSize: 12, marginTop: 4, display: "block" }}>This phone number has already submitted a sponsorship</span>
+                      )}
                     </div>
                     <div className="form-group">
                       <label htmlFor="fpp-date">Preferred Date *</label>
