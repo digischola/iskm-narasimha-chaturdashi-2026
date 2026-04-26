@@ -88,8 +88,15 @@
 }
 .slf .form-row {
   display: grid !important;
+  grid-template-columns: 1fr !important;
   gap: 16px !important;
   margin-bottom: 16px !important;
+}
+.slf .form-row.two-col {
+  grid-template-columns: 1fr 1fr !important;
+}
+@media (max-width: 600px) {
+  .slf .form-row.two-col { grid-template-columns: 1fr !important; }
 }
 .slf h1, .slf h2, .slf h3, .slf h4, .slf h5 { font-family: 'Playfair Display', serif; color: var(--navy); line-height: 1.25; }
 .slf img { max-width: 100%; display: block; }
