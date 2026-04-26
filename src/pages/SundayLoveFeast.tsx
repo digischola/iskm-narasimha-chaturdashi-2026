@@ -32,6 +32,32 @@ function formatNextSunday(): string {
   });
 }
 
+/** ISO yyyy-mm-dd in SGT for a given Sunday Date object. */
+function sundayIso(d: Date): string {
+  const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+  const sgt = new Date(d.getTime() + SGT_OFFSET_MS);
+  const y = sgt.getUTCFullYear();
+  const m = String(sgt.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(sgt.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+/** Returns the next 13 Sundays (~3 months) as { iso, label } pairs. */
+function buildSundayOptions(): Array<{ iso: string; label: string }> {
+  const first = getNextSunday();
+  const out: Array<{ iso: string; label: string }> = [];
+  for (let i = 0; i < 13; i++) {
+    const d = new Date(first.getTime() + i * 7 * 86400000);
+    const iso = sundayIso(d);
+    const pretty = new Date(iso + "T00:00:00+08:00").toLocaleDateString("en-SG", {
+      weekday: "long", day: "numeric", month: "short", year: "numeric",
+    });
+    const label = i === 0 ? `${pretty} (this Sunday)` : pretty;
+    out.push({ iso, label });
+  }
+  return out;
+}
+
 const IMG = "/images/sunday-love-feast";
 
 const GALLERY_ROW1 = [
