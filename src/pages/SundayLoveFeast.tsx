@@ -205,7 +205,10 @@ export default function SundayLoveFeast() {
   const [formAttendees, setFormAttendees] = useState("2");
   const [formFirstTime, setFormFirstTime] = useState("no");
   const sundayOptions = useRef(buildSundayOptions()).current;
+  const eligibleIsoSet = useRef(new Set(sundayOptions.map(o => o.iso))).current;
+  const calendarMonths = useRef(buildCalendarMonths(eligibleIsoSet)).current;
   const [formAttendanceDate, setFormAttendanceDate] = useState<string>(sundayOptions[0]?.iso || "");
+  const selectedSundayLabel = sundayOptions.find(o => o.iso === formAttendanceDate)?.label || "";
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
