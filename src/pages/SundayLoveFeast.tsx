@@ -42,20 +42,77 @@ function sundayIso(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
-/** Returns the next 13 Sundays (~3 months) as { iso, label } pairs. */
+/** Returns the upcoming Sundays in the next ~30 days as { iso, label } pairs. */
 function buildSundayOptions(): Array<{ iso: string; label: string }> {
   const first = getNextSunday();
   const out: Array<{ iso: string; label: string }> = [];
-  for (let i = 0; i < 13; i++) {
+  // Up to 5 Sundays = ~1 month window
+  for (let i = 0; i < 5; i++) {
     const d = new Date(first.getTime() + i * 7 * 86400000);
+    // Keep only Sundays within ~31 days from today (1 month)
+    const daysFromFirst = i * 7;
+    if (daysFromFirst > 31) break;
     const iso = sundayIso(d);
     const pretty = new Date(iso + "T00:00:00+08:00").toLocaleDateString("en-SG", {
       weekday: "long", day: "numeric", month: "short", year: "numeric",
+      timeZone: "Asia/Singapore",
     });
     const label = i === 0 ? `${pretty} (this Sunday)` : pretty;
     out.push({ iso, label });
   }
   return out;
+}
+
+/** Build a calendar grid covering all Sundays in the eligible window. */
+type CalDay = { iso: string; dayNum: number; inMonth: boolean; isSunday: boolean; isEligible: boolean; isPast: boolean };
+function buildCalendarMonths(eligibleIsoSet: Set<string>): Array<{ year: number; month: number; label: string; weeks: CalDay[][] }> {
+  const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+  const todaySgt = new Date(Date.now() + SGT_OFFSET_MS);
+  const todayIso = `${todaySgt.getUTCFullYear()}-${String(todaySgt.getUTCMonth() + 1).padStart(2, "0")}-${String(todaySgt.getUTCDate()).padStart(2, "0")}`;
+
+  const eligibleSorted = Array.from(eligibleIsoSet).sort();
+  if (eligibleSorted.length === 0) return [];
+  const firstIso = eligibleSorted[0];
+  const lastIso = eligibleSorted[eligibleSorted.length - 1];
+  const [fy, fm] = firstIso.split("-").map(Number);
+  const [ly, lm] = lastIso.split("-").map(Number);
+
+  const months: Array<{ year: number; month: number; label: string; weeks: CalDay[][] }> = [];
+  let curY = fy, curM = fm;
+  while (curY < ly || (curY === ly && curM <= lm)) {
+    const monthLabel = new Date(Date.UTC(curY, curM - 1, 1)).toLocaleDateString("en-SG", {
+      month: "long", year: "numeric", timeZone: "Asia/Singapore",
+    });
+    const firstDow = new Date(Date.UTC(curY, curM - 1, 1)).getUTCDay(); // 0=Sun
+    const daysInMonth = new Date(Date.UTC(curY, curM, 0)).getUTCDate();
+    const cells: CalDay[] = [];
+    // Leading blanks (previous month days shown faded — use empty placeholders)
+    for (let i = 0; i < firstDow; i++) {
+      cells.push({ iso: `pad-${curY}-${curM}-${i}`, dayNum: 0, inMonth: false, isSunday: false, isEligible: false, isPast: false });
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = `${curY}-${String(curM).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const dow = new Date(Date.UTC(curY, curM - 1, d)).getUTCDay();
+      cells.push({
+        iso,
+        dayNum: d,
+        inMonth: true,
+        isSunday: dow === 0,
+        isEligible: eligibleIsoSet.has(iso),
+        isPast: iso < todayIso,
+      });
+    }
+    // Trailing blanks to complete week row
+    while (cells.length % 7 !== 0) {
+      cells.push({ iso: `pad-end-${cells.length}`, dayNum: 0, inMonth: false, isSunday: false, isEligible: false, isPast: false });
+    }
+    const weeks: CalDay[][] = [];
+    for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+    months.push({ year: curY, month: curM, label: monthLabel, weeks });
+    curM++;
+    if (curM > 12) { curM = 1; curY++; }
+  }
+  return months;
 }
 
 const IMG = "/images/sunday-love-feast";
@@ -148,7 +205,10 @@ export default function SundayLoveFeast() {
   const [formAttendees, setFormAttendees] = useState("2");
   const [formFirstTime, setFormFirstTime] = useState("no");
   const sundayOptions = useRef(buildSundayOptions()).current;
+  const eligibleIsoSet = useRef(new Set(sundayOptions.map(o => o.iso))).current;
+  const calendarMonths = useRef(buildCalendarMonths(eligibleIsoSet)).current;
   const [formAttendanceDate, setFormAttendanceDate] = useState<string>(sundayOptions[0]?.iso || "");
+  const selectedSundayLabel = sundayOptions.find(o => o.iso === formAttendanceDate)?.label || "";
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
@@ -608,15 +668,46 @@ export default function SundayLoveFeast() {
               <div className="form-row">
                 <div className="form-group">
                   <label>Choose Date <span className="req">*</span></label>
-                  <select
-                    value={formAttendanceDate}
-                    onChange={e => setFormAttendanceDate(e.target.value)}
-                    required
-                  >
-                    {sundayOptions.map(opt => (
-                      <option key={opt.iso} value={opt.iso}>{opt.label}</option>
+                  <div className="slf-cal" role="group" aria-label="Choose a Sunday to attend">
+                    {calendarMonths.map(m => (
+                      <div key={`${m.year}-${m.month}`} className="slf-cal-month">
+                        <div className="slf-cal-month-label">{m.label}</div>
+                        <div className="slf-cal-dow">
+                          {["S","M","T","W","T","F","S"].map((d, i) => (
+                            <span key={i} className={i === 0 ? "is-sun" : ""}>{d}</span>
+                          ))}
+                        </div>
+                        <div className="slf-cal-grid">
+                          {m.weeks.flat().map((cell, idx) => {
+                            if (!cell.inMonth) return <span key={idx} className="slf-cal-cell empty" />;
+                            const selectable = cell.isEligible && !cell.isPast;
+                            const selected = selectable && cell.iso === formAttendanceDate;
+                            return (
+                              <button
+                                key={idx}
+                                type="button"
+                                disabled={!selectable}
+                                aria-pressed={selected}
+                                aria-label={cell.iso}
+                                className={[
+                                  "slf-cal-cell",
+                                  cell.isSunday ? "sun" : "",
+                                  selectable ? "selectable" : "disabled",
+                                  selected ? "selected" : "",
+                                ].filter(Boolean).join(" ")}
+                                onClick={() => selectable && setFormAttendanceDate(cell.iso)}
+                              >
+                                {cell.dayNum}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     ))}
-                  </select>
+                  </div>
+                  {selectedSundayLabel && (
+                    <div className="slf-cal-selected">Selected: <strong>{selectedSundayLabel}</strong></div>
+                  )}
                 </div>
               </div>
               <div className="form-row two-col">
