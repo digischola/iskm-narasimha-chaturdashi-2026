@@ -637,22 +637,51 @@ export default function SundayLoveFeast() {
             <h2 className="section-title" style={{ color: "var(--white)" }}>More Than a Sunday Gathering</h2>
             <p className="section-subtitle" style={{ color: "rgba(255,255,255,.6)" }}>Hear from devotees who make Sunday Love Feast a part of their lives</p>
           </div>
-          <div className="testimonial-grid">
-            <div className="testimonial-card reveal reveal-delay-1">
-              <div className="stars">★ ★ ★ ★ ★</div>
-              <blockquote>"The Sunday Love Feast is the highlight of our family's week. The children love their class, and the Prasadam is always incredible. It feels like coming home."</blockquote>
-              <div className="testimonial-author">
-                <div className="testimonial-avatar">P</div>
-                <div><div className="testimonial-name">Priya M.</div><div className="testimonial-detail">Attending since 2023</div></div>
-              </div>
+          <div className="testimonial-slider">
+            <button
+              type="button"
+              className="testi-arrow testi-arrow-prev"
+              aria-label="Previous testimonial"
+              onClick={() => setTestiIdx((i) => (i - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)}
+            >
+              <i className="fas fa-chevron-left" />
+            </button>
+            <div
+              className="testimonial-grid"
+              style={{ ["--testi-idx" as never]: testiIdx } as React.CSSProperties}
+            >
+              {TESTIMONIALS.map((t, i) => (
+                <div className={`testimonial-card reveal reveal-delay-${i + 1}`} key={i}>
+                  <div className="stars">{t.stars}</div>
+                  <blockquote>"{t.quote}"</blockquote>
+                  <div className="testimonial-author">
+                    <div className="testimonial-avatar">{t.avatar}</div>
+                    <div>
+                      <div className="testimonial-name">{t.name}</div>
+                      <div className="testimonial-detail">{t.detail}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="testimonial-card reveal reveal-delay-2">
-              <div className="stars">★ ★ ★ ★ ★</div>
-              <blockquote>"I came as a curious visitor and now I don't miss a single Sunday. The Kirtan fills you with an energy you can't explain. And it's all completely free — just pure love."</blockquote>
-              <div className="testimonial-author">
-                <div className="testimonial-avatar">R</div>
-                <div><div className="testimonial-name">Rajesh K.</div><div className="testimonial-detail">Regular since 2024</div></div>
-              </div>
+            <button
+              type="button"
+              className="testi-arrow testi-arrow-next"
+              aria-label="Next testimonial"
+              onClick={() => setTestiIdx((i) => (i + 1) % TESTIMONIALS.length)}
+            >
+              <i className="fas fa-chevron-right" />
+            </button>
+            <div className="testi-dots">
+              {TESTIMONIALS.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`testi-dot${i === testiIdx ? " active" : ""}`}
+                  aria-label={`Go to testimonial ${i + 1}`}
+                  onClick={() => setTestiIdx(i)}
+                />
+              ))}
             </div>
           </div>
         </div>
