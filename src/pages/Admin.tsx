@@ -386,8 +386,8 @@ export default function Admin() {
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "email_log";
     } else if (page === "registrations" && regEventTab === "slf") {
-      const headers = ["Name", "Email", "Country Code", "Phone", "Attendees", "First Time", "Registered At"];
-      const rows = slfData.map(r => [r.name, r.email, r.country_code || "", r.phone || "", r.attendees, r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      const headers = ["Name", "Email", "Country Code", "Phone", "Attendees", "Attendance Date", "First Time", "Registered At"];
+      const rows = slfData.map(r => [r.name, r.email, r.country_code || "", r.phone || "", r.attendees, r.attendance_date || "", r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "slf_registrations";
     } else if (page === "registrations" && regEventTab === "prasadam") {
