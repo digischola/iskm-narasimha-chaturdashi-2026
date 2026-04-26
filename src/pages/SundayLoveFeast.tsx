@@ -7,17 +7,23 @@ import "./SundayLoveFeast.css";
    HELPERS
    ═══════════════════════════════════════ */
 function getNextSunday(): Date {
-  const now = new Date();
-  const day = now.getDay();
-  const diff = (7 - day) % 7 || 7;
-  const next = new Date(now);
-  next.setDate(now.getDate() + diff);
-  next.setHours(17, 0, 0, 0);
-  if (day === 0 && now.getHours() < 19) {
-    next.setDate(now.getDate());
-    next.setHours(17, 0, 0, 0);
-  }
-  return next;
+  // Target = upcoming Sunday at 5:00 PM Singapore time (SGT, UTC+8).
+  // If today is Sunday and it's before 5 PM SGT, target = today 5 PM SGT.
+  // Otherwise, target = next Sunday 5 PM SGT.
+  const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+  const nowSgt = new Date(Date.now() + SGT_OFFSET_MS);
+  const day = nowSgt.getUTCDay(); // 0 = Sunday in SGT
+  const hour = nowSgt.getUTCHours(); // hour in SGT
+  let daysToAdd = (7 - day) % 7;
+  if (day === 0 && hour >= 17) daysToAdd = 7;
+  // Build Sunday 5 PM SGT = Sunday 09:00 UTC
+  const sundaySgtMidnightUtc = Date.UTC(
+    nowSgt.getUTCFullYear(),
+    nowSgt.getUTCMonth(),
+    nowSgt.getUTCDate() + daysToAdd,
+    9, 0, 0, 0
+  );
+  return new Date(sundaySgtMidnightUtc);
 }
 
 function formatNextSunday(): string {
@@ -29,22 +35,22 @@ function formatNextSunday(): string {
 const IMG = "/images/sunday-love-feast";
 
 const GALLERY_ROW1 = [
-  { src: `${IMG}/5-individual-person-chatting.webp`, alt: "Person chatting at Love Feast" },
+  { src: `${IMG}/uploads/glimpse1.webp`, alt: "Devotees serving Prasadam at Love Feast" },
   { src: `${IMG}/6-ladle-pouring-sauce-closeup.webp`, alt: "Ladle pouring sauce" },
-  { src: `${IMG}/6-women-merchandise-table.webp`, alt: "Women at merchandise table" },
+  { src: `${IMG}/uploads/glimpse3.webp`, alt: "Devotee enjoying Prasadam" },
   { src: `${IMG}/7-cupcakes-muffins-baked-closeup.webp`, alt: "Cupcakes and muffins" },
-  { src: `${IMG}/7-men-clapping-chanting-engaged.webp`, alt: "Men chanting" },
-  { src: `${IMG}/7-prasadam-serving-line-multiple.webp`, alt: "Prasadam serving line" },
-  { src: `${IMG}/7-volunteers-posing-food-trays.webp`, alt: "Volunteers with food trays" },
+  { src: `${IMG}/uploads/glimpse5.webp`, alt: "Congregation gathered for Sunday Love Feast" },
+  { src: `${IMG}/uploads/glimpse2.webp`, alt: "Devotees offering pranams" },
+  { src: `${IMG}/uploads/glimpse4.webp`, alt: "Buffet line at Sunday Love Feast" },
 ];
 const GALLERY_ROW2 = [
-  { src: `${IMG}/8-devotee-mridanga-kirtan-group.webp`, alt: "Kirtan group" },
-  { src: `${IMG}/8-father-son-matching-yellow-shirts.webp`, alt: "Father and son" },
-  { src: `${IMG}/8-man-smiling-holding-prasadam-plate.webp`, alt: "Man with prasadam plate" },
-  { src: `${IMG}/8-woman-smiling-flowers-vibrant.webp`, alt: "Woman with flowers" },
-  { src: `${IMG}/9-congregation-seated-temple-hall-wide.webp`, alt: "Congregation in temple hall" },
+  { src: `${IMG}/uploads/glimpse5.webp`, alt: "Bhagavad Gītā class in temple hall" },
   { src: `${IMG}/9-jagannath-deities-food-offerings-flowers.webp`, alt: "Jagannath deities with offerings" },
+  { src: `${IMG}/uploads/glimpse4.webp`, alt: "Community sharing Prasadam" },
   { src: `${IMG}/9-radha-krishna-deities-flower-decoration.webp`, alt: "Radha Krishna deities" },
+  { src: `${IMG}/uploads/glimpse1.webp`, alt: "Serving Prasadam plates" },
+  { src: `${IMG}/uploads/glimpse2.webp`, alt: "Devotees in prayer" },
+  { src: `${IMG}/uploads/glimpse3.webp`, alt: "Devotee with Prasadam plate" },
 ];
 
 const SCHEDULE = [
@@ -82,9 +88,33 @@ export default function SundayLoveFeast() {
   
   const [regCounter, setRegCounter] = useState(0);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(true);
-  
 
-  // Form state
+  // Testimonial slider (mobile)
+  const [testiIdx, setTestiIdx] = useState(0);
+  const TESTIMONIALS = [
+    {
+      stars: "★ ★ ★ ★ ★",
+      quote: "The Sunday Love Feast is the highlight of our family's week. The children love their class, and the Prasadam is always incredible. It feels like coming home.",
+      avatar: "P",
+      name: "Priya M.",
+      detail: "Attending since 2023",
+    },
+    {
+      stars: "★ ★ ★ ★ ★",
+      quote: "I came as a curious visitor and now I don't miss a single Sunday. The Kirtan fills you with an energy you can't explain. And it's all completely free — just pure love.",
+      avatar: "R",
+      name: "Rajesh K.",
+      detail: "Regular since 2024",
+    },
+    {
+      stars: "★ ★ ★ ★ ★",
+      quote: "I brought my parents one Sunday and they haven't stopped talking about it. The Bhajans, the Gita class, and the warmth of everyone here — it's truly special.",
+      avatar: "A",
+      name: "Anita S.",
+      detail: "Devotee since 2022",
+    },
+  ];
+
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
   const [formPhoneCode, setFormPhoneCode] = useState("+65");
@@ -269,6 +299,15 @@ export default function SundayLoveFeast() {
     document.body.style.overflow = lightboxSrc || mobileMenuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [lightboxSrc, mobileMenuOpen]);
+
+  // Auto-rotate testimonials on mobile (every 6s)
+  useEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth > 768) return;
+    const id = setInterval(() => {
+      setTestiIdx((i) => (i + 1) % TESTIMONIALS.length);
+    }, 6000);
+    return () => clearInterval(id);
+  }, [TESTIMONIALS.length]);
 
   // No longer need carousel auto-scroll — using CSS marquee
 
@@ -598,22 +637,51 @@ export default function SundayLoveFeast() {
             <h2 className="section-title" style={{ color: "var(--white)" }}>More Than a Sunday Gathering</h2>
             <p className="section-subtitle" style={{ color: "rgba(255,255,255,.6)" }}>Hear from devotees who make Sunday Love Feast a part of their lives</p>
           </div>
-          <div className="testimonial-grid">
-            <div className="testimonial-card reveal reveal-delay-1">
-              <div className="stars">★ ★ ★ ★ ★</div>
-              <blockquote>"The Sunday Love Feast is the highlight of our family's week. The children love their class, and the Prasadam is always incredible. It feels like coming home."</blockquote>
-              <div className="testimonial-author">
-                <div className="testimonial-avatar">P</div>
-                <div><div className="testimonial-name">Priya M.</div><div className="testimonial-detail">Attending since 2023</div></div>
-              </div>
+          <div className="testimonial-slider">
+            <button
+              type="button"
+              className="testi-arrow testi-arrow-prev"
+              aria-label="Previous testimonial"
+              onClick={() => setTestiIdx((i) => (i - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)}
+            >
+              <i className="fas fa-chevron-left" />
+            </button>
+            <div
+              className="testimonial-grid"
+              style={{ ["--testi-idx" as never]: testiIdx } as React.CSSProperties}
+            >
+              {TESTIMONIALS.map((t, i) => (
+                <div className={`testimonial-card reveal reveal-delay-${i + 1}`} key={i}>
+                  <div className="stars">{t.stars}</div>
+                  <blockquote>"{t.quote}"</blockquote>
+                  <div className="testimonial-author">
+                    <div className="testimonial-avatar">{t.avatar}</div>
+                    <div>
+                      <div className="testimonial-name">{t.name}</div>
+                      <div className="testimonial-detail">{t.detail}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="testimonial-card reveal reveal-delay-2">
-              <div className="stars">★ ★ ★ ★ ★</div>
-              <blockquote>"I came as a curious visitor and now I don't miss a single Sunday. The Kirtan fills you with an energy you can't explain. And it's all completely free — just pure love."</blockquote>
-              <div className="testimonial-author">
-                <div className="testimonial-avatar">R</div>
-                <div><div className="testimonial-name">Rajesh K.</div><div className="testimonial-detail">Regular since 2024</div></div>
-              </div>
+            <button
+              type="button"
+              className="testi-arrow testi-arrow-next"
+              aria-label="Next testimonial"
+              onClick={() => setTestiIdx((i) => (i + 1) % TESTIMONIALS.length)}
+            >
+              <i className="fas fa-chevron-right" />
+            </button>
+            <div className="testi-dots">
+              {TESTIMONIALS.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`testi-dot${i === testiIdx ? " active" : ""}`}
+                  aria-label={`Go to testimonial ${i + 1}`}
+                  onClick={() => setTestiIdx(i)}
+                />
+              ))}
             </div>
           </div>
         </div>
