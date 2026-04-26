@@ -7,17 +7,23 @@ import "./SundayLoveFeast.css";
    HELPERS
    ═══════════════════════════════════════ */
 function getNextSunday(): Date {
-  const now = new Date();
-  const day = now.getDay();
-  const diff = (7 - day) % 7 || 7;
-  const next = new Date(now);
-  next.setDate(now.getDate() + diff);
-  next.setHours(17, 0, 0, 0);
-  if (day === 0 && now.getHours() < 19) {
-    next.setDate(now.getDate());
-    next.setHours(17, 0, 0, 0);
-  }
-  return next;
+  // Target = upcoming Sunday at 5:00 PM Singapore time (SGT, UTC+8).
+  // If today is Sunday and it's before 5 PM SGT, target = today 5 PM SGT.
+  // Otherwise, target = next Sunday 5 PM SGT.
+  const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+  const nowSgt = new Date(Date.now() + SGT_OFFSET_MS);
+  const day = nowSgt.getUTCDay(); // 0 = Sunday in SGT
+  const hour = nowSgt.getUTCHours(); // hour in SGT
+  let daysToAdd = (7 - day) % 7;
+  if (day === 0 && hour >= 17) daysToAdd = 7;
+  // Build Sunday 5 PM SGT = Sunday 09:00 UTC
+  const sundaySgtMidnightUtc = Date.UTC(
+    nowSgt.getUTCFullYear(),
+    nowSgt.getUTCMonth(),
+    nowSgt.getUTCDate() + daysToAdd,
+    9, 0, 0, 0
+  );
+  return new Date(sundaySgtMidnightUtc);
 }
 
 function formatNextSunday(): string {
