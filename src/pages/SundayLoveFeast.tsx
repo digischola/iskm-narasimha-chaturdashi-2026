@@ -32,6 +32,32 @@ function formatNextSunday(): string {
   });
 }
 
+/** ISO yyyy-mm-dd in SGT for a given Sunday Date object. */
+function sundayIso(d: Date): string {
+  const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+  const sgt = new Date(d.getTime() + SGT_OFFSET_MS);
+  const y = sgt.getUTCFullYear();
+  const m = String(sgt.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(sgt.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+/** Returns the next 13 Sundays (~3 months) as { iso, label } pairs. */
+function buildSundayOptions(): Array<{ iso: string; label: string }> {
+  const first = getNextSunday();
+  const out: Array<{ iso: string; label: string }> = [];
+  for (let i = 0; i < 13; i++) {
+    const d = new Date(first.getTime() + i * 7 * 86400000);
+    const iso = sundayIso(d);
+    const pretty = new Date(iso + "T00:00:00+08:00").toLocaleDateString("en-SG", {
+      weekday: "long", day: "numeric", month: "short", year: "numeric",
+    });
+    const label = i === 0 ? `${pretty} (this Sunday)` : pretty;
+    out.push({ iso, label });
+  }
+  return out;
+}
+
 const IMG = "/images/sunday-love-feast";
 
 const GALLERY_ROW1 = [
@@ -121,6 +147,8 @@ export default function SundayLoveFeast() {
   const [formPhoneNum, setFormPhoneNum] = useState("");
   const [formAttendees, setFormAttendees] = useState("2");
   const [formFirstTime, setFormFirstTime] = useState("no");
+  const sundayOptions = useRef(buildSundayOptions()).current;
+  const [formAttendanceDate, setFormAttendanceDate] = useState<string>(sundayOptions[0]?.iso || "");
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
@@ -331,6 +359,10 @@ export default function SundayLoveFeast() {
       setFormError("Please enter a valid phone number (8–15 digits).");
       return;
     }
+    if (!formAttendanceDate) {
+      setFormError("Please choose which Sunday you'll attend.");
+      return;
+    }
     setFormSubmitting(true);
     try {
       const res = await supabase.functions.invoke("submit-slf-registration", {
@@ -341,6 +373,7 @@ export default function SundayLoveFeast() {
           phone: stripPhone(formPhoneNum),
           attendees: parseInt(formAttendees) || 2,
           first_time: formFirstTime === "yes",
+          attendance_date: formAttendanceDate,
         },
       });
       const data = res.data;
@@ -357,7 +390,7 @@ export default function SundayLoveFeast() {
         });
 
         setFormSuccess(true);
-        setSuccessEventDate(data.event_date || "");
+        setSuccessEventDate(data.event_date || formAttendanceDate);
         if (data.count) setRegCounter(data.count);
       } else {
         setFormError("Something went wrong. Please try again.");
@@ -464,7 +497,7 @@ export default function SundayLoveFeast() {
             </div>
           </div>
           <div className="hero-video-wrap">
-            <video autoPlay muted loop playsInline poster="/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.webp" ref={heroVideoRef}>
+            <video autoPlay muted loop playsInline ref={heroVideoRef}>
               <source src="/images/sunday-love-feast/hero-video.mp4" type="video/mp4" />
             </video>
             <div className="hero-video-overlay">
@@ -497,7 +530,13 @@ export default function SundayLoveFeast() {
               <div className="text-center" style={{ padding: "40px 0" }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
                 <h3 style={{ color: "var(--navy)", marginBottom: 8 }}>You're Registered!</h3>
-                <p style={{ color: "var(--text-muted)", maxWidth: 360, margin: "0 auto 20px" }}>We look forward to seeing you this Sunday. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</p>
+                <p style={{ color: "var(--text-muted)", maxWidth: 380, margin: "0 auto 20px" }}>
+                  {successEventDate ? (
+                    <>We look forward to seeing you on <strong>{new Date(successEventDate + "T00:00:00+08:00").toLocaleDateString("en-SG", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</strong>. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
+                  ) : (
+                    <>We look forward to seeing you this Sunday. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
+                  )}
+                </p>
                 {successEventDate && (
                   <a
                     href={buildSlfCalendarUrl()}
@@ -564,6 +603,20 @@ export default function SundayLoveFeast() {
                   </div>
                   {formPhoneNum && !isPhoneValid() && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>Enter 8–15 digits</span>}
                   {phoneDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This phone number is already registered</span>}
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Choose Date <span className="req">*</span></label>
+                  <select
+                    value={formAttendanceDate}
+                    onChange={e => setFormAttendanceDate(e.target.value)}
+                    required
+                  >
+                    {sundayOptions.map(opt => (
+                      <option key={opt.iso} value={opt.iso}>{opt.label}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className="form-row two-col">

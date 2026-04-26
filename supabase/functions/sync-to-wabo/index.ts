@@ -22,7 +22,7 @@ const corsHeaders = {
  *
  * Whitelisted Wabo custom-field keys (no others allowed):
  *   nrsimhachaturdasi2026, sunday_love_feast, prasadam_sponsor,
- *   pax, tier, preferred_date, occasion
+ *   pax, tier, preferred_date, occasion, slf_attendance_date
  *
  * Auth: only `geta-host` header with WABO_API_KEY secret. No Authorization header.
  * Fire-and-forget — non-200 logs only, never blocks UX.
@@ -38,6 +38,7 @@ const ALLOWED_EXTRA_KEYS = new Set([
   "tier",
   "preferred_date",
   "occasion",
+  "slf_attendance_date",
 ]);
 
 serve(async (req) => {

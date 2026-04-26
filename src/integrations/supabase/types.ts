@@ -238,6 +238,7 @@ export type Database = {
       }
       slf_registrations: {
         Row: {
+          attendance_date: string | null
           attendees: number
           country_code: string | null
           created_at: string
@@ -248,6 +249,7 @@ export type Database = {
           phone: string
         }
         Insert: {
+          attendance_date?: string | null
           attendees?: number
           country_code?: string | null
           created_at?: string
@@ -258,6 +260,7 @@ export type Database = {
           phone: string
         }
         Update: {
+          attendance_date?: string | null
           attendees?: number
           country_code?: string | null
           created_at?: string

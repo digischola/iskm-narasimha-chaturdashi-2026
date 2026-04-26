@@ -386,8 +386,8 @@ export default function Admin() {
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "email_log";
     } else if (page === "registrations" && regEventTab === "slf") {
-      const headers = ["Name", "Email", "Country Code", "Phone", "Attendees", "First Time", "Registered At"];
-      const rows = slfData.map(r => [r.name, r.email, r.country_code || "", r.phone || "", r.attendees, r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      const headers = ["Name", "Email", "Country Code", "Phone", "Attendees", "Attendance Date", "First Time", "Registered At"];
+      const rows = slfData.map(r => [r.name, r.email, r.country_code || "", r.phone || "", r.attendees, (r as any).attendance_date || "", r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "slf_registrations";
     } else if (page === "registrations" && regEventTab === "prasadam") {
@@ -774,7 +774,7 @@ export default function Admin() {
                         <th>Email</th>
                         <th>Phone</th>
                         {regEventTab === "nrsimha" && <><th>Pax</th><th>Conf</th><th>Reminder</th></>}
-                        {regEventTab === "slf" && <><th>Pax</th><th>First Time</th></>}
+                        {regEventTab === "slf" && <><th>Pax</th><th>Sunday</th><th>First Time</th></>}
                         {regEventTab === "prasadam" && <><th>Tier</th><th>Date</th><th>Status</th></>}
                         <th>Submitted</th>
                       </tr>
@@ -810,6 +810,11 @@ export default function Admin() {
                             {regEventTab === "slf" && (
                               <>
                                 <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
+                                <td style={{ color: "#1e3a6e", fontWeight: 600, fontSize: "13px", whiteSpace: "nowrap" }}>
+                                  {r.attendance_date
+                                    ? new Date(r.attendance_date + "T00:00:00+08:00").toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })
+                                    : <span style={{ color: "#aaa", fontWeight: 400 }}>—</span>}
+                                </td>
                                 <td>{r.first_time ? <span className="admin-badge sent">Yes</span> : "No"}</td>
                               </>
                             )}
