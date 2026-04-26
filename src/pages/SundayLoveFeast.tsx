@@ -726,17 +726,45 @@ export default function SundayLoveFeast() {
               <div className="form-row">
                 <div className="form-group">
                   <label>Choose Date <span className="req">*</span></label>
-                  <div className="slf-cal" role="group" aria-label="Choose a Sunday to attend">
-                    {calendarMonths.map(m => (
-                      <div key={`${m.year}-${m.month}`} className="slf-cal-month">
-                        <div className="slf-cal-month-label">{m.label}</div>
+                  <div className="slf-cal-wrap" ref={calWrapRef}>
+                    <button
+                      type="button"
+                      className={"slf-cal-trigger" + (calOpen ? " open" : "")}
+                      aria-expanded={calOpen}
+                      aria-haspopup="dialog"
+                      onClick={() => setCalOpen(o => !o)}
+                    >
+                      <span className="slf-cal-trigger-text">
+                        {selectedSundayLabel || "Select a Sunday"}
+                      </span>
+                      <span className={"slf-cal-chev" + (calOpen ? " up" : "")} aria-hidden="true">▾</span>
+                    </button>
+                    {calOpen && (
+                      <div className="slf-cal-inline" role="dialog" aria-label="Choose a Sunday to attend">
+                        <div className="slf-cal-nav">
+                          <button
+                            type="button"
+                            className="slf-cal-navbtn"
+                            onClick={() => stepMonth(-1)}
+                            disabled={!canPrevMonth}
+                            aria-label="Previous month"
+                          >‹</button>
+                          <span className="slf-cal-month-label">{visibleMonth.label}</span>
+                          <button
+                            type="button"
+                            className="slf-cal-navbtn"
+                            onClick={() => stepMonth(1)}
+                            disabled={!canNextMonth}
+                            aria-label="Next month"
+                          >›</button>
+                        </div>
                         <div className="slf-cal-dow">
                           {["S","M","T","W","T","F","S"].map((d, i) => (
                             <span key={i} className={i === 0 ? "is-sun" : ""}>{d}</span>
                           ))}
                         </div>
                         <div className="slf-cal-grid">
-                          {m.weeks.flat().map((cell, idx) => {
+                          {visibleMonth.weeks.flat().map((cell: any, idx: number) => {
                             if (!cell.inMonth) return <span key={idx} className="slf-cal-cell empty" />;
                             const selectable = cell.isEligible && !cell.isPast;
                             const selected = selectable && cell.iso === formAttendanceDate;
@@ -753,7 +781,11 @@ export default function SundayLoveFeast() {
                                   selectable ? "selectable" : "disabled",
                                   selected ? "selected" : "",
                                 ].filter(Boolean).join(" ")}
-                                onClick={() => selectable && setFormAttendanceDate(cell.iso)}
+                                onClick={() => {
+                                  if (!selectable) return;
+                                  setFormAttendanceDate(cell.iso);
+                                  setCalOpen(false);
+                                }}
                               >
                                 {cell.dayNum}
                               </button>
@@ -761,11 +793,8 @@ export default function SundayLoveFeast() {
                           })}
                         </div>
                       </div>
-                    ))}
+                    )}
                   </div>
-                  {selectedSundayLabel && (
-                    <div className="slf-cal-selected">Selected: <strong>{selectedSundayLabel}</strong></div>
-                  )}
                 </div>
               </div>
               <div className="form-row two-col">
