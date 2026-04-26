@@ -599,6 +599,20 @@ export default function SundayLoveFeast() {
                   {phoneDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This phone number is already registered</span>}
                 </div>
               </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Choose Date <span className="req">*</span></label>
+                  <select
+                    value={formAttendanceDate}
+                    onChange={e => setFormAttendanceDate(e.target.value)}
+                    required
+                  >
+                    {sundayOptions.map(opt => (
+                      <option key={opt.iso} value={opt.iso}>{opt.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
               <div className="form-row two-col">
                 <div className="form-group">
                   <label>Number of Attendees</label>
