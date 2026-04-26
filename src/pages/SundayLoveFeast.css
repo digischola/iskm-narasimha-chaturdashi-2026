@@ -827,7 +827,6 @@
   .slf .schedule-card-img { height: auto; aspect-ratio: 1 / 1; }
   .slf .schedule-card h3 { font-size: 1rem; }
   .slf .schedule-card p { font-size: 12px; }
-  .slf .testimonial-grid { grid-template-columns: 1fr; }
   .slf .testimonial-card blockquote { font-size: 14px; }
   .slf .sponsor-grid { grid-template-columns: 1fr; }
   .slf .sponsor-card h3 { font-size: 1rem; }
