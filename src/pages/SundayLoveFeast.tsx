@@ -668,15 +668,46 @@ export default function SundayLoveFeast() {
               <div className="form-row">
                 <div className="form-group">
                   <label>Choose Date <span className="req">*</span></label>
-                  <select
-                    value={formAttendanceDate}
-                    onChange={e => setFormAttendanceDate(e.target.value)}
-                    required
-                  >
-                    {sundayOptions.map(opt => (
-                      <option key={opt.iso} value={opt.iso}>{opt.label}</option>
+                  <div className="slf-cal" role="group" aria-label="Choose a Sunday to attend">
+                    {calendarMonths.map(m => (
+                      <div key={`${m.year}-${m.month}`} className="slf-cal-month">
+                        <div className="slf-cal-month-label">{m.label}</div>
+                        <div className="slf-cal-dow">
+                          {["S","M","T","W","T","F","S"].map((d, i) => (
+                            <span key={i} className={i === 0 ? "is-sun" : ""}>{d}</span>
+                          ))}
+                        </div>
+                        <div className="slf-cal-grid">
+                          {m.weeks.flat().map((cell, idx) => {
+                            if (!cell.inMonth) return <span key={idx} className="slf-cal-cell empty" />;
+                            const selectable = cell.isEligible && !cell.isPast;
+                            const selected = selectable && cell.iso === formAttendanceDate;
+                            return (
+                              <button
+                                key={idx}
+                                type="button"
+                                disabled={!selectable}
+                                aria-pressed={selected}
+                                aria-label={cell.iso}
+                                className={[
+                                  "slf-cal-cell",
+                                  cell.isSunday ? "sun" : "",
+                                  selectable ? "selectable" : "disabled",
+                                  selected ? "selected" : "",
+                                ].filter(Boolean).join(" ")}
+                                onClick={() => selectable && setFormAttendanceDate(cell.iso)}
+                              >
+                                {cell.dayNum}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     ))}
-                  </select>
+                  </div>
+                  {selectedSundayLabel && (
+                    <div className="slf-cal-selected">Selected: <strong>{selectedSundayLabel}</strong></div>
+                  )}
                 </div>
               </div>
               <div className="form-row two-col">
