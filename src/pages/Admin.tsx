@@ -774,7 +774,7 @@ export default function Admin() {
                         <th>Email</th>
                         <th>Phone</th>
                         {regEventTab === "nrsimha" && <><th>Pax</th><th>Conf</th><th>Reminder</th></>}
-                        {regEventTab === "slf" && <><th>Pax</th><th>First Time</th></>}
+                        {regEventTab === "slf" && <><th>Pax</th><th>Sunday</th><th>First Time</th></>}
                         {regEventTab === "prasadam" && <><th>Tier</th><th>Date</th><th>Status</th></>}
                         <th>Submitted</th>
                       </tr>
