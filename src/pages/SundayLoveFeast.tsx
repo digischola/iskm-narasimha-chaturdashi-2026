@@ -300,6 +300,15 @@ export default function SundayLoveFeast() {
     return () => { document.body.style.overflow = ""; };
   }, [lightboxSrc, mobileMenuOpen]);
 
+  // Auto-rotate testimonials on mobile (every 6s)
+  useEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth > 768) return;
+    const id = setInterval(() => {
+      setTestiIdx((i) => (i + 1) % TESTIMONIALS.length);
+    }, 6000);
+    return () => clearInterval(id);
+  }, [TESTIMONIALS.length]);
+
   // No longer need carousel auto-scroll — using CSS marquee
 
   const scrollTo = useCallback((id: string) => {
