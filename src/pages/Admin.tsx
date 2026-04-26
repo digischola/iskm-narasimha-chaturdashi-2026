@@ -810,6 +810,11 @@ export default function Admin() {
                             {regEventTab === "slf" && (
                               <>
                                 <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
+                                <td style={{ color: "#1e3a6e", fontWeight: 600, fontSize: "13px", whiteSpace: "nowrap" }}>
+                                  {r.attendance_date
+                                    ? new Date(r.attendance_date + "T00:00:00+08:00").toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })
+                                    : <span style={{ color: "#aaa", fontWeight: 400 }}>—</span>}
+                                </td>
                                 <td>{r.first_time ? <span className="admin-badge sent">Yes</span> : "No"}</td>
                               </>
                             )}
