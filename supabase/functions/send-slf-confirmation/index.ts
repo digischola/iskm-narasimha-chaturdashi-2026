@@ -65,14 +65,14 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 
       <tr><td align="center" style="padding:8px 32px 24px;" class="p-mobile">
         <p style="margin:0;font-size:17px;line-height:1.6;color:#555555;max-width:460px;">
-          Your seat for this Sunday's Love Feast is saved — {{attendees_pretty}}.
+          Your seat for the Sunday Love Feast is saved — {{attendees_pretty}}.
         </p>
       </td></tr>
 
       <tr><td style="padding:0 24px 32px;" class="p-mobile">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1e3a6e;border-radius:14px;">
           <tr><td align="center" style="padding:28px 24px;color:#ffffff;">
-            <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">This Sunday</div>
+            <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Your Sunday</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:700;color:#ffffff;line-height:1.2;margin-bottom:6px;">{{event_date_pretty}}</div>
             <div style="font-size:16px;color:#f8a4c0;font-weight:600;margin-bottom:20px;">5:00 PM – 7:30 PM</div>
             <div style="font-size:14px;color:#ffffff;opacity:0.85;line-height:1.5;">
