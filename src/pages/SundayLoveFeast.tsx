@@ -88,9 +88,33 @@ export default function SundayLoveFeast() {
   
   const [regCounter, setRegCounter] = useState(0);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(true);
-  
 
-  // Form state
+  // Testimonial slider (mobile)
+  const [testiIdx, setTestiIdx] = useState(0);
+  const TESTIMONIALS = [
+    {
+      stars: "★ ★ ★ ★ ★",
+      quote: "The Sunday Love Feast is the highlight of our family's week. The children love their class, and the Prasadam is always incredible. It feels like coming home.",
+      avatar: "P",
+      name: "Priya M.",
+      detail: "Attending since 2023",
+    },
+    {
+      stars: "★ ★ ★ ★ ★",
+      quote: "I came as a curious visitor and now I don't miss a single Sunday. The Kirtan fills you with an energy you can't explain. And it's all completely free — just pure love.",
+      avatar: "R",
+      name: "Rajesh K.",
+      detail: "Regular since 2024",
+    },
+    {
+      stars: "★ ★ ★ ★ ★",
+      quote: "I brought my parents one Sunday and they haven't stopped talking about it. The Bhajans, the Gita class, and the warmth of everyone here — it's truly special.",
+      avatar: "A",
+      name: "Anita S.",
+      detail: "Devotee since 2022",
+    },
+  ];
+
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
   const [formPhoneCode, setFormPhoneCode] = useState("+65");
