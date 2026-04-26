@@ -530,7 +530,13 @@ export default function SundayLoveFeast() {
               <div className="text-center" style={{ padding: "40px 0" }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
                 <h3 style={{ color: "var(--navy)", marginBottom: 8 }}>You're Registered!</h3>
-                <p style={{ color: "var(--text-muted)", maxWidth: 360, margin: "0 auto 20px" }}>We look forward to seeing you this Sunday. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</p>
+                <p style={{ color: "var(--text-muted)", maxWidth: 380, margin: "0 auto 20px" }}>
+                  {successEventDate ? (
+                    <>We look forward to seeing you on <strong>{new Date(successEventDate + "T00:00:00+08:00").toLocaleDateString("en-SG", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</strong>. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
+                  ) : (
+                    <>We look forward to seeing you this Sunday. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
+                  )}
+                </p>
                 {successEventDate && (
                   <a
                     href={buildSlfCalendarUrl()}
