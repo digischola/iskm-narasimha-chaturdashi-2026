@@ -1,55 +1,79 @@
+## Goal
 
+Replace the always-visible 2-month calendar grid with an **inline collapsible date field** that matches the other SLF form inputs. Click the field → calendar expands inline within the form (pushing content below it down, no popover/modal). Pick a Sunday → calendar collapses → field text updates.
 
-## Root cause
+## Visual & Interaction
 
-Email "Add to Calendar" and "WhatsApp" links go through the `track-email` edge function:
-`https://…/track-email?t=c&…&r=<encoded original URL>` → function does `decodeURIComponent(redirect)` → sets that as `Location` header → 302.
-
-The decoded URLs (e.g. `…text=Śrī+Nṛsiṁha+Caturdaśī+2026…`, `…text=Join us for Śrī Nṛsiṁha…`) contain raw multi-byte UTF-8 characters. HTTP header values must be **ByteString (Latin-1)**, so Deno throws:
-
-```
-TypeError: Value is not a valid ByteString
-   at new Response (… 23_response.js:326)
-   at handler (track-email/index.ts:75)
-```
-
-Result: every click on a tracked link returns **500 Internal Server Error**.
-
-The function logs confirm this — multiple identical errors at `track-email/index.ts:75` (the `new Response({ Location: … })` line in the deployed version).
-
-## Fix
-
-In `supabase/functions/track-email/index.ts`, sanitize the redirect URL so the `Location` header is always ASCII-safe. Two-line change:
-
-```ts
-if (type === "c" && redirect) {
-  // Decode once (reverse the encodeURIComponent done by the wrapper),
-  // then re-encode any non-ASCII chars so the Location header stays Latin-1 / ByteString-safe.
-  const target = encodeURI(decodeURIComponent(redirect));
-  return new Response(null, {
-    status: 302,
-    headers: { Location: target },
-  });
-}
+```text
+┌─────────────────────────────────────────┐
+│ Choose Date *                           │
+│ ┌─────────────────────────────────┐ ▼   │
+│ │ Sunday, 26 Apr 2026 (this Sun.) │     │  ← looks like other inputs
+│ └─────────────────────────────────┘     │
+└─────────────────────────────────────────┘
+       ↓ click ↓
+┌─────────────────────────────────────────┐
+│ Choose Date *                           │
+│ ┌─────────────────────────────────┐ ▲   │
+│ │ Sunday, 26 Apr 2026             │     │
+│ └─────────────────────────────────┘     │
+│ ┌─────────────────────────────────────┐ │
+│ │  ‹     April 2026              ›    │ │  ← inline, in form flow
+│ │  S  M  T  W  T  F  S                │ │
+│ │  ...     [26]  ...                  │ │  ← only Sundays clickable
+│ │                                     │ │
+│ └─────────────────────────────────────┘ │
+│ (next form row pushed down)             │
+└─────────────────────────────────────────┘
 ```
 
-`encodeURI` preserves valid URL structure (`?`, `&`, `=`, `+`, `:`, `/`, `#`) and only percent-encodes characters that would break the header — exactly what's needed.
-
-Then redeploy `track-email`.
-
-## Verification
-
-After redeploy, call the function with a Unicode-laden URL:
-
-```
-GET /functions/v1/track-email?t=c&r=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Frender%3Ftext%3D%C5%9Ar%C4%AB
-```
-
-Expect a clean **302** with `Location` header containing the percent-encoded URL — no 500, no ByteString error in logs.
+- Closed state: a single field that visually matches the Name/Email/Phone inputs, with a small chevron on the right and the selected Sunday formatted as readable text.
+- Click anywhere on the field → toggles open. Click chevron → toggles open. Click outside or pick a date → closes.
+- Open state: a compact 1-month calendar appears **inside the form column**, pushing the rows beneath it down. No portal, no `position: absolute`, no shadcn Popover.
+- Month header has small `‹` / `›` arrows to step months. Disabled when there are no eligible Sundays in the prev/next month.
+- Sundays within the next ~31 days = clickable + highlighted in gold.
+- All other days = greyed, non-clickable.
+- Past Sundays and Sundays beyond ~31 days = visible but disabled.
+- Selecting a Sunday immediately collapses the calendar and updates the field text.
 
 ## Scope
 
-- Edit: `supabase/functions/track-email/index.ts` (one block, ~3 lines).
-- Deploy: `track-email`.
-- No frontend changes, no schema changes, no template changes. Existing wrapped links in already-sent emails will start working immediately.
+Only `src/pages/SundayLoveFeast.tsx` and `src/pages/SundayLoveFeast.css`. No DB / edge function changes — `attendance_date` ISO submission, validation, email, and Wabo sync are already correct.
 
+## Implementation Details
+
+1. **Remove** the always-open 2-month grid markup (`<div className="slf-cal">…calendarMonths.map…`) and the `buildCalendarMonths` helper output's full-window rendering.
+2. **Add** state: `const [calOpen, setCalOpen] = useState(false)` and `const [calCursor, setCalCursor] = useState<{y:number; m:number}>(...)` initialised to the month of the default Sunday.
+3. **Reuse** `eligibleIsoSet` (already built from `sundayOptions`) to decide which dates are clickable.
+4. **Render**:
+   - A button styled like an `input` (same height, border, padding, font as `.slf .form-group input`) showing the formatted selected Sunday + chevron icon. `aria-expanded={calOpen}`.
+   - When `calOpen`, render a single-month `.slf-cal-inline` block immediately after the trigger (sibling div inside the same `.form-group`), in normal document flow.
+   - Header row: `‹ Month YYYY ›` — prev/next buttons disabled when stepping outside the eligible month range.
+   - Weekday header `S M T W T F S` (Sunday in gold).
+   - Day grid: only `isSunday && isEligible && !isPast` cells get the selectable styling; all other cells render as plain greyed numbers.
+   - On select: `setFormAttendanceDate(iso); setCalOpen(false);`.
+5. **Outside-click close**: `useEffect` listening to `mousedown` on `document`, closing if click target is outside the wrapper `ref`.
+6. **Keyboard**: `Escape` closes; `Enter`/`Space` on the trigger toggles.
+7. **CSS** (`SundayLoveFeast.css`):
+   - `.slf-cal-trigger` — same look as `.slf .form-group input` (border, radius, padding, font, color), with flex layout for text + chevron.
+   - `.slf-cal-trigger[aria-expanded="true"]` — focused border colour.
+   - `.slf-cal-inline` — replaces current `.slf-cal`; `margin-top: 8px`, no shadow/popover styling, fits within form column. Drop the old `max-width: 360px` and let it span the form column width.
+   - `.slf-cal-nav` — month header row with prev/next icon buttons.
+   - Keep existing `.slf-cal-cell` styling for selectable / selected / disabled / Sunday colouring; just removed from inside the always-open container.
+   - Mobile: full width, slightly smaller cell font.
+8. **Cleanup**: remove `selectedSundayLabel` extra line below (it's now redundant — the trigger itself shows it). Remove unused `calendarMonths` ref / helper if no longer referenced.
+
+## Out of Scope
+
+- No changes to countdown, hero, testimonials, glimpses, edge functions, DB schema, Wabo sync, confirmation email, or admin dashboard.
+- No shadcn Popover / Dialog / Calendar component (keeps the page self-contained and matches existing inline styling).
+
+## Test Checklist (≤2 min)
+
+1. Field shows "Sunday, 26 Apr 2026 (this Sunday)" by default and looks like the other input fields.
+2. Click field → calendar expands inline, form rows below shift down, no overlay.
+3. Only the Sundays within the next ~31 days are gold/clickable. All other days greyed.
+4. Click a different Sunday → calendar closes, field text updates to that date.
+5. Click `›` → next month shows; if no eligible Sundays remain, `›` is disabled.
+6. Click outside the field/calendar → closes.
+7. Submit form → `attendance_date` in DB and Wabo `slf_attendance_date` reflect the picked Sunday.

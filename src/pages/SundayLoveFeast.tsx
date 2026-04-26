@@ -209,6 +209,64 @@ export default function SundayLoveFeast() {
   const calendarMonths = useRef(buildCalendarMonths(eligibleIsoSet)).current;
   const [formAttendanceDate, setFormAttendanceDate] = useState<string>(sundayOptions[0]?.iso || "");
   const selectedSundayLabel = sundayOptions.find(o => o.iso === formAttendanceDate)?.label || "";
+  const [calOpen, setCalOpen] = useState(false);
+  const initialCursor = (() => {
+    const iso = sundayOptions[0]?.iso || "";
+    if (!iso) { const d = new Date(); return { y: d.getFullYear(), m: d.getMonth() + 1 }; }
+    const [y, m] = iso.split("-").map(Number);
+    return { y, m };
+  })();
+  const [calCursor, setCalCursor] = useState<{ y: number; m: number }>(initialCursor);
+  const calWrapRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!calOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (calWrapRef.current && !calWrapRef.current.contains(e.target as Node)) setCalOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setCalOpen(false); };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [calOpen]);
+  const calMonthRange = (() => {
+    if (calendarMonths.length === 0) return null;
+    const first = calendarMonths[0];
+    const last = calendarMonths[calendarMonths.length - 1];
+    return { firstY: first.year, firstM: first.month, lastY: last.year, lastM: last.month };
+  })();
+  const canPrevMonth = !!calMonthRange && (calCursor.y > calMonthRange.firstY || (calCursor.y === calMonthRange.firstY && calCursor.m > calMonthRange.firstM));
+  const canNextMonth = !!calMonthRange && (calCursor.y < calMonthRange.lastY || (calCursor.y === calMonthRange.lastY && calCursor.m < calMonthRange.lastM));
+  const stepMonth = (delta: number) => {
+    setCalCursor(c => {
+      let y = c.y, m = c.m + delta;
+      if (m < 1) { m = 12; y--; }
+      if (m > 12) { m = 1; y++; }
+      return { y, m };
+    });
+  };
+  const visibleMonth = (() => {
+    const found = calendarMonths.find(mo => mo.year === calCursor.y && mo.month === calCursor.m);
+    if (found) return found;
+    // Build empty month view if cursor outside calendarMonths
+    const monthLabel = new Date(Date.UTC(calCursor.y, calCursor.m - 1, 1)).toLocaleDateString("en-SG", {
+      month: "long", year: "numeric", timeZone: "Asia/Singapore",
+    });
+    const firstDow = new Date(Date.UTC(calCursor.y, calCursor.m - 1, 1)).getUTCDay();
+    const daysInMonth = new Date(Date.UTC(calCursor.y, calCursor.m, 0)).getUTCDate();
+    const cells: any[] = [];
+    for (let i = 0; i < firstDow; i++) cells.push({ iso: `pad-${i}`, dayNum: 0, inMonth: false, isSunday: false, isEligible: false, isPast: false });
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dow = new Date(Date.UTC(calCursor.y, calCursor.m - 1, d)).getUTCDay();
+      cells.push({ iso: `x-${d}`, dayNum: d, inMonth: true, isSunday: dow === 0, isEligible: false, isPast: false });
+    }
+    while (cells.length % 7 !== 0) cells.push({ iso: `pad-end-${cells.length}`, dayNum: 0, inMonth: false, isSunday: false, isEligible: false, isPast: false });
+    const weeks: any[] = [];
+    for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+    return { year: calCursor.y, month: calCursor.m, label: monthLabel, weeks };
+  })();
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
@@ -668,17 +726,45 @@ export default function SundayLoveFeast() {
               <div className="form-row">
                 <div className="form-group">
                   <label>Choose Date <span className="req">*</span></label>
-                  <div className="slf-cal" role="group" aria-label="Choose a Sunday to attend">
-                    {calendarMonths.map(m => (
-                      <div key={`${m.year}-${m.month}`} className="slf-cal-month">
-                        <div className="slf-cal-month-label">{m.label}</div>
+                  <div className="slf-cal-wrap" ref={calWrapRef}>
+                    <button
+                      type="button"
+                      className={"slf-cal-trigger" + (calOpen ? " open" : "")}
+                      aria-expanded={calOpen}
+                      aria-haspopup="dialog"
+                      onClick={() => setCalOpen(o => !o)}
+                    >
+                      <span className="slf-cal-trigger-text">
+                        {selectedSundayLabel || "Select a Sunday"}
+                      </span>
+                      <span className={"slf-cal-chev" + (calOpen ? " up" : "")} aria-hidden="true">▾</span>
+                    </button>
+                    {calOpen && (
+                      <div className="slf-cal-inline" role="dialog" aria-label="Choose a Sunday to attend">
+                        <div className="slf-cal-nav">
+                          <button
+                            type="button"
+                            className="slf-cal-navbtn"
+                            onClick={() => stepMonth(-1)}
+                            disabled={!canPrevMonth}
+                            aria-label="Previous month"
+                          >‹</button>
+                          <span className="slf-cal-month-label">{visibleMonth.label}</span>
+                          <button
+                            type="button"
+                            className="slf-cal-navbtn"
+                            onClick={() => stepMonth(1)}
+                            disabled={!canNextMonth}
+                            aria-label="Next month"
+                          >›</button>
+                        </div>
                         <div className="slf-cal-dow">
                           {["S","M","T","W","T","F","S"].map((d, i) => (
                             <span key={i} className={i === 0 ? "is-sun" : ""}>{d}</span>
                           ))}
                         </div>
                         <div className="slf-cal-grid">
-                          {m.weeks.flat().map((cell, idx) => {
+                          {visibleMonth.weeks.flat().map((cell: any, idx: number) => {
                             if (!cell.inMonth) return <span key={idx} className="slf-cal-cell empty" />;
                             const selectable = cell.isEligible && !cell.isPast;
                             const selected = selectable && cell.iso === formAttendanceDate;
@@ -695,7 +781,11 @@ export default function SundayLoveFeast() {
                                   selectable ? "selectable" : "disabled",
                                   selected ? "selected" : "",
                                 ].filter(Boolean).join(" ")}
-                                onClick={() => selectable && setFormAttendanceDate(cell.iso)}
+                                onClick={() => {
+                                  if (!selectable) return;
+                                  setFormAttendanceDate(cell.iso);
+                                  setCalOpen(false);
+                                }}
                               >
                                 {cell.dayNum}
                               </button>
@@ -703,11 +793,8 @@ export default function SundayLoveFeast() {
                           })}
                         </div>
                       </div>
-                    ))}
+                    )}
                   </div>
-                  {selectedSundayLabel && (
-                    <div className="slf-cal-selected">Selected: <strong>{selectedSundayLabel}</strong></div>
-                  )}
                 </div>
               </div>
               <div className="form-row two-col">
