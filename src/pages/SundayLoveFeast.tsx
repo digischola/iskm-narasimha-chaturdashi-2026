@@ -359,6 +359,10 @@ export default function SundayLoveFeast() {
       setFormError("Please enter a valid phone number (8–15 digits).");
       return;
     }
+    if (!formAttendanceDate) {
+      setFormError("Please choose which Sunday you'll attend.");
+      return;
+    }
     setFormSubmitting(true);
     try {
       const res = await supabase.functions.invoke("submit-slf-registration", {
@@ -369,6 +373,7 @@ export default function SundayLoveFeast() {
           phone: stripPhone(formPhoneNum),
           attendees: parseInt(formAttendees) || 2,
           first_time: formFirstTime === "yes",
+          attendance_date: formAttendanceDate,
         },
       });
       const data = res.data;
@@ -385,7 +390,7 @@ export default function SundayLoveFeast() {
         });
 
         setFormSuccess(true);
-        setSuccessEventDate(data.event_date || "");
+        setSuccessEventDate(data.event_date || formAttendanceDate);
         if (data.count) setRegCounter(data.count);
       } else {
         setFormError("Something went wrong. Please try again.");
