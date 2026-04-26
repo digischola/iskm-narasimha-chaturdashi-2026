@@ -35,22 +35,22 @@ function formatNextSunday(): string {
 const IMG = "/images/sunday-love-feast";
 
 const GALLERY_ROW1 = [
-  { src: `${IMG}/5-individual-person-chatting.webp`, alt: "Person chatting at Love Feast" },
+  { src: `${IMG}/uploads/glimpse1.webp`, alt: "Devotees serving Prasadam at Love Feast" },
   { src: `${IMG}/6-ladle-pouring-sauce-closeup.webp`, alt: "Ladle pouring sauce" },
-  { src: `${IMG}/6-women-merchandise-table.webp`, alt: "Women at merchandise table" },
+  { src: `${IMG}/uploads/glimpse3.webp`, alt: "Devotee enjoying Prasadam" },
   { src: `${IMG}/7-cupcakes-muffins-baked-closeup.webp`, alt: "Cupcakes and muffins" },
-  { src: `${IMG}/7-men-clapping-chanting-engaged.webp`, alt: "Men chanting" },
-  { src: `${IMG}/7-prasadam-serving-line-multiple.webp`, alt: "Prasadam serving line" },
-  { src: `${IMG}/7-volunteers-posing-food-trays.webp`, alt: "Volunteers with food trays" },
+  { src: `${IMG}/uploads/glimpse5.webp`, alt: "Congregation gathered for Sunday Love Feast" },
+  { src: `${IMG}/uploads/glimpse2.webp`, alt: "Devotees offering pranams" },
+  { src: `${IMG}/uploads/glimpse4.webp`, alt: "Buffet line at Sunday Love Feast" },
 ];
 const GALLERY_ROW2 = [
-  { src: `${IMG}/8-devotee-mridanga-kirtan-group.webp`, alt: "Kirtan group" },
-  { src: `${IMG}/8-father-son-matching-yellow-shirts.webp`, alt: "Father and son" },
-  { src: `${IMG}/8-man-smiling-holding-prasadam-plate.webp`, alt: "Man with prasadam plate" },
-  { src: `${IMG}/8-woman-smiling-flowers-vibrant.webp`, alt: "Woman with flowers" },
-  { src: `${IMG}/9-congregation-seated-temple-hall-wide.webp`, alt: "Congregation in temple hall" },
+  { src: `${IMG}/uploads/glimpse5.webp`, alt: "Bhagavad Gītā class in temple hall" },
   { src: `${IMG}/9-jagannath-deities-food-offerings-flowers.webp`, alt: "Jagannath deities with offerings" },
+  { src: `${IMG}/uploads/glimpse4.webp`, alt: "Community sharing Prasadam" },
   { src: `${IMG}/9-radha-krishna-deities-flower-decoration.webp`, alt: "Radha Krishna deities" },
+  { src: `${IMG}/uploads/glimpse1.webp`, alt: "Serving Prasadam plates" },
+  { src: `${IMG}/uploads/glimpse2.webp`, alt: "Devotees in prayer" },
+  { src: `${IMG}/uploads/glimpse3.webp`, alt: "Devotee with Prasadam plate" },
 ];
 
 const SCHEDULE = [
