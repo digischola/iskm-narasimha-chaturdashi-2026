@@ -497,7 +497,7 @@ export default function SundayLoveFeast() {
             </div>
           </div>
           <div className="hero-video-wrap">
-            <video autoPlay muted loop playsInline poster="/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.webp" ref={heroVideoRef}>
+            <video autoPlay muted loop playsInline ref={heroVideoRef}>
               <source src="/images/sunday-love-feast/hero-video.mp4" type="video/mp4" />
             </video>
             <div className="hero-video-overlay">
