@@ -162,7 +162,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
           </tr>
         </table>
         <div style="margin-top:16px;">
-          <a href="https://www.google.com/maps/place/International+Sri+Krishna+Mandir+(ISKM)/@1.3146362,103.8807558,17z" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;text-decoration:none;border:2px solid #1e3a6e;border-radius:999px;">Get Directions →</a>
+          <a href="https://www.google.com/maps/place/International+Sri+Krishna+Mandir+(ISKM)/@1.3146362,103.8856267,17z/data=!3m1!5s0x31da183c7fd36ed1:0x5a6dd216c71b14b1!4m6!3m5!1s0x31da183c80ceaac5:0x458ccd4e57b8697b!8m2!3d1.3146362!4d103.8856267!16s%2Fg%2F1tf33gsl" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;text-decoration:none;border:2px solid #1e3a6e;border-radius:999px;">Get Directions →</a>
         </div>
       </td></tr>
 
@@ -210,8 +210,9 @@ function trackUrl(base: string, rid: string, et: string, email: string, linkName
 }
 
 function addClickTracking(html: string, trackBase: string, rid: string, et: string, email: string): string {
+  // Match both calendar.google.com and www.google.com/calendar
   html = html.replace(
-    /href="(https:\/\/calendar\.google\.com\/[^"]+)"/g,
+    /href="(https:\/\/(?:calendar\.google\.com|www\.google\.com\/calendar)[^"]+)"/g,
     (_, url) => `href="${trackUrl(trackBase, rid, et, email, "calendar", url)}"`,
   );
   html = html.replace(
@@ -224,7 +225,7 @@ function addClickTracking(html: string, trackBase: string, rid: string, et: stri
 function buildCalendarUrl(eventDateIso: string): string {
   // Sunday Love Feast: 5:00 PM – 7:30 PM SGT (UTC+8) → 09:00–11:30 UTC
   const ymd = eventDateIso.replace(/-/g, "");
-  return `https://www.google.com/calendar/render?action=TEMPLATE` +
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE` +
     `&text=${encodeURIComponent("Sunday Love Feast — ISKM Singapore")}` +
     `&dates=${ymd}T090000Z/${ymd}T113000Z` +
     `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/sunday-love-feast")}` +
@@ -234,7 +235,10 @@ function buildCalendarUrl(eventDateIso: string): string {
 function formatDatePretty(eventDateIso: string): string {
   try {
     const d = new Date(eventDateIso + "T00:00:00+08:00");
-    return d.toLocaleDateString("en-SG", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    return d.toLocaleDateString("en-SG", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric",
+      timeZone: "Asia/Singapore",
+    });
   } catch {
     return eventDateIso;
   }

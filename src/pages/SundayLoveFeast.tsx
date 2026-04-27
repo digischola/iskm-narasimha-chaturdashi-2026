@@ -29,6 +29,7 @@ function getNextSunday(): Date {
 function formatNextSunday(): string {
   return getNextSunday().toLocaleDateString("en-SG", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
+    timeZone: "Asia/Singapore",
   });
 }
 
@@ -270,8 +271,6 @@ export default function SundayLoveFeast() {
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
-  const [emailDupStatus, setEmailDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
-  const [phoneDupStatus, setPhoneDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
   const [successEventDate, setSuccessEventDate] = useState<string>("");
 
   const stripPhone = (v: string) => v.replace(/[\s\-().]/g, "");
@@ -282,33 +281,6 @@ export default function SundayLoveFeast() {
     return /^\d+$/.test(digits) && total >= 8 && total <= 15;
   };
   const fullPhone = () => formPhoneCode + stripPhone(formPhoneNum);
-
-  const checkEmailDup = async () => {
-    const v = formEmail.trim();
-    if (!v || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)) return;
-    setEmailDupStatus("checking");
-    try {
-      const { data } = await supabase.functions.invoke("check-duplicate", {
-        body: { field: "email", value: v, table: "slf" },
-      });
-      setEmailDupStatus(data?.exists ? "duplicate" : "ok");
-    } catch {
-      setEmailDupStatus("idle");
-    }
-  };
-
-  const checkPhoneDup = async () => {
-    if (!isPhoneValid()) return;
-    setPhoneDupStatus("checking");
-    try {
-      const { data } = await supabase.functions.invoke("check-duplicate", {
-        body: { field: "phone", value: stripPhone(formPhoneNum), table: "slf" },
-      });
-      setPhoneDupStatus(data?.exists ? "duplicate" : "ok");
-    } catch {
-      setPhoneDupStatus("idle");
-    }
-  };
 
   const ribbonRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -465,14 +437,6 @@ export default function SundayLoveFeast() {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
-    if (emailDupStatus === "duplicate") {
-      setFormError("This email is already registered.");
-      return;
-    }
-    if (phoneDupStatus === "duplicate") {
-      setFormError("This phone number is already registered.");
-      return;
-    }
     if (!isPhoneValid()) {
       setFormError("Please enter a valid phone number (8–15 digits).");
       return;
@@ -524,7 +488,7 @@ export default function SundayLoveFeast() {
     const iso = successEventDate || "";
     if (!iso) return "#";
     const ymd = iso.replace(/-/g, "");
-    return `https://www.google.com/calendar/render?action=TEMPLATE` +
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE` +
       `&text=${encodeURIComponent("Sunday Love Feast — ISKM Singapore")}` +
       `&dates=${ymd}T090000Z/${ymd}T113000Z` +
       `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/sunday-love-feast")}` +
@@ -650,7 +614,7 @@ export default function SundayLoveFeast() {
                 <h3 style={{ color: "var(--navy)", marginBottom: 8 }}>You're Registered!</h3>
                 <p style={{ color: "var(--text-muted)", maxWidth: 380, margin: "0 auto 20px" }}>
                   {successEventDate ? (
-                    <>We look forward to seeing you on <strong>{new Date(successEventDate + "T00:00:00+08:00").toLocaleDateString("en-SG", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</strong>. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
+                    <>We look forward to seeing you on <strong>{new Date(successEventDate + "T00:00:00+08:00").toLocaleDateString("en-SG", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Singapore" })}</strong>. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
                   ) : (
                     <>We look forward to seeing you this Sunday. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
                   )}
@@ -683,17 +647,15 @@ export default function SundayLoveFeast() {
                     placeholder="you@email.com"
                     required
                     value={formEmail}
-                    onChange={e => { setFormEmail(e.target.value); setEmailDupStatus("idle"); }}
-                    onBlur={checkEmailDup}
+                    onChange={e => setFormEmail(e.target.value)}
                   />
-                  {emailDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This email is already registered</span>}
                 </div>
                 <div className="form-group">
                   <label>Phone <span className="req">*</span></label>
                   <div style={{ display: "flex", gap: 8 }}>
                     <select
                       value={formPhoneCode}
-                      onChange={e => { setFormPhoneCode(e.target.value); setPhoneDupStatus("idle"); }}
+                      onChange={e => setFormPhoneCode(e.target.value)}
                       style={{ width: 90, flexShrink: 0 }}
                     >
                       <option value="+65">+65</option>
@@ -714,13 +676,11 @@ export default function SundayLoveFeast() {
                       placeholder="XXXX XXXX"
                       required
                       value={formPhoneNum}
-                      onChange={e => { setFormPhoneNum(e.target.value); setPhoneDupStatus("idle"); }}
-                      onBlur={checkPhoneDup}
+                      onChange={e => setFormPhoneNum(e.target.value)}
                       style={{ flex: 1 }}
                     />
                   </div>
                   {formPhoneNum && !isPhoneValid() && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>Enter 8–15 digits</span>}
-                  {phoneDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This phone number is already registered</span>}
                 </div>
               </div>
               <div className="form-row">
@@ -1040,9 +1000,9 @@ export default function SundayLoveFeast() {
           </a>
           <div className="share-label" style={{ marginTop: 32 }}>Invite a friend</div>
           <div className="share-row">
-            <a href="https://wa.me/?text=Join%20us%20for%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Bhagavad%20Gita%20class%20every%20Sunday%205-7%3A30PM.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="share-btn wa"><i className="fab fa-whatsapp" /> Share</a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevents.srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="share-btn fb"><i className="fab fa-facebook-f" /> Share</a>
-            <a href="https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org&text=Join%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Gita%20class%20every%20Sunday%205-7%3A30PM" target="_blank" rel="noopener noreferrer" className="share-btn tg"><i className="fab fa-telegram-plane" /> Share</a>
+            <a href="https://wa.me/?text=Join%20us%20for%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Bhagavad%20Gita%20class%20every%20Sunday%205-7%3A30PM.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fsunday-love-feast" target="_blank" rel="noopener noreferrer" className="share-btn wa"><i className="fab fa-whatsapp" /> Share</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevents.srikrishnamandir.org%2Fsunday-love-feast" target="_blank" rel="noopener noreferrer" className="share-btn fb"><i className="fab fa-facebook-f" /> Share</a>
+            <a href="https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org%2Fsunday-love-feast&text=Join%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Gita%20class%20every%20Sunday%205-7%3A30PM" target="_blank" rel="noopener noreferrer" className="share-btn tg"><i className="fab fa-telegram-plane" /> Share</a>
           </div>
         </div>
       </section>

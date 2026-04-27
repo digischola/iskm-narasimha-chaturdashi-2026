@@ -1,79 +1,61 @@
-## Goal
+## Sunday Love Feast — fixes
 
-Replace the always-visible 2-month calendar grid with an **inline collapsible date field** that matches the other SLF form inputs. Click the field → calendar expands inline within the form (pushing content below it down, no popover/modal). Pick a Sunday → calendar collapses → field text updates.
+Scope: SLF page + SLF edge functions only. No changes to Prasadam, NC, or admin.
 
-## Visual & Interaction
+### 1. Date showing one day earlier (Sat instead of Sun)
 
-```text
-┌─────────────────────────────────────────┐
-│ Choose Date *                           │
-│ ┌─────────────────────────────────┐ ▼   │
-│ │ Sunday, 26 Apr 2026 (this Sun.) │     │  ← looks like other inputs
-│ └─────────────────────────────────┘     │
-└─────────────────────────────────────────┘
-       ↓ click ↓
-┌─────────────────────────────────────────┐
-│ Choose Date *                           │
-│ ┌─────────────────────────────────┐ ▲   │
-│ │ Sunday, 26 Apr 2026             │     │
-│ └─────────────────────────────────┘     │
-│ ┌─────────────────────────────────────┐ │
-│ │  ‹     April 2026              ›    │ │  ← inline, in form flow
-│ │  S  M  T  W  T  F  S                │ │
-│ │  ...     [26]  ...                  │ │  ← only Sundays clickable
-│ │                                     │ │
-│ └─────────────────────────────────────┘ │
-│ (next form row pushed down)             │
-└─────────────────────────────────────────┘
-```
+**Root cause:** Several places format an SGT-anchored ISO date (`new Date("2026-05-10T00:00:00+08:00")`) using `toLocaleDateString("en-SG", {...})` *without* passing `timeZone: "Asia/Singapore"`. The `Date` object is the UTC instant `2026-05-09T16:00:00Z`. When formatted in the user's browser timezone (e.g. India UTC+5:30, Europe, Americas) or the edge function server timezone (UTC), it renders as **Saturday 9 May**.
 
-- Closed state: a single field that visually matches the Name/Email/Phone inputs, with a small chevron on the right and the selected Sunday formatted as readable text.
-- Click anywhere on the field → toggles open. Click chevron → toggles open. Click outside or pick a date → closes.
-- Open state: a compact 1-month calendar appears **inside the form column**, pushing the rows beneath it down. No portal, no `position: absolute`, no shadcn Popover.
-- Month header has small `‹` / `›` arrows to step months. Disabled when there are no eligible Sundays in the prev/next month.
-- Sundays within the next ~31 days = clickable + highlighted in gold.
-- All other days = greyed, non-clickable.
-- Past Sundays and Sundays beyond ~31 days = visible but disabled.
-- Selecting a Sunday immediately collapses the calendar and updates the field text.
+**Fix — add `timeZone: "Asia/Singapore"` everywhere a Sunday is printed:**
 
-## Scope
+- `src/pages/SundayLoveFeast.tsx`
+  - `formatNextSunday()` (line 30) — used in the "Next Date" footer card.
+  - The success badge "We look forward to seeing you on …" (line 653) — currently the visible bug in your screenshot.
+- `supabase/functions/send-slf-confirmation/index.ts`
+  - `formatDatePretty()` (line 237) — used in the email subject body, plain-text version, and the dark "Your Sunday" hero card.
 
-Only `src/pages/SundayLoveFeast.tsx` and `src/pages/SundayLoveFeast.css`. No DB / edge function changes — `attendance_date` ISO submission, validation, email, and Wabo sync are already correct.
+### 2. Email "Add to Calendar" not working
 
-## Implementation Details
+The Google Calendar URL in the email uses `https://www.google.com/calendar/render` and the click-tracker regex matches `calendar.google.com/...`, so the calendar link is *not* tracked but rendered as-is. The `www.google.com/calendar/render` host is the legacy form and is unreliable on mobile (often opens a Google search rather than the calendar prefill). 
 
-1. **Remove** the always-open 2-month grid markup (`<div className="slf-cal">…calendarMonths.map…`) and the `buildCalendarMonths` helper output's full-window rendering.
-2. **Add** state: `const [calOpen, setCalOpen] = useState(false)` and `const [calCursor, setCalCursor] = useState<{y:number; m:number}>(...)` initialised to the month of the default Sunday.
-3. **Reuse** `eligibleIsoSet` (already built from `sundayOptions`) to decide which dates are clickable.
-4. **Render**:
-   - A button styled like an `input` (same height, border, padding, font as `.slf .form-group input`) showing the formatted selected Sunday + chevron icon. `aria-expanded={calOpen}`.
-   - When `calOpen`, render a single-month `.slf-cal-inline` block immediately after the trigger (sibling div inside the same `.form-group`), in normal document flow.
-   - Header row: `‹ Month YYYY ›` — prev/next buttons disabled when stepping outside the eligible month range.
-   - Weekday header `S M T W T F S` (Sunday in gold).
-   - Day grid: only `isSunday && isEligible && !isPast` cells get the selectable styling; all other cells render as plain greyed numbers.
-   - On select: `setFormAttendanceDate(iso); setCalOpen(false);`.
-5. **Outside-click close**: `useEffect` listening to `mousedown` on `document`, closing if click target is outside the wrapper `ref`.
-6. **Keyboard**: `Escape` closes; `Enter`/`Space` on the trigger toggles.
-7. **CSS** (`SundayLoveFeast.css`):
-   - `.slf-cal-trigger` — same look as `.slf .form-group input` (border, radius, padding, font, color), with flex layout for text + chevron.
-   - `.slf-cal-trigger[aria-expanded="true"]` — focused border colour.
-   - `.slf-cal-inline` — replaces current `.slf-cal`; `margin-top: 8px`, no shadow/popover styling, fits within form column. Drop the old `max-width: 360px` and let it span the form column width.
-   - `.slf-cal-nav` — month header row with prev/next icon buttons.
-   - Keep existing `.slf-cal-cell` styling for selectable / selected / disabled / Sunday colouring; just removed from inside the always-open container.
-   - Mobile: full width, slightly smaller cell font.
-8. **Cleanup**: remove `selectedSundayLabel` extra line below (it's now redundant — the trigger itself shows it). Remove unused `calendarMonths` ref / helper if no longer referenced.
+**Fix:** switch `buildCalendarUrl` in `supabase/functions/send-slf-confirmation/index.ts` (and the matching `buildSlfCalendarUrl` on the success badge in `SundayLoveFeast.tsx`) to `https://calendar.google.com/calendar/render?action=TEMPLATE&...` and update the click-tracking regex to match this host as well so analytics still capture clicks.
 
-## Out of Scope
+### 3. Email "Get Directions" lands on wrong place
 
-- No changes to countdown, hero, testimonials, glimpses, edge functions, DB schema, Wabo sync, confirmation email, or admin dashboard.
-- No shadcn Popover / Dialog / Calendar component (keeps the page self-contained and matches existing inline styling).
+The email currently links to a truncated URL: `https://www.google.com/maps/place/International+Sri+Krishna+Mandir+(ISKM)/@1.3146362,103.8807558,17z` — Google Maps drops the place context and falls back to a generic search.
 
-## Test Checklist (≤2 min)
+**Fix:** Replace it with the full canonical URL the user provided, including the `data=!3m1!5s…!16s%2Fg%2F1tf33gsl` portion that pins the result to the real ISKM listing. Update both the email template href and the click-tracking regex in `addClickTracking` so the longer URL is still matched (the existing `[^"]+` already covers it, just confirm).
 
-1. Field shows "Sunday, 26 Apr 2026 (this Sunday)" by default and looks like the other input fields.
-2. Click field → calendar expands inline, form rows below shift down, no overlay.
-3. Only the Sundays within the next ~31 days are gold/clickable. All other days greyed.
-4. Click a different Sunday → calendar closes, field text updates to that date.
-5. Click `›` → next month shows; if no eligible Sundays remain, `›` is disabled.
-6. Click outside the field/calendar → closes.
-7. Submit form → `attendance_date` in DB and Wabo `slf_attendance_date` reflect the picked Sunday.
+### 4. WhatsApp / Facebook / Telegram share buttons go to homepage
+
+In `SundayLoveFeast.tsx` (lines 1043–1045) the share URLs all point to `https://events.srikrishnamandir.org` (root). 
+
+**Fix:** point all three share links at the SLF page itself — `https://events.srikrishnamandir.org/sunday-love-feast` — and tweak the WhatsApp/Telegram share text to say "See you this Sunday — register at …" so the link itself is the SLF landing page.
+
+### 5. Remove "already registered" restriction
+
+A user can register for multiple Sundays now, so the email/phone duplicate check shouldn't block a second submission.
+
+**Fix:**
+- In `supabase/functions/submit-slf-registration/index.ts`, remove the email duplicate check (lines 124–135) and phone duplicate check (lines 137–148). Keep the insert as-is — multiple rows for the same email/phone are now allowed.
+- In `src/pages/SundayLoveFeast.tsx`:
+  - Remove the `checkEmailDup` / `checkPhoneDup` invocations and `onBlur` calls.
+  - Remove the inline "already registered" warnings (lines 689 and 723).
+  - Remove the duplicate-blocks in `handleSubmit` (lines 468–474).
+  - Leave the `check-duplicate` edge function untouched (still used by NC and Prasadam).
+
+### Test checklist
+
+1. Open the SLF page in a non-SGT timezone (e.g. set system to UTC or India). The "Next Date" footer and the form's "Choose Date" button both show **Sunday**, not Saturday.
+2. Submit a registration. The success badge says **"Sunday, 10 May 2026"**.
+3. Receive the email. The hero card, subject preview, and plain-text body all say **Sunday**.
+4. Click "Add to Calendar" in the email — it opens the Google Calendar prefill page (not a search results page) on both desktop and mobile.
+5. Click "Get Directions" in the email — it lands on the ISKM Maps listing with the address card, not a generic search.
+6. Click the WhatsApp / Facebook / Telegram share buttons in the page footer — they all share `https://events.srikrishnamandir.org/sunday-love-feast`.
+7. Register twice with the same email + phone for two different Sundays — both submissions succeed, two confirmation emails arrive (one per Sunday), Wabo gets two updates with the corresponding `slf_attendance_date`.
+
+### Files touched
+
+- `src/pages/SundayLoveFeast.tsx`
+- `supabase/functions/send-slf-confirmation/index.ts`
+- `supabase/functions/submit-slf-registration/index.ts`

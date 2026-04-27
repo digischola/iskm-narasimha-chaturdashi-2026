@@ -121,31 +121,8 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const { data: emailMatch } = await supabase
-      .from("slf_registrations")
-      .select("id")
-      .eq("email", email)
-      .maybeSingle();
-
-    if (emailMatch) {
-      return new Response(JSON.stringify({ success: false, error: "This email has already been registered" }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const { data: phoneMatch } = await supabase
-      .from("slf_registrations")
-      .select("id")
-      .eq("phone", phone)
-      .maybeSingle();
-
-    if (phoneMatch) {
-      return new Response(JSON.stringify({ success: false, error: "This phone number has already been registered" }), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    // Note: duplicate email/phone is allowed — a user may register for
+    // multiple Sundays. No dedupe check here.
 
     const registrationId = crypto.randomUUID();
     const { error } = await supabase.from("slf_registrations").insert({
