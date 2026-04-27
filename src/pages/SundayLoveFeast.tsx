@@ -684,7 +684,7 @@ export default function SundayLoveFeast() {
                   <div style={{ display: "flex", gap: 8 }}>
                     <select
                       value={formPhoneCode}
-                      onChange={e => { setFormPhoneCode(e.target.value); setPhoneDupStatus("idle"); }}
+                      onChange={e => setFormPhoneCode(e.target.value)}
                       style={{ width: 90, flexShrink: 0 }}
                     >
                       <option value="+65">+65</option>
@@ -705,13 +705,11 @@ export default function SundayLoveFeast() {
                       placeholder="XXXX XXXX"
                       required
                       value={formPhoneNum}
-                      onChange={e => { setFormPhoneNum(e.target.value); setPhoneDupStatus("idle"); }}
-                      onBlur={checkPhoneDup}
+                      onChange={e => setFormPhoneNum(e.target.value)}
                       style={{ flex: 1 }}
                     />
                   </div>
                   {formPhoneNum && !isPhoneValid() && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>Enter 8–15 digits</span>}
-                  {phoneDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This phone number is already registered</span>}
                 </div>
               </div>
               <div className="form-row">
