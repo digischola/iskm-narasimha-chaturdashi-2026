@@ -210,8 +210,9 @@ function trackUrl(base: string, rid: string, et: string, email: string, linkName
 }
 
 function addClickTracking(html: string, trackBase: string, rid: string, et: string, email: string): string {
+  // Match both calendar.google.com and www.google.com/calendar
   html = html.replace(
-    /href="(https:\/\/calendar\.google\.com\/[^"]+)"/g,
+    /href="(https:\/\/(?:calendar\.google\.com|www\.google\.com\/calendar)[^"]+)"/g,
     (_, url) => `href="${trackUrl(trackBase, rid, et, email, "calendar", url)}"`,
   );
   html = html.replace(
@@ -224,7 +225,7 @@ function addClickTracking(html: string, trackBase: string, rid: string, et: stri
 function buildCalendarUrl(eventDateIso: string): string {
   // Sunday Love Feast: 5:00 PM – 7:30 PM SGT (UTC+8) → 09:00–11:30 UTC
   const ymd = eventDateIso.replace(/-/g, "");
-  return `https://www.google.com/calendar/render?action=TEMPLATE` +
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE` +
     `&text=${encodeURIComponent("Sunday Love Feast — ISKM Singapore")}` +
     `&dates=${ymd}T090000Z/${ymd}T113000Z` +
     `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/sunday-love-feast")}` +
