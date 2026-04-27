@@ -1000,9 +1000,9 @@ export default function SundayLoveFeast() {
           </a>
           <div className="share-label" style={{ marginTop: 32 }}>Invite a friend</div>
           <div className="share-row">
-            <a href="https://wa.me/?text=Join%20us%20for%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Bhagavad%20Gita%20class%20every%20Sunday%205-7%3A30PM.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="share-btn wa"><i className="fab fa-whatsapp" /> Share</a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevents.srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="share-btn fb"><i className="fab fa-facebook-f" /> Share</a>
-            <a href="https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org&text=Join%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Gita%20class%20every%20Sunday%205-7%3A30PM" target="_blank" rel="noopener noreferrer" className="share-btn tg"><i className="fab fa-telegram-plane" /> Share</a>
+            <a href="https://wa.me/?text=Join%20us%20for%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Bhagavad%20Gita%20class%20every%20Sunday%205-7%3A30PM.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fsunday-love-feast" target="_blank" rel="noopener noreferrer" className="share-btn wa"><i className="fab fa-whatsapp" /> Share</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevents.srikrishnamandir.org%2Fsunday-love-feast" target="_blank" rel="noopener noreferrer" className="share-btn fb"><i className="fab fa-facebook-f" /> Share</a>
+            <a href="https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org%2Fsunday-love-feast&text=Join%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Gita%20class%20every%20Sunday%205-7%3A30PM" target="_blank" rel="noopener noreferrer" className="share-btn tg"><i className="fab fa-telegram-plane" /> Share</a>
           </div>
         </div>
       </section>
