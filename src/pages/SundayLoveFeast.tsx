@@ -29,6 +29,7 @@ function getNextSunday(): Date {
 function formatNextSunday(): string {
   return getNextSunday().toLocaleDateString("en-SG", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
+    timeZone: "Asia/Singapore",
   });
 }
 
