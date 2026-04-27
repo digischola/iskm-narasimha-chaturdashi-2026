@@ -466,14 +466,6 @@ export default function SundayLoveFeast() {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
-    if (emailDupStatus === "duplicate") {
-      setFormError("This email is already registered.");
-      return;
-    }
-    if (phoneDupStatus === "duplicate") {
-      setFormError("This phone number is already registered.");
-      return;
-    }
     if (!isPhoneValid()) {
       setFormError("Please enter a valid phone number (8–15 digits).");
       return;
