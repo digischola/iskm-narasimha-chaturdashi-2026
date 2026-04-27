@@ -271,8 +271,7 @@ export default function SundayLoveFeast() {
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
-  const [emailDupStatus, setEmailDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
-  const [phoneDupStatus, setPhoneDupStatus] = useState<"idle" | "checking" | "ok" | "duplicate">("idle");
+  const [successEventDate, setSuccessEventDate] = useState<string>("");
   const [successEventDate, setSuccessEventDate] = useState<string>("");
 
   const stripPhone = (v: string) => v.replace(/[\s\-().]/g, "");
