@@ -235,7 +235,10 @@ function buildCalendarUrl(eventDateIso: string): string {
 function formatDatePretty(eventDateIso: string): string {
   try {
     const d = new Date(eventDateIso + "T00:00:00+08:00");
-    return d.toLocaleDateString("en-SG", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    return d.toLocaleDateString("en-SG", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric",
+      timeZone: "Asia/Singapore",
+    });
   } catch {
     return eventDateIso;
   }
