@@ -643,7 +643,7 @@ export default function SundayLoveFeast() {
                 <h3 style={{ color: "var(--navy)", marginBottom: 8 }}>You're Registered!</h3>
                 <p style={{ color: "var(--text-muted)", maxWidth: 380, margin: "0 auto 20px" }}>
                   {successEventDate ? (
-                    <>We look forward to seeing you on <strong>{new Date(successEventDate + "T00:00:00+08:00").toLocaleDateString("en-SG", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</strong>. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
+                    <>We look forward to seeing you on <strong>{new Date(successEventDate + "T00:00:00+08:00").toLocaleDateString("en-SG", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Singapore" })}</strong>. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
                   ) : (
                     <>We look forward to seeing you this Sunday. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
                   )}
