@@ -676,10 +676,8 @@ export default function SundayLoveFeast() {
                     placeholder="you@email.com"
                     required
                     value={formEmail}
-                    onChange={e => { setFormEmail(e.target.value); setEmailDupStatus("idle"); }}
-                    onBlur={checkEmailDup}
+                    onChange={e => setFormEmail(e.target.value)}
                   />
-                  {emailDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: 12, marginTop: 4, display: "block" }}>This email is already registered</span>}
                 </div>
                 <div className="form-group">
                   <label>Phone <span className="req">*</span></label>
