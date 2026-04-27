@@ -272,7 +272,6 @@ export default function SundayLoveFeast() {
   const [formSuccess, setFormSuccess] = useState(false);
   const [formError, setFormError] = useState("");
   const [successEventDate, setSuccessEventDate] = useState<string>("");
-  const [successEventDate, setSuccessEventDate] = useState<string>("");
 
   const stripPhone = (v: string) => v.replace(/[\s\-().]/g, "");
   const isPhoneValid = () => {
@@ -282,33 +281,6 @@ export default function SundayLoveFeast() {
     return /^\d+$/.test(digits) && total >= 8 && total <= 15;
   };
   const fullPhone = () => formPhoneCode + stripPhone(formPhoneNum);
-
-  const checkEmailDup = async () => {
-    const v = formEmail.trim();
-    if (!v || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(v)) return;
-    setEmailDupStatus("checking");
-    try {
-      const { data } = await supabase.functions.invoke("check-duplicate", {
-        body: { field: "email", value: v, table: "slf" },
-      });
-      setEmailDupStatus(data?.exists ? "duplicate" : "ok");
-    } catch {
-      setEmailDupStatus("idle");
-    }
-  };
-
-  const checkPhoneDup = async () => {
-    if (!isPhoneValid()) return;
-    setPhoneDupStatus("checking");
-    try {
-      const { data } = await supabase.functions.invoke("check-duplicate", {
-        body: { field: "phone", value: stripPhone(formPhoneNum), table: "slf" },
-      });
-      setPhoneDupStatus(data?.exists ? "duplicate" : "ok");
-    } catch {
-      setPhoneDupStatus("idle");
-    }
-  };
 
   const ribbonRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
