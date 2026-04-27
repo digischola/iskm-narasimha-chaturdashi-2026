@@ -517,7 +517,7 @@ export default function SundayLoveFeast() {
     const iso = successEventDate || "";
     if (!iso) return "#";
     const ymd = iso.replace(/-/g, "");
-    return `https://www.google.com/calendar/render?action=TEMPLATE` +
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE` +
       `&text=${encodeURIComponent("Sunday Love Feast — ISKM Singapore")}` +
       `&dates=${ymd}T090000Z/${ymd}T113000Z` +
       `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/sunday-love-feast")}` +
