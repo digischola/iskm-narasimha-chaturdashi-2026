@@ -2,11 +2,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.101.1/cors";
 
 /**
- * Sends Sunday Love Feast confirmation email.
- * Body: { registration_id: string, name: string, email: string, attendees: number, event_date_iso: string }
+ * Sends Weekend Love Feast confirmation email.
+ * Body: { registration_id, name, email, attendees, event_date_iso, event_day }
  *
- * event_date_iso: e.g. "2026-04-26" — the upcoming Sunday the user is registering for.
- * Idempotent via slf-confirm-{registration_id}; pgmq queue is `transactional_emails`.
+ * event_date_iso: e.g. "2026-05-09" — the upcoming Sat or Sun the user is registering for.
+ * event_day: "Saturday" | "Sunday"
+ * Idempotent via wlf-confirm-{registration_id}; pgmq queue is `transactional_emails`.
  */
 
 const CONFIRMATION_HTML = `<!DOCTYPE html>
@@ -18,7 +19,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 <meta name="x-apple-disable-message-reformatting">
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
-<title>You're in — Sunday Love Feast</title>
+<title>You're in — Weekend Love Feast</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+Pro:wght@400;600;700&display=swap');
   body, table, td, p, a, li { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
@@ -38,7 +39,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 <body style="margin:0;padding:0;background:#fdf5ed;font-family:'Source Sans Pro',-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#333333;">
 
 <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#fdf5ed;">
-  Sunday {{event_date_pretty}} · 5:00 PM. Your seat is saved. Bhajan, Gita, Kīrtana &amp; free Prasādam.
+  {{event_day}} {{event_date_pretty}} · 5:00 PM. Your seat is saved. Bhajan, Gita, Kīrtana &amp; free Prasādam.
   &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj;
 </div>
 
@@ -54,7 +55,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
       </td></tr>
 
       <tr><td align="center" style="padding:24px 24px 8px;" class="p-mobile">
-        <div style="display:inline-block;padding:6px 14px;background:#fdf5ed;border:1px solid #f4c96b;border-radius:999px;font-size:11px;font-weight:700;color:#1e3a6e;letter-spacing:1.5px;text-transform:uppercase;">✓ Registered for Sunday Love Feast</div>
+        <div style="display:inline-block;padding:6px 14px;background:#fdf5ed;border:1px solid {{accent_color}};border-radius:999px;font-size:11px;font-weight:700;color:#1e3a6e;letter-spacing:1.5px;text-transform:uppercase;">✓ Registered for Weekend Love Feast</div>
       </td></tr>
 
       <tr><td align="center" style="padding:16px 32px 8px;" class="p-mobile">
@@ -65,16 +66,16 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 
       <tr><td align="center" style="padding:8px 32px 24px;" class="p-mobile">
         <p style="margin:0;font-size:17px;line-height:1.6;color:#555555;max-width:460px;">
-          Your seat for the Sunday Love Feast is saved — {{attendees_pretty}}.
+          Your seat for the Weekend Love Feast is saved — {{attendees_pretty}}.
         </p>
       </td></tr>
 
       <tr><td style="padding:0 24px 32px;" class="p-mobile">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1e3a6e;border-radius:14px;">
           <tr><td align="center" style="padding:28px 24px;color:#ffffff;">
-            <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Your Sunday</div>
+            <div style="font-size:12px;font-weight:700;color:{{accent_color}};letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Your {{event_day}}</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:700;color:#ffffff;line-height:1.2;margin-bottom:6px;">{{event_date_pretty}}</div>
-            <div style="font-size:16px;color:#f8a4c0;font-weight:600;margin-bottom:20px;">5:00 PM – 7:30 PM</div>
+            <div style="font-size:16px;color:{{accent_color}};font-weight:600;margin-bottom:20px;">5:00 PM – 7:30 PM</div>
             <div style="font-size:14px;color:#ffffff;opacity:0.85;line-height:1.5;">
               International Sri Krishna Mandir<br>
               No.9 Lorong 29 Geylang, #03-02<br>
@@ -87,7 +88,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
         <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#444444;">Hare Krishna {{first_name}},</p>
         <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#444444;">
-          Every Sunday evening, devotees and seekers come together at the temple for an evening that nourishes both heart and stomach — soul-stirring <strong style="color:#1e3a6e;">Bhajan</strong>, transformative <strong style="color:#1e3a6e;">Bhagavad Gītā class</strong>, ecstatic <strong style="color:#1e3a6e;">Kīrtana</strong>, and a blessed <strong style="color:#1e3a6e;">Prasādam feast</strong>.
+          Every weekend evening, devotees and seekers come together at the temple for an evening that nourishes both heart and stomach — soul-stirring <strong style="color:#1e3a6e;">Bhajan</strong>, transformative <strong style="color:#1e3a6e;">Bhagavad Gītā class</strong>, ecstatic <strong style="color:#1e3a6e;">Kīrtana</strong>, and a blessed <strong style="color:#1e3a6e;">Prasādam feast</strong>.
         </p>
         <p style="margin:0;font-size:16px;line-height:1.7;color:#444444;">
           Walk in with a smile. We'll have a plate ready.
@@ -96,8 +97,8 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 
       <tr><td align="center" style="padding:8px 32px 32px;" class="p-mobile">
         <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-          <tr><td align="center" style="border-radius:999px;background:#f8a4c0;">
-            <a href="{{calendar_url}}" class="btn-primary" style="display:inline-block;padding:16px 36px;font-family:'Source Sans Pro',Arial,sans-serif;font-size:16px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:999px;background:#f8a4c0;">Add to Calendar →</a>
+          <tr><td align="center" style="border-radius:999px;background:{{accent_color}};">
+            <a href="{{calendar_url}}" class="btn-primary" style="display:inline-block;padding:16px 36px;font-family:'Source Sans Pro',Arial,sans-serif;font-size:16px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:999px;background:{{accent_color}};">Add to Calendar →</a>
           </td></tr>
         </table>
       </td></tr>
@@ -105,7 +106,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
       <tr><td style="padding:0 32px;" class="p-mobile"><div style="height:1px;background:#eee6d8;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
 
       <tr><td style="padding:32px 32px 8px;" class="p-mobile">
-        <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Your Evening</div>
+        <div style="font-size:12px;font-weight:700;color:{{accent_color}};letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Your Evening</div>
         <h2 class="h2" style="margin:0 0 20px;font-family:'Playfair Display',Georgia,serif;font-size:28px;font-weight:700;color:#1e3a6e;">Hour by Hour</h2>
       </td></tr>
 
@@ -143,7 +144,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
       </td></tr>
 
       <tr><td style="padding:8px 32px 24px;" class="p-mobile">
-        <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Getting Here</div>
+        <div style="font-size:12px;font-weight:700;color:{{accent_color}};letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Getting Here</div>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td style="padding:6px 0;font-size:15px;color:#444;line-height:1.6;">
@@ -162,7 +163,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
           </tr>
         </table>
         <div style="margin-top:16px;">
-          <a href="https://www.google.com/maps/place/International+Sri+Krishna+Mandir+(ISKM)/@1.3146362,103.8856267,17z/data=!3m1!5s0x31da183c7fd36ed1:0x5a6dd216c71b14b1!4m6!3m5!1s0x31da183c80ceaac5:0x458ccd4e57b8697b!8m2!3d1.3146362!4d103.8856267!16s%2Fg%2F1tf33gsl" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;text-decoration:none;border:2px solid #1e3a6e;border-radius:999px;">Get Directions →</a>
+          <a href="https://www.google.com/maps/place/International+Sri+Krishna+Mandir+(ISKM)/@1.3146362,103.8807558,17z/data=!3m1!5s0x31da183c7fd36ed1:0x5a6dd216c71b14b1!4m6!3m5!1s0x31da183c80ceaac5:0x458ccd4e57b8697b!8m2!3d1.3146362!4d103.8856267!16s%2Fg%2F1tf33gsl" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;text-decoration:none;border:2px solid #1e3a6e;border-radius:999px;">Get Directions →</a>
         </div>
       </td></tr>
 
@@ -180,7 +181,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
             <div style="margin-bottom:8px;font-weight:700;">ISKM Singapore</div>
             <div style="opacity:0.7;">No.9 Lorong 29 Geylang, #03-02 · Singapore 388065</div>
             <div style="margin-top:16px;font-size:12px;opacity:0.7;">
-              <a href="https://events.srikrishnamandir.org/sunday-love-feast" style="color:#ffffff;opacity:0.7;">events.srikrishnamandir.org</a>
+              <a href="https://events.srikrishnamandir.org/weekend-love-feast" style="color:#ffffff;opacity:0.7;">events.srikrishnamandir.org</a>
               · 
               <a href="{{unsubscribe_url}}" style="color:#ffffff;opacity:0.7;">Unsubscribe</a>
             </div>
@@ -210,7 +211,6 @@ function trackUrl(base: string, rid: string, et: string, email: string, linkName
 }
 
 function addClickTracking(html: string, trackBase: string, rid: string, et: string, email: string): string {
-  // Match both calendar.google.com and www.google.com/calendar
   html = html.replace(
     /href="(https:\/\/(?:calendar\.google\.com|www\.google\.com\/calendar)[^"]+)"/g,
     (_, url) => `href="${trackUrl(trackBase, rid, et, email, "calendar", url)}"`,
@@ -222,19 +222,24 @@ function addClickTracking(html: string, trackBase: string, rid: string, et: stri
   return html;
 }
 
-function buildCalendarUrl(eventDateIso: string): string {
-  // Sunday Love Feast: 5:00 PM – 7:30 PM SGT (UTC+8) → 09:00–11:30 UTC
+function buildCalendarUrl(eventDateIso: string, eventDay: string): string {
+  // Weekend Love Feast: 5:00 PM – 7:30 PM SGT (UTC+8) → 09:00–11:30 UTC
+  // Use full ISO datetime in UTC to avoid timezone-shift bugs in client calendars.
   const ymd = eventDateIso.replace(/-/g, "");
+  const startUtc = `${ymd}T090000Z`;
+  const endUtc = `${ymd}T113000Z`;
   return `https://calendar.google.com/calendar/render?action=TEMPLATE` +
-    `&text=${encodeURIComponent("Sunday Love Feast — ISKM Singapore")}` +
-    `&dates=${ymd}T090000Z/${ymd}T113000Z` +
-    `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/sunday-love-feast")}` +
+    `&text=${encodeURIComponent(`${eventDay} Love Feast — ISKM Singapore`)}` +
+    `&dates=${startUtc}/${endUtc}` +
+    `&ctz=Asia/Singapore` +
+    `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/weekend-love-feast")}` +
     `&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
 }
 
 function formatDatePretty(eventDateIso: string): string {
   try {
-    const d = new Date(eventDateIso + "T00:00:00+08:00");
+    // Use noon SGT (rather than 00:00) so any locale conversion never drifts to the previous day.
+    const d = new Date(eventDateIso + "T12:00:00+08:00");
     return d.toLocaleDateString("en-SG", {
       weekday: "long", day: "numeric", month: "long", year: "numeric",
       timeZone: "Asia/Singapore",
@@ -244,13 +249,20 @@ function formatDatePretty(eventDateIso: string): string {
   }
 }
 
+function dayNameFromIso(iso: string): "Saturday" | "Sunday" {
+  const d = new Date(iso + "T12:00:00+08:00");
+  // SGT is UTC+8; using noon ensures UTC day matches SGT day.
+  const dow = d.getUTCDay();
+  return dow === 6 ? "Saturday" : "Sunday";
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const { registration_id, name, email, attendees, event_date_iso } = await req.json();
+    const { registration_id, name, email, attendees, event_date_iso, event_day } = await req.json();
 
     if (!registration_id || !name || !email || !event_date_iso) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
@@ -263,8 +275,8 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Idempotency: skip if already logged as sent or pending
-    const messageId = "slf-confirm-" + registration_id;
+    // Idempotency
+    const messageId = "wlf-confirm-" + registration_id;
     const { data: existingLog } = await supabase
       .from("email_send_log")
       .select("id")
@@ -283,26 +295,37 @@ Deno.serve(async (req) => {
       ? `we've reserved ${attendees} seats`
       : `we've reserved your seat`;
 
+    const day: "Saturday" | "Sunday" =
+      event_day === "Saturday" || event_day === "Sunday"
+        ? event_day
+        : dayNameFromIso(event_date_iso);
+
+    // Pink for Saturday, Gold for Sunday
+    const accentColor = day === "Saturday" ? "#f8a4c0" : "#f4c96b";
+
     const token = crypto.randomUUID();
     const unsubscribeUrl = "https://events.srikrishnamandir.org/unsubscribe?token=" + token;
 
     await supabase.from("email_unsubscribe_tokens").insert({ email, token });
 
     const trackBase = supabaseUrl + "/functions/v1/track-email";
-    const pixelUrl = `${trackBase}?t=o&et=slf-confirmation&rid=${registration_id}&e=${encodeURIComponent(email)}`;
+    const pixelUrl = `${trackBase}?t=o&et=wlf-confirmation&rid=${registration_id}&e=${encodeURIComponent(email)}`;
 
     let html = renderTemplate(CONFIRMATION_HTML, {
       first_name: firstName,
       attendees_pretty: attendeesPretty,
+      event_day: day,
       event_date_pretty: formatDatePretty(event_date_iso),
-      calendar_url: buildCalendarUrl(event_date_iso),
+      accent_color: accentColor,
+      calendar_url: buildCalendarUrl(event_date_iso, day),
       unsubscribe_url: unsubscribeUrl,
       tracking_pixel: `<img src="${pixelUrl}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="" />`,
     });
 
-    html = addClickTracking(html, trackBase, registration_id, "slf-confirmation", email);
+    html = addClickTracking(html, trackBase, registration_id, "wlf-confirmation", email);
 
-    const text = `You're in, ${firstName} — Sunday Love Feast\n\n${attendeesPretty} for ${formatDatePretty(event_date_iso)}, 5:00 PM – 7:30 PM.\n\nInternational Sri Krishna Mandir\nNo.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nSchedule:\n5:00 PM – Bhajan\n5:30 PM – Bhagavad Gītā Class\n6:30 PM – Ārati & Kīrtana\n7:15 PM – Prasādam Feast\n\nQuestions? WhatsApp +65 6250 2280\n\nISKM Singapore\nhttps://events.srikrishnamandir.org/sunday-love-feast\n\nUnsubscribe: ${unsubscribeUrl}`;
+    const datePretty = formatDatePretty(event_date_iso);
+    const text = `You're in, ${firstName} — Weekend Love Feast\n\n${attendeesPretty} for ${datePretty}, 5:00 PM – 7:30 PM.\n\nInternational Sri Krishna Mandir\nNo.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nSchedule:\n5:00 PM – Bhajan\n5:30 PM – Bhagavad Gītā Class\n6:30 PM – Ārati & Kīrtana\n7:15 PM – Prasādam Feast\n\nQuestions? WhatsApp +65 6250 2280\n\nISKM Singapore\nhttps://events.srikrishnamandir.org/weekend-love-feast\n\nUnsubscribe: ${unsubscribeUrl}`;
 
     await supabase.rpc("enqueue_email", {
       queue_name: "transactional_emails",
@@ -310,11 +333,11 @@ Deno.serve(async (req) => {
         to: email,
         from: "ISKM Singapore <noreply@notify.events.srikrishnamandir.org>",
         sender_domain: "notify.events.srikrishnamandir.org",
-        subject: `You're in, ${firstName} — Sunday Love Feast 🌸`,
+        subject: `You're in, ${firstName} — ${day} Love Feast 🌸`,
         html,
         text,
         purpose: "transactional",
-        label: "slf-confirmation",
+        label: "wlf-confirmation",
         message_id: messageId,
         idempotency_key: messageId,
         unsubscribe_token: token,
@@ -324,7 +347,7 @@ Deno.serve(async (req) => {
 
     await supabase.from("email_send_log").insert({
       message_id: messageId,
-      template_name: "slf-confirmation",
+      template_name: "wlf-confirmation",
       recipient_email: email,
       status: "pending",
     });
@@ -333,7 +356,7 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("send-slf-confirmation error:", err);
+    console.error("send-wlf-confirmation error:", err);
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
