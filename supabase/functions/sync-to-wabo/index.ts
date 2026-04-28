@@ -107,7 +107,7 @@ serve(async (req) => {
           continue;
         }
         if (v === undefined || v === null) continue;
-        payload[k] = typeof v === "string" || typeof v === "number" ? v : String(v);
+        payload[k] = String(v);
       }
     }
 
