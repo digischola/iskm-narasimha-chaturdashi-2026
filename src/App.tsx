@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback, useRef, lazy, Suspense } from "react";
 import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
-const SundayLoveFeast = lazy(() => import("@/pages/SundayLoveFeast"));
+const WeekendLoveFeast = lazy(() => import("@/pages/WeekendLoveFeast"));
 const FreePrasadamProgram = lazy(() => import("@/pages/FreePrasadamProgram"));
 
 
@@ -868,7 +868,8 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/nrsimha-caturdasi-2026" element={<LandingPage />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/sunday-love-feast" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><SundayLoveFeast /></Suspense>} />
+        <Route path="/weekend-love-feast" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><WeekendLoveFeast /></Suspense>} />
+        <Route path="/sunday-love-feast" element={<Navigate to="/weekend-love-feast" replace />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/free-prasadam-program" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><FreePrasadamProgram /></Suspense>} />
       </Routes>

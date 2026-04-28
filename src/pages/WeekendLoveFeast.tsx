@@ -1,41 +1,50 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
-import "./SundayLoveFeast.css";
+import "./WeekendLoveFeast.css";
 
 /* ═══════════════════════════════════════
-   HELPERS
+   HELPERS — two-day weekend (Sat + Sun)
    ═══════════════════════════════════════ */
-function getNextSunday(): Date {
-  // Target = upcoming Sunday at 5:00 PM Singapore time (SGT, UTC+8).
-  // If today is Sunday and it's before 5 PM SGT, target = today 5 PM SGT.
-  // Otherwise, target = next Sunday 5 PM SGT.
-  const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+
+/**
+ * Returns the next eligible weekend day at 5 PM SGT — whichever of upcoming
+ * Saturday or Sunday comes first. If today IS a Sat/Sun and it's before 5 PM
+ * SGT, today counts.
+ */
+function getNextEligibleDay(): Date {
   const nowSgt = new Date(Date.now() + SGT_OFFSET_MS);
-  const day = nowSgt.getUTCDay(); // 0 = Sunday in SGT
-  const hour = nowSgt.getUTCHours(); // hour in SGT
-  let daysToAdd = (7 - day) % 7;
-  if (day === 0 && hour >= 17) daysToAdd = 7;
-  // Build Sunday 5 PM SGT = Sunday 09:00 UTC
-  const sundaySgtMidnightUtc = Date.UTC(
+  const day = nowSgt.getUTCDay(); // 0=Sun, 6=Sat
+  const hour = nowSgt.getUTCHours();
+  // Compute days-until for both Saturday and Sunday
+  const daysUntil = (target: number) => {
+    let d = (target - day + 7) % 7;
+    // If today and already past 5 PM SGT, push to next week
+    if (d === 0 && hour >= 17) d = 7;
+    return d;
+  };
+  const dSat = daysUntil(6);
+  const dSun = daysUntil(0);
+  const pick = dSat <= dSun ? dSat : dSun;
+  const targetUtc = Date.UTC(
     nowSgt.getUTCFullYear(),
     nowSgt.getUTCMonth(),
-    nowSgt.getUTCDate() + daysToAdd,
-    9, 0, 0, 0
+    nowSgt.getUTCDate() + pick,
+    9, 0, 0, 0,
   );
-  return new Date(sundaySgtMidnightUtc);
+  return new Date(targetUtc);
 }
 
-function formatNextSunday(): string {
-  return getNextSunday().toLocaleDateString("en-SG", {
+function formatNextEligibleDay(): string {
+  return getNextEligibleDay().toLocaleDateString("en-SG", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
     timeZone: "Asia/Singapore",
   });
 }
 
-/** ISO yyyy-mm-dd in SGT for a given Sunday Date object. */
-function sundayIso(d: Date): string {
-  const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+/** ISO yyyy-mm-dd in SGT for a given Date object. */
+function isoSgt(d: Date): string {
   const sgt = new Date(d.getTime() + SGT_OFFSET_MS);
   const y = sgt.getUTCFullYear();
   const m = String(sgt.getUTCMonth() + 1).padStart(2, "0");
@@ -43,53 +52,53 @@ function sundayIso(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
-/** Returns the upcoming Sundays in the next ~30 days as { iso, label } pairs. */
-function buildSundayOptions(): Array<{ iso: string; label: string }> {
-  const first = getNextSunday();
-  const out: Array<{ iso: string; label: string }> = [];
-  // Up to 5 Sundays = ~1 month window
-  for (let i = 0; i < 5; i++) {
-    const d = new Date(first.getTime() + i * 7 * 86400000);
-    // Keep only Sundays within ~31 days from today (1 month)
-    const daysFromFirst = i * 7;
-    if (daysFromFirst > 31) break;
-    const iso = sundayIso(d);
+/** Returns upcoming Sat & Sun days within the next ~31 days. */
+function buildWeekendOptions(): Array<{ iso: string; label: string; dow: 0 | 6 }> {
+  const out: Array<{ iso: string; label: string; dow: 0 | 6 }> = [];
+  const nowSgt = new Date(Date.now() + SGT_OFFSET_MS);
+  const todayMidUtc = Date.UTC(nowSgt.getUTCFullYear(), nowSgt.getUTCMonth(), nowSgt.getUTCDate());
+  const firstEligible = getNextEligibleDay();
+  const firstEligibleIso = isoSgt(firstEligible);
+  // Walk day-by-day for ~32 days
+  for (let i = 0; i <= 32; i++) {
+    const dayUtc = todayMidUtc + i * 86400000;
+    const d = new Date(dayUtc);
+    const dow = d.getUTCDay(); // SGT == UTC midnight here since we're using SGT-anchored midnight
+    if (dow !== 0 && dow !== 6) continue;
+    const iso = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+    // Skip dates earlier than first eligible (handles "today after 5 PM" case)
+    if (iso < firstEligibleIso) continue;
     const pretty = new Date(iso + "T00:00:00+08:00").toLocaleDateString("en-SG", {
       weekday: "long", day: "numeric", month: "short", year: "numeric",
       timeZone: "Asia/Singapore",
     });
-    const label = i === 0 ? `${pretty} (this Sunday)` : pretty;
-    out.push({ iso, label });
+    out.push({ iso, label: pretty, dow: dow as 0 | 6 });
   }
   return out;
 }
 
-/** Build a calendar grid covering all Sundays in the eligible window. */
-type CalDay = { iso: string; dayNum: number; inMonth: boolean; isSunday: boolean; isEligible: boolean; isPast: boolean };
+/** Build calendar months covering the eligible window. */
+type CalDay = { iso: string; dayNum: number; inMonth: boolean; isSat: boolean; isSun: boolean; isEligible: boolean; isPast: boolean };
 function buildCalendarMonths(eligibleIsoSet: Set<string>): Array<{ year: number; month: number; label: string; weeks: CalDay[][] }> {
-  const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
   const todaySgt = new Date(Date.now() + SGT_OFFSET_MS);
   const todayIso = `${todaySgt.getUTCFullYear()}-${String(todaySgt.getUTCMonth() + 1).padStart(2, "0")}-${String(todaySgt.getUTCDate()).padStart(2, "0")}`;
-
   const eligibleSorted = Array.from(eligibleIsoSet).sort();
   if (eligibleSorted.length === 0) return [];
   const firstIso = eligibleSorted[0];
   const lastIso = eligibleSorted[eligibleSorted.length - 1];
   const [fy, fm] = firstIso.split("-").map(Number);
   const [ly, lm] = lastIso.split("-").map(Number);
-
   const months: Array<{ year: number; month: number; label: string; weeks: CalDay[][] }> = [];
   let curY = fy, curM = fm;
   while (curY < ly || (curY === ly && curM <= lm)) {
     const monthLabel = new Date(Date.UTC(curY, curM - 1, 1)).toLocaleDateString("en-SG", {
       month: "long", year: "numeric", timeZone: "Asia/Singapore",
     });
-    const firstDow = new Date(Date.UTC(curY, curM - 1, 1)).getUTCDay(); // 0=Sun
+    const firstDow = new Date(Date.UTC(curY, curM - 1, 1)).getUTCDay();
     const daysInMonth = new Date(Date.UTC(curY, curM, 0)).getUTCDate();
     const cells: CalDay[] = [];
-    // Leading blanks (previous month days shown faded — use empty placeholders)
     for (let i = 0; i < firstDow; i++) {
-      cells.push({ iso: `pad-${curY}-${curM}-${i}`, dayNum: 0, inMonth: false, isSunday: false, isEligible: false, isPast: false });
+      cells.push({ iso: `pad-${curY}-${curM}-${i}`, dayNum: 0, inMonth: false, isSat: false, isSun: false, isEligible: false, isPast: false });
     }
     for (let d = 1; d <= daysInMonth; d++) {
       const iso = `${curY}-${String(curM).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
@@ -98,14 +107,14 @@ function buildCalendarMonths(eligibleIsoSet: Set<string>): Array<{ year: number;
         iso,
         dayNum: d,
         inMonth: true,
-        isSunday: dow === 0,
+        isSat: dow === 6,
+        isSun: dow === 0,
         isEligible: eligibleIsoSet.has(iso),
         isPast: iso < todayIso,
       });
     }
-    // Trailing blanks to complete week row
     while (cells.length % 7 !== 0) {
-      cells.push({ iso: `pad-end-${cells.length}`, dayNum: 0, inMonth: false, isSunday: false, isEligible: false, isPast: false });
+      cells.push({ iso: `pad-end-${cells.length}`, dayNum: 0, inMonth: false, isSat: false, isSun: false, isEligible: false, isPast: false });
     }
     const weeks: CalDay[][] = [];
     for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
@@ -116,16 +125,16 @@ function buildCalendarMonths(eligibleIsoSet: Set<string>): Array<{ year: number;
   return months;
 }
 
-const IMG = "/images/sunday-love-feast";
+const IMG = "/images/weekend-love-feast";
 
 const GALLERY_ROW1 = [
-  { src: `${IMG}/uploads/glimpse1.webp`, alt: "Devotees serving Prasadam at Love Feast" },
+  { src: `${IMG}/uploads/glimpse1.webp`, alt: "Devotees serving Prasadam at Weekend Love Feast" },
   { src: `${IMG}/6-ladle-pouring-sauce-closeup.webp`, alt: "Ladle pouring sauce" },
   { src: `${IMG}/uploads/glimpse3.webp`, alt: "Devotee enjoying Prasadam" },
   { src: `${IMG}/7-cupcakes-muffins-baked-closeup.webp`, alt: "Cupcakes and muffins" },
-  { src: `${IMG}/uploads/glimpse5.webp`, alt: "Congregation gathered for Sunday Love Feast" },
+  { src: `${IMG}/uploads/glimpse5.webp`, alt: "Congregation gathered for Weekend Love Feast" },
   { src: `${IMG}/uploads/glimpse2.webp`, alt: "Devotees offering pranams" },
-  { src: `${IMG}/uploads/glimpse4.webp`, alt: "Buffet line at Sunday Love Feast" },
+  { src: `${IMG}/uploads/glimpse4.webp`, alt: "Buffet line at Weekend Love Feast" },
 ];
 const GALLERY_ROW2 = [
   { src: `${IMG}/uploads/glimpse5.webp`, alt: "Bhagavad Gītā class in temple hall" },
@@ -138,26 +147,41 @@ const GALLERY_ROW2 = [
 ];
 
 const SCHEDULE = [
-  { time: "5:00 PM", title: "Bhajan", desc: "Begin the evening with melodious devotional songs that calm the mind and uplift the spirit.", img: `${IMG}/9-kirtan-leader-singing-mridanga.webp`, alt: "Bhajan session at Sunday Love Feast" },
+  { time: "5:00 PM", title: "Bhajan", desc: "Begin the evening with melodious devotional songs that calm the mind and uplift the spirit.", img: `${IMG}/9-kirtan-leader-singing-mridanga.webp`, alt: "Bhajan session at Weekend Love Feast" },
   { time: "5:30 PM", title: "Bhagavad Gita Class", desc: "Adults explore timeless wisdom from the Gita, while children enjoy their own engaging class.", img: `${IMG}/9-bhagavad-gita-class-temple-hall.webp`, alt: "Bhagavad Gita Class at ISKM" },
   { time: "6:30 PM", title: "Arati & Kirtan", desc: "Experience the ecstasy of congregational chanting and the beautiful Arati ceremony.", img: `${IMG}/9-radha-krishna-deities-flower-decoration.webp`, alt: "Arati & Kirtan ceremony" },
   { time: "7:15 PM", title: "Prasadam Feast", desc: "Relish a delicious vegetarian feast lovingly prepared and offered to Lord Krishna.", img: `${IMG}/8-prasadam-plates-closeup-food.webp`, alt: "Prasadam feast plates" },
 ];
 
 const FAQS = [
-  { q: "Is it really free? Are there any hidden charges?", a: "Yes, the Sunday Love Feast is completely free — no registration fee, no entry charge, no hidden costs. The Prasadam, classes, and Kirtan are all offered as a loving service. Donations are welcome but never expected." },
-  { q: "Do I need to register to attend?", a: "Registration helps us prepare enough Prasadam for everyone, but walk-ins are always welcome. Registering simply ensures we have a plate ready for you and your family." },
-  { q: "Can I bring my children?", a: "Absolutely! We have a dedicated Children's Class running parallel to the adult Bhagavad Gita class. Kids learn through stories, activities, and creative engagement. All ages are welcome." },
+  { q: "Is it really free? Are there any hidden charges?", a: "Yes, the Weekend Love Feast is completely free — no registration fee, no entry charge, no hidden costs. The Prasadam, classes, and Kirtan are all offered as a loving service. Donations are welcome but never expected." },
+  { q: "Which day should I come — Saturday or Sunday?", a: "Whichever suits you! The same warm programme — Bhajan, Bhagavad Gita class, Arati, Kirtan, and Prasadam feast — runs from 5:00 PM to 7:30 PM on both Saturday and Sunday. Pick the day that works for your week." },
+  { q: "Do I need to register to attend?", a: "Registration helps us prepare enough Prasadam for everyone, but walk-ins are always welcome on either day. Registering simply ensures we have a plate ready for you and your family on the day you choose." },
+  { q: "Can I bring my children?", a: "Absolutely! We have a dedicated Children's Class running parallel to the adult Bhagavad Gita class on both days. Kids learn through stories, activities, and creative engagement. All ages are welcome." },
   { q: "What should I wear?", a: "There is no dress code. Wear whatever you're comfortable in. Many devotees wear traditional Indian attire, but casual clothing is perfectly fine." },
   { q: "Is there parking available?", a: "Street parking is available along Lorong 29. The venue is also easily accessible by MRT (Aljunied or Paya Lebar station) and multiple bus routes." },
-  { q: "I'm not Hindu. Can I still attend?", a: "Everyone is welcome regardless of background, religion, or nationality. The Sunday Love Feast is about sharing love, wisdom, and good food with all." },
+  { q: "I'm not Hindu. Can I still attend?", a: "Everyone is welcome regardless of background, religion, or nationality. The Weekend Love Feast is about sharing love, wisdom, and good food with all." },
 ];
 
 /* ═══════════════════════════════════════
    COMPONENT
    ═══════════════════════════════════════ */
-export default function SundayLoveFeast() {
-  // Countdown
+export default function WeekendLoveFeast() {
+  // Set page title & meta on mount (SPA — overrides static index.html)
+  useEffect(() => {
+    document.title = "Weekend Love Feast — ISKM Singapore";
+    const setMeta = (selector: string, value: string) => {
+      const el = document.querySelector(selector) as HTMLMetaElement | null;
+      if (el) el.content = value;
+    };
+    setMeta('meta[name="description"]', "Weekend Love Feast — every Saturday & Sunday at ISKM Singapore. Free Bhajan, Bhagavad Gītā class, Kīrtana & Prasādam feast.");
+    setMeta('meta[property="og:title"]', "Weekend Love Feast — ISKM Singapore");
+    setMeta('meta[name="twitter:title"]', "Weekend Love Feast — ISKM Singapore");
+    setMeta('meta[property="og:description"]', "Weekend Love Feast — every Saturday & Sunday at ISKM Singapore. Free Bhajan, Bhagavad Gītā class, Kīrtana & Prasādam feast.");
+    setMeta('meta[name="twitter:description"]', "Weekend Love Feast — every Saturday & Sunday at ISKM Singapore. Free Bhajan, Bhagavad Gītā class, Kīrtana & Prasādam feast.");
+  }, []);
+
+  // Countdown — to next eligible day (Sat or Sun)
   const [cd, setCd] = useState({ d: 0, h: 0, m: 0, s: 0 });
   const prevVals = useRef({ d: "", h: "", m: "", s: "" });
   const [flips, setFlips] = useState({ d: false, h: false, m: false, s: false });
@@ -169,7 +193,7 @@ export default function SundayLoveFeast() {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  
+
   const [regCounter, setRegCounter] = useState(0);
   const [mobileCtaVisible, setMobileCtaVisible] = useState(true);
 
@@ -178,21 +202,21 @@ export default function SundayLoveFeast() {
   const TESTIMONIALS = [
     {
       stars: "★ ★ ★ ★ ★",
-      quote: "The Sunday Love Feast is the highlight of our family's week. The children love their class, and the Prasadam is always incredible. It feels like coming home.",
+      quote: "The Weekend Love Feast is the highlight of our family's week. The children love their class, and the Prasadam is always incredible. It feels like coming home.",
       avatar: "P",
       name: "Priya M.",
       detail: "Attending since 2023",
     },
     {
       stars: "★ ★ ★ ★ ★",
-      quote: "I came as a curious visitor and now I don't miss a single Sunday. The Kirtan fills you with an energy you can't explain. And it's all completely free — just pure love.",
+      quote: "I came as a curious visitor and now I don't miss a single weekend. The Kirtan fills you with an energy you can't explain. And it's all completely free — just pure love.",
       avatar: "R",
       name: "Rajesh K.",
       detail: "Regular since 2024",
     },
     {
       stars: "★ ★ ★ ★ ★",
-      quote: "I brought my parents one Sunday and they haven't stopped talking about it. The Bhajans, the Gita class, and the warmth of everyone here — it's truly special.",
+      quote: "I brought my parents one weekend and they haven't stopped talking about it. The Bhajans, the Gita class, and the warmth of everyone here — it's truly special.",
       avatar: "A",
       name: "Anita S.",
       detail: "Devotee since 2022",
@@ -205,14 +229,17 @@ export default function SundayLoveFeast() {
   const [formPhoneNum, setFormPhoneNum] = useState("");
   const [formAttendees, setFormAttendees] = useState("2");
   const [formFirstTime, setFormFirstTime] = useState("no");
-  const sundayOptions = useRef(buildSundayOptions()).current;
-  const eligibleIsoSet = useRef(new Set(sundayOptions.map(o => o.iso))).current;
+  const weekendOptions = useRef(buildWeekendOptions()).current;
+  const eligibleIsoSet = useRef(new Set(weekendOptions.map(o => o.iso))).current;
   const calendarMonths = useRef(buildCalendarMonths(eligibleIsoSet)).current;
-  const [formAttendanceDate, setFormAttendanceDate] = useState<string>(sundayOptions[0]?.iso || "");
-  const selectedSundayLabel = sundayOptions.find(o => o.iso === formAttendanceDate)?.label || "";
+  const [formAttendanceDate, setFormAttendanceDate] = useState<string>(weekendOptions[0]?.iso || "");
+  const selectedDayLabel = (() => {
+    const opt = weekendOptions.find(o => o.iso === formAttendanceDate);
+    return opt?.label || "";
+  })();
   const [calOpen, setCalOpen] = useState(false);
   const initialCursor = (() => {
-    const iso = sundayOptions[0]?.iso || "";
+    const iso = weekendOptions[0]?.iso || "";
     if (!iso) { const d = new Date(); return { y: d.getFullYear(), m: d.getMonth() + 1 }; }
     const [y, m] = iso.split("-").map(Number);
     return { y, m };
@@ -251,19 +278,18 @@ export default function SundayLoveFeast() {
   const visibleMonth = (() => {
     const found = calendarMonths.find(mo => mo.year === calCursor.y && mo.month === calCursor.m);
     if (found) return found;
-    // Build empty month view if cursor outside calendarMonths
     const monthLabel = new Date(Date.UTC(calCursor.y, calCursor.m - 1, 1)).toLocaleDateString("en-SG", {
       month: "long", year: "numeric", timeZone: "Asia/Singapore",
     });
     const firstDow = new Date(Date.UTC(calCursor.y, calCursor.m - 1, 1)).getUTCDay();
     const daysInMonth = new Date(Date.UTC(calCursor.y, calCursor.m, 0)).getUTCDate();
     const cells: any[] = [];
-    for (let i = 0; i < firstDow; i++) cells.push({ iso: `pad-${i}`, dayNum: 0, inMonth: false, isSunday: false, isEligible: false, isPast: false });
+    for (let i = 0; i < firstDow; i++) cells.push({ iso: `pad-${i}`, dayNum: 0, inMonth: false, isSat: false, isSun: false, isEligible: false, isPast: false });
     for (let d = 1; d <= daysInMonth; d++) {
       const dow = new Date(Date.UTC(calCursor.y, calCursor.m - 1, d)).getUTCDay();
-      cells.push({ iso: `x-${d}`, dayNum: d, inMonth: true, isSunday: dow === 0, isEligible: false, isPast: false });
+      cells.push({ iso: `x-${d}`, dayNum: d, inMonth: true, isSat: dow === 6, isSun: dow === 0, isEligible: false, isPast: false });
     }
-    while (cells.length % 7 !== 0) cells.push({ iso: `pad-end-${cells.length}`, dayNum: 0, inMonth: false, isSunday: false, isEligible: false, isPast: false });
+    while (cells.length % 7 !== 0) cells.push({ iso: `pad-end-${cells.length}`, dayNum: 0, inMonth: false, isSat: false, isSun: false, isEligible: false, isPast: false });
     const weeks: any[] = [];
     for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
     return { year: calCursor.y, month: calCursor.m, label: monthLabel, weeks };
@@ -289,12 +315,11 @@ export default function SundayLoveFeast() {
   const particlesRef = useRef<HTMLDivElement>(null);
   const registerRef = useRef<HTMLElement>(null);
   const faqRefs = useRef<(HTMLDivElement | null)[]>([]);
-  
 
-  // Countdown timer
+  // Countdown timer — to next eligible day
   useEffect(() => {
     const tick = () => {
-      const target = getNextSunday();
+      const target = getNextEligibleDay();
       const diff = target.getTime() - Date.now();
       if (diff <= 0) return;
       const d = Math.floor(diff / 864e5);
@@ -325,7 +350,6 @@ export default function SundayLoveFeast() {
       const docH = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(docH > 0 ? scrollTop / docH : 0);
       setNavScrolled(scrollTop > 20);
-      // Parallax
       if (heroVideoRef.current && scrollTop < window.innerHeight) {
         heroVideoRef.current.style.transform = `translateY(${scrollTop * 0.15}px) scale(1.05)`;
       }
@@ -361,14 +385,13 @@ export default function SundayLoveFeast() {
     return () => { container.innerHTML = ""; };
   }, []);
 
-  // Reveal on scroll (IntersectionObserver)
+  // Reveal on scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } }),
       { threshold: 0.1, rootMargin: "0px 0px -30px 0px" }
     );
     document.querySelectorAll(".slf .reveal").forEach(el => observer.observe(el));
-    // Trigger for already visible
     setTimeout(() => {
       document.querySelectorAll(".slf .reveal:not(.visible)").forEach(el => {
         const rect = el.getBoundingClientRect();
@@ -378,16 +401,16 @@ export default function SundayLoveFeast() {
     return () => observer.disconnect();
   }, []);
 
-  // Fetch real registration count
-  // Fire ViewContent pixel on mount
+  // ViewContent pixel
   useEffect(() => {
-    trackPixelEvent("ViewContent", { content_name: "Sunday Love Feast" });
+    trackPixelEvent("ViewContent", { content_name: "Weekend Love Feast" });
   }, []);
 
+  // Fetch real registration count
   useEffect(() => {
     const fetchCount = async () => {
       const { count } = await supabase
-        .from("slf_registrations")
+        .from("weekend_love_feast_registrations")
         .select("*", { count: "exact", head: true });
       if (count !== null) setRegCounter(count);
     };
@@ -405,20 +428,17 @@ export default function SundayLoveFeast() {
     return () => observer.disconnect();
   }, []);
 
-  // Close lightbox on Escape
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setLightboxSrc(null); };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  // Lock body when lightbox/mobile menu open
   useEffect(() => {
     document.body.style.overflow = lightboxSrc || mobileMenuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [lightboxSrc, mobileMenuOpen]);
 
-  // Auto-rotate testimonials on mobile (every 6s)
   useEffect(() => {
     if (typeof window === "undefined" || window.innerWidth > 768) return;
     const id = setInterval(() => {
@@ -426,8 +446,6 @@ export default function SundayLoveFeast() {
     }, 6000);
     return () => clearInterval(id);
   }, [TESTIMONIALS.length]);
-
-  // No longer need carousel auto-scroll — using CSS marquee
 
   const scrollTo = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -442,12 +460,12 @@ export default function SundayLoveFeast() {
       return;
     }
     if (!formAttendanceDate) {
-      setFormError("Please choose which Sunday you'll attend.");
+      setFormError("Please choose which day you'll attend.");
       return;
     }
     setFormSubmitting(true);
     try {
-      const res = await supabase.functions.invoke("submit-slf-registration", {
+      const res = await supabase.functions.invoke("submit-wlf-registration", {
         body: {
           name: formName,
           email: formEmail,
@@ -484,14 +502,14 @@ export default function SundayLoveFeast() {
     }
   };
 
-  const buildSlfCalendarUrl = () => {
+  const buildWlfCalendarUrl = () => {
     const iso = successEventDate || "";
     if (!iso) return "#";
     const ymd = iso.replace(/-/g, "");
     return `https://calendar.google.com/calendar/render?action=TEMPLATE` +
-      `&text=${encodeURIComponent("Sunday Love Feast — ISKM Singapore")}` +
+      `&text=${encodeURIComponent("Weekend Love Feast — ISKM Singapore")}` +
       `&dates=${ymd}T090000Z/${ymd}T113000Z` +
-      `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/sunday-love-feast")}` +
+      `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/weekend-love-feast")}` +
       `&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
   };
 
@@ -508,6 +526,9 @@ export default function SundayLoveFeast() {
     });
   }, [openFaq]);
 
+  const shareUrl = "https://events.srikrishnamandir.org/weekend-love-feast";
+  const shareText = "Join us for Weekend Love Feast at ISKM Singapore — every Saturday & Sunday 5–7:30 PM. Free Prasadam, Kirtan & Bhagavad Gita class.";
+
   return (
     <div className="slf">
       {/* Scroll Progress */}
@@ -516,14 +537,14 @@ export default function SundayLoveFeast() {
       {/* Ribbon */}
       <div className="ribbon" ref={ribbonRef}>
         <span className="urgency-dot" />
-        <span className="hl">Every Sunday</span> — Join us for Bhajan, Gita Class, Kirtan &amp; Free Prasadam
+        <span className="hl">Every Saturday &amp; Sunday</span> — Join us for Bhajan, Gita Class, Kirtan &amp; Free Prasadam
         <a href="#slf-register" onClick={e => { e.preventDefault(); scrollTo("slf-register"); }}>Register Now →</a>
       </div>
 
       {/* Sticky Nav */}
       <nav className={`sticky-nav${navScrolled ? " scrolled" : ""}`} ref={navRef}>
         <a href="#slf-home" className="nav-brand" onClick={e => { e.preventDefault(); scrollTo("slf-home"); }}>
-          <img src="/images/sunday-love-feast/logo.webp" alt="ISKM Logo" width="32" height="32" />
+          <img src={`${IMG}/logo.webp`} alt="ISKM Logo" width="32" height="32" />
           ISKM Singapore
         </a>
         <div className="nav-links">
@@ -552,10 +573,10 @@ export default function SundayLoveFeast() {
         <div className="container">
           <div className="hero-content">
             <div className="hero-badge"><i className="fas fa-spa" /> ISKM SINGAPORE PRESENTS</div>
-            <h1>Sunday Love Feast<span>Every Week</span></h1>
+            <h1>Weekend Love Feast<span>Every Saturday &amp; Sunday</span></h1>
             <p className="hero-subtitle">An evening of soul-stirring Bhajan, transformative Bhagavad Gita wisdom, ecstatic Kirtan, and blessed Prasadam — shared with a warm community of devotees and seekers.</p>
             <div className="hero-details">
-              <div className="hero-detail"><i className="far fa-calendar" /> Every Sunday</div>
+              <div className="hero-detail"><i className="far fa-calendar" /> Every Saturday &amp; Sunday</div>
               <div className="hero-detail"><i className="far fa-clock" /> 5:00 PM – 7:30 PM</div>
               <div className="hero-detail"><i className="fas fa-map-marker-alt" /> No.9 Lorong 29 Geylang, #03-02</div>
             </div>
@@ -574,17 +595,17 @@ export default function SundayLoveFeast() {
             </div>
             <div className="hero-cta-wrap">
               <a href="#slf-register" className="hero-cta" onClick={e => { e.preventDefault(); scrollTo("slf-register"); }}>
-                Register This Sunday <i className="fas fa-arrow-right" />
+                Register This Weekend <i className="fas fa-arrow-right" />
               </a>
             </div>
           </div>
           <div className="hero-video-wrap">
             <video autoPlay muted loop playsInline ref={heroVideoRef}>
-              <source src="/images/sunday-love-feast/hero-video.mp4" type="video/mp4" />
+              <source src={`${IMG}/hero-video.mp4`} type="video/mp4" />
             </video>
             <div className="hero-video-overlay">
               <span className="tag">Free for Everyone</span>
-              <p>250+ devotees gather every Sunday</p>
+              <p>250+ devotees gather every weekend</p>
             </div>
           </div>
         </div>
@@ -605,8 +626,8 @@ export default function SundayLoveFeast() {
           <div className="form-card reveal">
             <div className="text-center">
               <div className="form-tag"><i className="fas fa-ticket-alt" /> Free Entry</div>
-              <h2>Reserve Your Seat This Sunday</h2>
-              <p className="form-desc">Fill in below so we can prepare enough Prasadam for everyone</p>
+              <h2>Reserve Your Seat This Weekend</h2>
+              <p className="form-desc">Choose your day — Saturday or Sunday — so we can prepare enough Prasadam for everyone</p>
             </div>
             {formSuccess ? (
               <div className="text-center" style={{ padding: "40px 0" }}>
@@ -616,12 +637,12 @@ export default function SundayLoveFeast() {
                   {successEventDate ? (
                     <>We look forward to seeing you on <strong>{new Date(successEventDate + "T00:00:00+08:00").toLocaleDateString("en-SG", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Singapore" })}</strong>. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
                   ) : (
-                    <>We look forward to seeing you this Sunday. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
+                    <>We look forward to seeing you this weekend. A confirmation email is on its way — walk in with a smile, Prasadam awaits!</>
                   )}
                 </p>
                 {successEventDate && (
                   <a
-                    href={buildSlfCalendarUrl()}
+                    href={buildWlfCalendarUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--navy)", color: "#fff", borderRadius: 8, textDecoration: "none", fontWeight: 600, fontSize: 14 }}
@@ -695,12 +716,12 @@ export default function SundayLoveFeast() {
                       onClick={() => setCalOpen(o => !o)}
                     >
                       <span className="slf-cal-trigger-text">
-                        {selectedSundayLabel || "Select a Sunday"}
+                        {selectedDayLabel || "Select Saturday or Sunday"}
                       </span>
                       <span className={"slf-cal-chev" + (calOpen ? " up" : "")} aria-hidden="true">▾</span>
                     </button>
                     {calOpen && (
-                      <div className="slf-cal-inline" role="dialog" aria-label="Choose a Sunday to attend">
+                      <div className="slf-cal-inline" role="dialog" aria-label="Choose a Saturday or Sunday to attend">
                         <div className="slf-cal-nav">
                           <button
                             type="button"
@@ -718,9 +739,13 @@ export default function SundayLoveFeast() {
                             aria-label="Next month"
                           >›</button>
                         </div>
+                        <div className="slf-cal-legend">
+                          <span className="slf-cal-legend-item"><span className="slf-cal-legend-dot is-sat" /> Saturday</span>
+                          <span className="slf-cal-legend-item"><span className="slf-cal-legend-dot is-sun" /> Sunday</span>
+                        </div>
                         <div className="slf-cal-dow">
                           {["S","M","T","W","T","F","S"].map((d, i) => (
-                            <span key={i} className={i === 0 ? "is-sun" : ""}>{d}</span>
+                            <span key={i} className={i === 0 ? "is-sun" : i === 6 ? "is-sat" : ""}>{d}</span>
                           ))}
                         </div>
                         <div className="slf-cal-grid">
@@ -737,7 +762,8 @@ export default function SundayLoveFeast() {
                                 aria-label={cell.iso}
                                 className={[
                                   "slf-cal-cell",
-                                  cell.isSunday ? "sun" : "",
+                                  cell.isSat ? "sat" : "",
+                                  cell.isSun ? "sun" : "",
                                   selectable ? "selectable" : "disabled",
                                   selected ? "selected" : "",
                                 ].filter(Boolean).join(" ")}
@@ -791,7 +817,7 @@ export default function SundayLoveFeast() {
             </div>
             <div className="social-proof">
               <i className="fas fa-fire" style={{ color: "var(--gold)", marginRight: 4 }} />
-              <strong>{regCounter}</strong> people registered for this Sunday
+              <strong>{regCounter}</strong> people registered for this weekend
             </div>
           </div>
         </div>
@@ -803,7 +829,7 @@ export default function SundayLoveFeast() {
           <div className="text-center reveal">
             <div className="section-badge">What Awaits You</div>
             <h2 className="section-title">An Evening of Devotion &amp; Joy</h2>
-            <p className="section-subtitle">Every Sunday, experience the beauty of Bhakti through music, wisdom, worship, and a loving feast</p>
+            <p className="section-subtitle">Every Saturday &amp; Sunday, experience the beauty of Bhakti through music, wisdom, worship, and a loving feast</p>
           </div>
           <div className="schedule-grid">
             {SCHEDULE.map((s, i) => (
@@ -825,8 +851,8 @@ export default function SundayLoveFeast() {
         <div className="container experience-content">
           <div className="text-center reveal">
             <div className="section-badge" style={{ color: "var(--gold-light)" }}>What People Say</div>
-            <h2 className="section-title" style={{ color: "var(--white)" }}>More Than a Sunday Gathering</h2>
-            <p className="section-subtitle" style={{ color: "rgba(255,255,255,.6)" }}>Hear from devotees who make Sunday Love Feast a part of their lives</p>
+            <h2 className="section-title" style={{ color: "var(--white)" }}>More Than a Weekend Gathering</h2>
+            <p className="section-subtitle" style={{ color: "rgba(255,255,255,.6)" }}>Hear from devotees who make Weekend Love Feast a part of their lives</p>
           </div>
           <div className="testimonial-slider">
             <button
@@ -883,7 +909,7 @@ export default function SundayLoveFeast() {
         <div className="container">
           <div className="text-center reveal">
             <div className="section-badge">Celebrate With Us</div>
-            <h2 className="section-title">Sponsor the Sunday Love Feast</h2>
+            <h2 className="section-title">Sponsor the Weekend Love Feast</h2>
             <p className="section-subtitle">Mark your special day by sponsoring Prasadam for the entire congregation</p>
           </div>
           <div className="sponsor-grid">
@@ -900,9 +926,9 @@ export default function SundayLoveFeast() {
             ))}
           </div>
           <div className="text-center reveal">
-            <div className="sponsor-price">$501 <small>per Sunday feast sponsorship</small></div>
+            <div className="sponsor-price">$501 <small>per feast sponsorship</small></div>
             <br />
-            <a href="https://wa.me/6562502280?text=I%20would%20like%20to%20enquire%20about%20sponsoring%20a%20Sunday%20Love%20Feast" target="_blank" rel="noopener noreferrer" className="btn-sponsor">
+            <a href="https://wa.me/6562502280?text=I%20would%20like%20to%20enquire%20about%20sponsoring%20a%20Weekend%20Love%20Feast" target="_blank" rel="noopener noreferrer" className="btn-sponsor">
               <i className="fab fa-whatsapp" /> Enquire on WhatsApp
             </a>
           </div>
@@ -913,9 +939,9 @@ export default function SundayLoveFeast() {
       <section className="gallery-section section" id="slf-gallery">
         <div className="container">
           <div className="text-center reveal">
-            <div className="section-badge">Past Sundays</div>
+            <div className="section-badge">Past Weekends</div>
             <h2 className="section-title">Glimpses of Love Feast</h2>
-            <p className="section-subtitle">Moments of devotion, joy, and togetherness from our Sunday gatherings</p>
+            <p className="section-subtitle">Moments of devotion, joy, and togetherness from our weekend gatherings</p>
           </div>
         </div>
         <div className="marquee-wrap">
@@ -972,7 +998,7 @@ export default function SundayLoveFeast() {
             <div className="location-info">
               <h3><i className="fas fa-spa" style={{ color: "var(--gold)", marginRight: 8, fontSize: 20 }} /> International Sri Krishna Mandir</h3>
               <div className="location-detail"><i className="fas fa-map-marker-alt" /><div><strong>Address</strong>No.9 Lorong 29 Geylang, #03-02, Singapore 388065</div></div>
-              <div className="location-detail"><i className="far fa-clock" /><div><strong>Every Sunday</strong>5:00 PM – 7:30 PM</div></div>
+              <div className="location-detail"><i className="far fa-clock" /><div><strong>Every Saturday &amp; Sunday</strong>5:00 PM – 7:30 PM</div></div>
               <div className="location-detail"><i className="fas fa-phone" /><div><strong>Contact</strong>+65 8125 1260</div></div>
               <div className="directions-list">
                 <h4>Getting Here</h4>
@@ -992,17 +1018,17 @@ export default function SundayLoveFeast() {
       <section className="final-cta">
         <div className="container reveal">
           <div className="gold-divider"><i className="fas fa-spa" /></div>
-          <h2>See You This Sunday</h2>
-          <div className="next-date">{formatNextSunday()}</div>
+          <h2>See You This Weekend</h2>
+          <div className="next-date">{formatNextEligibleDay()}</div>
           <p>5:00 PM – 7:30 PM · Free Entry · Prasadam for Everyone</p>
           <a href="#slf-register" className="btn-final" onClick={e => { e.preventDefault(); scrollTo("slf-register"); }}>
             Register Now <i className="fas fa-arrow-right" />
           </a>
           <div className="share-label" style={{ marginTop: 32 }}>Invite a friend</div>
           <div className="share-row">
-            <a href="https://wa.me/?text=Join%20us%20for%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Bhagavad%20Gita%20class%20every%20Sunday%205-7%3A30PM.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fsunday-love-feast" target="_blank" rel="noopener noreferrer" className="share-btn wa"><i className="fab fa-whatsapp" /> Share</a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fevents.srikrishnamandir.org%2Fsunday-love-feast" target="_blank" rel="noopener noreferrer" className="share-btn fb"><i className="fab fa-facebook-f" /> Share</a>
-            <a href="https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org%2Fsunday-love-feast&text=Join%20Sunday%20Love%20Feast%20at%20ISKM%20Singapore!%20Free%20Prasadam%2C%20Kirtan%20%26%20Gita%20class%20every%20Sunday%205-7%3A30PM" target="_blank" rel="noopener noreferrer" className="share-btn tg"><i className="fab fa-telegram-plane" /> Share</a>
+            <a href={`https://wa.me/?text=${encodeURIComponent(shareText + " Register: " + shareUrl)}`} target="_blank" rel="noopener noreferrer" className="share-btn wa"><i className="fab fa-whatsapp" /> Share</a>
+            <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" className="share-btn fb"><i className="fab fa-facebook-f" /> Share</a>
+            <a href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`} target="_blank" rel="noopener noreferrer" className="share-btn tg"><i className="fab fa-telegram-plane" /> Share</a>
           </div>
         </div>
       </section>
@@ -1018,7 +1044,7 @@ export default function SundayLoveFeast() {
         <div className="container">
           <div className="footer-inner">
             <div className="footer-brand">
-              <img src="/images/sunday-love-feast/logo.webp" alt="ISKM" width="28" height="28" />
+              <img src={`${IMG}/logo.webp`} alt="ISKM" width="28" height="28" />
               <span>ISKM Singapore</span>
             </div>
             <div className="footer-links">
@@ -1033,7 +1059,7 @@ export default function SundayLoveFeast() {
 
       {/* Mobile Sticky CTA */}
       <div className="mobile-sticky-cta" style={{ transform: mobileCtaVisible ? "translateY(0)" : "translateY(100%)", transition: "transform .3s ease" }}>
-        <a href="#slf-register" onClick={e => { e.preventDefault(); scrollTo("slf-register"); }}><i className="fas fa-ticket-alt" /> Register Free — This Sunday</a>
+        <a href="#slf-register" onClick={e => { e.preventDefault(); scrollTo("slf-register"); }}><i className="fas fa-ticket-alt" /> Register Free — This Weekend</a>
       </div>
     </div>
   );

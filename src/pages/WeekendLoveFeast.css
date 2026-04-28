@@ -981,6 +981,22 @@
   padding: 4px 0;
 }
 .slf .slf-cal-dow span.is-sun { color: var(--gold, #c79a3a); }
+.slf .slf-cal-dow span.is-sat { color: #f8a4c0; }
+.slf .slf-cal-legend {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #777;
+}
+.slf .slf-cal-legend-item { display: inline-flex; align-items: center; gap: 5px; }
+.slf .slf-cal-legend-dot {
+  width: 9px; height: 9px; border-radius: 50%; display: inline-block;
+}
+.slf .slf-cal-legend-dot.is-sat { background: #f8a4c0; }
+.slf .slf-cal-legend-dot.is-sun { background: var(--gold, #c79a3a); }
 .slf .slf-cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -1004,21 +1020,39 @@
 }
 .slf .slf-cal-cell.empty { visibility: hidden; }
 .slf .slf-cal-cell.disabled { color: #c4c4c4; background: transparent; }
-.slf .slf-cal-cell.selectable {
+/* Sunday selectable = gold */
+.slf .slf-cal-cell.sun.selectable {
   color: var(--navy);
   background: rgba(199, 154, 58, 0.08);
   border-color: rgba(199, 154, 58, 0.35);
   cursor: pointer;
   font-weight: 700;
 }
-.slf .slf-cal-cell.selectable:hover {
+.slf .slf-cal-cell.sun.selectable:hover {
   background: rgba(199, 154, 58, 0.18);
   border-color: var(--gold, #c79a3a);
 }
-.slf .slf-cal-cell.selected {
+.slf .slf-cal-cell.sun.selected {
   background: var(--gold, #c79a3a);
   color: var(--white);
   border-color: var(--gold, #c79a3a);
+}
+/* Saturday selectable = pink */
+.slf .slf-cal-cell.sat.selectable {
+  color: var(--navy);
+  background: rgba(248, 164, 192, 0.10);
+  border-color: rgba(248, 164, 192, 0.45);
+  cursor: pointer;
+  font-weight: 700;
+}
+.slf .slf-cal-cell.sat.selectable:hover {
+  background: rgba(248, 164, 192, 0.22);
+  border-color: #f8a4c0;
+}
+.slf .slf-cal-cell.sat.selected {
+  background: #f8a4c0;
+  color: #fff;
+  border-color: #f8a4c0;
 }
 @media (max-width: 480px) {
   .slf .slf-cal-inline { padding: 12px; }

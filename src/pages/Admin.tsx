@@ -133,7 +133,7 @@ export default function Admin() {
     setLoading(true);
     const [ncRes, slfRes, prasadamRes, emailRes, trackRes] = await Promise.all([
       supabase.from("registrations").select("*").order("created_at", { ascending: false }),
-      supabase.from("slf_registrations").select("*").order("created_at", { ascending: false }),
+      supabase.from("weekend_love_feast_registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("prasadam_sponsorships").select("*").order("created_at", { ascending: false }),
       supabase.from("email_send_log").select("*").order("created_at", { ascending: false }).limit(1000),
       supabase.from("email_tracking_events").select("*").order("created_at", { ascending: false }).limit(1000),
@@ -389,7 +389,7 @@ export default function Admin() {
       const headers = ["Name", "Email", "Country Code", "Phone", "Attendees", "Attendance Date", "First Time", "Registered At"];
       const rows = slfData.map(r => [r.name, r.email, r.country_code || "", r.phone || "", r.attendees, (r as any).attendance_date || "", r.first_time ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
-      prefix = "slf_registrations";
+      prefix = "weekend_love_feast";
     } else if (page === "registrations" && regEventTab === "prasadam") {
       const headers = ["Full Name", "Email", "Country Code", "Phone", "Tier", "Preferred Date", "Status", "Submitted At"];
       const rows = prasadamData.map(r => [r.full_name, r.email, r.country_code, r.phone, r.tier, r.preferred_date, r.status, new Date(r.created_at).toLocaleString("en-SG")]);
@@ -495,7 +495,7 @@ export default function Admin() {
               <div className="admin-event-tabs">
                 <button className={`admin-event-tab${eventTab === "all" ? " active" : ""}`} onClick={() => setEventTab("all")}>All Events</button>
                 <button className={`admin-event-tab${eventTab === "nrsimha" ? " active" : ""}`} onClick={() => setEventTab("nrsimha")}>Nṛsiṁha Caturdaśī</button>
-                <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => setEventTab("slf")}>Sunday Love Feast</button>
+                <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => setEventTab("slf")}>Weekend Love Feast</button>
                 <button className={`admin-event-tab${eventTab === "prasadam" ? " active" : ""}`} onClick={() => setEventTab("prasadam")}>Prasadam Program</button>
               </div>
 
@@ -572,7 +572,7 @@ export default function Admin() {
                             <td>{uniquePeopleCount > 0 ? `${((ncEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
                           </tr>
                           <tr>
-                            <td><span className="admin-name-text">Sunday Love Feast</span></td>
+                            <td><span className="admin-name-text">Weekend Love Feast</span></td>
                             <td>{slfEmails.size}</td>
                             <td>{slfTotal}</td>
                             <td>{slfAttendees}</td>
@@ -755,13 +755,13 @@ export default function Admin() {
 
               <div className="admin-event-tabs">
                 <button className={`admin-event-tab${regEventTab === "nrsimha" ? " active" : ""}`} onClick={() => { setRegEventTab("nrsimha"); setRegPage(1); }}>Nṛsiṁha Caturdaśī ({ncTotal})</button>
-                <button className={`admin-event-tab${regEventTab === "slf" ? " active" : ""}`} onClick={() => { setRegEventTab("slf"); setRegPage(1); }}>Sunday Love Feast ({slfTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "slf" ? " active" : ""}`} onClick={() => { setRegEventTab("slf"); setRegPage(1); }}>Weekend Love Feast ({slfTotal})</button>
                 <button className={`admin-event-tab${regEventTab === "prasadam" ? " active" : ""}`} onClick={() => { setRegEventTab("prasadam"); setRegPage(1); }}>Prasadam ({prasadamTotal})</button>
               </div>
 
               <div className="admin-table-card">
                 <div className="admin-table-header">
-                  <h3>{regEventTab === "nrsimha" ? "Nṛsiṁha Registrations" : regEventTab === "slf" ? "Sunday Love Feast Registrations" : "Prasadam Sponsorships"}</h3>
+                  <h3>{regEventTab === "nrsimha" ? "Nṛsiṁha Registrations" : regEventTab === "slf" ? "Weekend Love Feast Registrations" : "Prasadam Sponsorships"}</h3>
                   <span style={{ fontSize: "13px", color: "#888" }}>
                     Showing {Math.min((regPage - 1) * ROWS_PER_PAGE + 1, filteredReg.length)}-{Math.min(regPage * ROWS_PER_PAGE, filteredReg.length)} of {filteredReg.length} entries
                   </span>

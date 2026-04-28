@@ -236,42 +236,6 @@ export type Database = {
         }
         Relationships: []
       }
-      slf_registrations: {
-        Row: {
-          attendance_date: string | null
-          attendees: number
-          country_code: string | null
-          created_at: string
-          email: string
-          first_time: boolean
-          id: string
-          name: string
-          phone: string
-        }
-        Insert: {
-          attendance_date?: string | null
-          attendees?: number
-          country_code?: string | null
-          created_at?: string
-          email: string
-          first_time?: boolean
-          id?: string
-          name: string
-          phone: string
-        }
-        Update: {
-          attendance_date?: string | null
-          attendees?: number
-          country_code?: string | null
-          created_at?: string
-          email?: string
-          first_time?: boolean
-          id?: string
-          name?: string
-          phone?: string
-        }
-        Relationships: []
-      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -311,6 +275,42 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      weekend_love_feast_registrations: {
+        Row: {
+          attendance_date: string | null
+          attendees: number
+          country_code: string | null
+          created_at: string
+          email: string
+          first_time: boolean
+          id: string
+          name: string
+          phone: string
+        }
+        Insert: {
+          attendance_date?: string | null
+          attendees?: number
+          country_code?: string | null
+          created_at?: string
+          email: string
+          first_time?: boolean
+          id?: string
+          name: string
+          phone: string
+        }
+        Update: {
+          attendance_date?: string | null
+          attendees?: number
+          country_code?: string | null
+          created_at?: string
+          email?: string
+          first_time?: boolean
+          id?: string
+          name?: string
+          phone?: string
         }
         Relationships: []
       }
