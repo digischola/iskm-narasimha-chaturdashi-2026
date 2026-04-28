@@ -869,7 +869,6 @@ export default function App() {
         <Route path="/nrsimha-caturdasi-2026" element={<LandingPage />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/weekend-love-feast" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><WeekendLoveFeast /></Suspense>} />
-        <Route path="/sunday-love-feast" element={<Navigate to="/weekend-love-feast" replace />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/free-prasadam-program" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><FreePrasadamProgram /></Suspense>} />
       </Routes>
