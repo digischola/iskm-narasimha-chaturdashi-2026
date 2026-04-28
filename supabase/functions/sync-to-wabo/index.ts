@@ -40,6 +40,7 @@ const ALLOWED_EXTRA_KEYS = new Set([
   "occasion",
   "wlf_attendance_date",
   "wlf_attendance_day",
+  "wlf_attendees",
 ]);
 
 serve(async (req) => {
@@ -97,10 +98,6 @@ serve(async (req) => {
       source,
       [event_slug]: "yes",
     };
-
-    if (attendees !== undefined && attendees !== null && attendees !== "") {
-      payload.attendees = String(attendees);
-    }
 
     // Spread extras using only whitelisted keys
     if (extras && typeof extras === "object") {
