@@ -30,7 +30,7 @@ const corsHeaders = {
 
 const ALLOWED_EVENT_SLUGS = new Set([
   "nrsimhachaturdasi2026",
-  "sunday_love_feast",
+  "weekend_love_feast",
   "prasadam_sponsor",
 ]);
 
@@ -38,7 +38,8 @@ const ALLOWED_EXTRA_KEYS = new Set([
   "tier",
   "preferred_date",
   "occasion",
-  "slf_attendance_date",
+  "wlf_attendance_date",
+  "wlf_attendance_day",
 ]);
 
 serve(async (req) => {
