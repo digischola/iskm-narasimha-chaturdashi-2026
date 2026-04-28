@@ -1,0 +1,1 @@
+ALTER TABLE public.slf_registrations RENAME TO weekend_love_feast_registrations;

@@ -1,61 +1,138 @@
-## Sunday Love Feast — fixes
+## Weekend Love Feast — full rename + two-day model
 
-Scope: SLF page + SLF edge functions only. No changes to Prasadam, NC, or admin.
+Scope: SLF page, related edge functions, DB table, and Wabo keys. No changes to Prasadam or NC.
 
-### 1. Date showing one day earlier (Sat instead of Sun)
+### What you'll need to do in Wabo (before I deploy)
 
-**Root cause:** Several places format an SGT-anchored ISO date (`new Date("2026-05-10T00:00:00+08:00")`) using `toLocaleDateString("en-SG", {...})` *without* passing `timeZone: "Asia/Singapore"`. The `Date` object is the UTC instant `2026-05-09T16:00:00Z`. When formatted in the user's browser timezone (e.g. India UTC+5:30, Europe, Americas) or the edge function server timezone (UTC), it renders as **Saturday 9 May**.
+In your Wabo workspace, create three new custom-field keys:
+- **`weekend_love_feast`** — boolean / "yes" tag (replaces `sunday_love_feast`)
+- **`wlf_attendance_date`** — date field (replaces `slf_attendance_date`)
+- **`wlf_attendance_day`** — text field, value will be `"Saturday"` or `"Sunday"`
 
-**Fix — add `timeZone: "Asia/Singapore"` everywhere a Sunday is printed:**
+No backfill of existing Wabo contacts needed — historic SLF data is not migrated. Tell me when these three keys exist in Wabo and I'll deploy the updated sync function.
 
-- `src/pages/SundayLoveFeast.tsx`
-  - `formatNextSunday()` (line 30) — used in the "Next Date" footer card.
-  - The success badge "We look forward to seeing you on …" (line 653) — currently the visible bug in your screenshot.
-- `supabase/functions/send-slf-confirmation/index.ts`
-  - `formatDatePretty()` (line 237) — used in the email subject body, plain-text version, and the dark "Your Sunday" hero card.
+### 1. Routing & URL
 
-### 2. Email "Add to Calendar" not working
+- New canonical route: `/weekend-love-feast`
+- Old route `/sunday-love-feast` → React redirect to `/weekend-love-feast` (preserves query strings). Existing WhatsApp/print links keep working.
+- Page component renamed `SundayLoveFeast.tsx` → `WeekendLoveFeast.tsx` (and `.css` likewise)
+- Image folder renamed `public/images/sunday-love-feast/` → `public/images/weekend-love-feast/` and all references updated
 
-The Google Calendar URL in the email uses `https://www.google.com/calendar/render` and the click-tracker regex matches `calendar.google.com/...`, so the calendar link is *not* tracked but rendered as-is. The `www.google.com/calendar/render` host is the legacy form and is unreliable on mobile (often opens a Google search rather than the calendar prefill). 
+### 2. Two-day model (Sat + Sun)
 
-**Fix:** switch `buildCalendarUrl` in `supabase/functions/send-slf-confirmation/index.ts` (and the matching `buildSlfCalendarUrl` on the success badge in `SundayLoveFeast.tsx`) to `https://calendar.google.com/calendar/render?action=TEMPLATE&...` and update the click-tracking regex to match this host as well so analytics still capture clicks.
+- New helper `getNextEligibleDay()` returns whichever comes first: upcoming Saturday 5 PM SGT or Sunday 5 PM SGT (with same "if today is the day, before 5 PM SGT counts" logic).
+- Calendar option builder extended: include both Saturdays AND Sundays in the next ~31-day window.
+- Calendar grid: Saturday cells get **pink** accent (`#f8a4c0`); Sunday cells get **gold** (existing). Both selectable; disabled days unchanged. Day-of-week header colors S(at) pink and S(un) gold.
+- Validator (`validateAttendanceDate`) accepts both Saturday (`getUTCDay()===6`) and Sunday (`===0`).
+- Selected-date label shows e.g. "Saturday, 2 May 2026" or "Sunday, 3 May 2026".
 
-### 3. Email "Get Directions" lands on wrong place
+### 3. Countdown timer
 
-The email currently links to a truncated URL: `https://www.google.com/maps/place/International+Sri+Krishna+Mandir+(ISKM)/@1.3146362,103.8807558,17z` — Google Maps drops the place context and falls back to a generic search.
+Targets the next eligible day (Sat or Sun, whichever sooner) instead of next Sunday only.
 
-**Fix:** Replace it with the full canonical URL the user provided, including the `data=!3m1!5s…!16s%2Fg%2F1tf33gsl` portion that pins the result to the real ISKM listing. Update both the email template href and the click-tracking regex in `addClickTracking` so the longer URL is still matched (the existing `[^"]+` already covers it, just confirm).
+### 4. Copy rewrites (page)
 
-### 4. WhatsApp / Facebook / Telegram share buttons go to homepage
+| Location | Old | New |
+|---|---|---|
+| `<title>` / og:title / twitter:title | "Srikrishnamandir - Events Page" | "Weekend Love Feast — ISKM Singapore" |
+| meta description | "Sunday Love Feast every week..." | "Weekend Love Feast — every Saturday & Sunday at ISKM Singapore. Free Bhajan, Bhagavad Gītā class, Kīrtana & Prasādam feast." |
+| Ribbon | "Every Sunday" | "Every Saturday & Sunday" |
+| Hero h1 | "Sunday Love Feast / Every Week" | "Weekend Love Feast / Every Saturday & Sunday" |
+| Hero detail chip | "Every Sunday" | "Every Saturday & Sunday" |
+| Hero CTA | "Register This Sunday" | "Register This Weekend" |
+| Hero video overlay | "250+ devotees gather every Sunday" | "250+ devotees gather every weekend" |
+| Reg section h2 | "Reserve Your Seat This Sunday" | "Reserve Your Seat This Weekend" |
+| Calendar field placeholder | "Select a Sunday" | "Select Saturday or Sunday" |
+| Validation message | "choose which Sunday" | "choose which day you'll attend" |
+| Social proof footer | "registered for this Sunday" | "registered for this weekend" |
+| Schedule h2 sub | "Every Sunday, experience..." | "Every Saturday & Sunday, experience..." |
+| Testimonials section | "More Than a Sunday Gathering" / "make Sunday Love Feast" | "More Than a Weekend Gathering" / "make Weekend Love Feast" |
+| Testimonial quotes | "every Sunday" / "single Sunday" / "one Sunday" | rewritten to "every weekend" / "single week" / "one weekend", same warm voice |
+| Sponsor h2 | "Sponsor the Sunday Love Feast" | "Sponsor the Weekend Love Feast" |
+| Sponsor price line | "$501 per Sunday feast sponsorship" | "$501 per feast sponsorship" |
+| Sponsor WhatsApp text | "sponsoring a Sunday Love Feast" | "sponsoring a Weekend Love Feast" |
+| Gallery badge / sub | "Past Sundays" / "Sunday gatherings" | "Past Weekends" / "weekend gatherings" |
+| FAQs | every "Sunday Love Feast" / "Sunday-only" mention | rewritten for "Weekend Love Feast" + "either Saturday or Sunday" |
+| Location card | "Every Sunday" | "Every Saturday & Sunday" |
+| Final CTA h2 | "See You This Sunday" | "See You This Weekend" |
+| Final CTA next-date | next Sunday | next eligible day (Sat or Sun) |
+| Mobile sticky CTA | "This Sunday" | "This Weekend" |
+| Image alt text | every "Sunday Love Feast" mention | rewritten to "Weekend Love Feast" |
 
-In `SundayLoveFeast.tsx` (lines 1043–1045) the share URLs all point to `https://events.srikrishnamandir.org` (root). 
+### 5. Share buttons (WhatsApp / Facebook / Telegram)
 
-**Fix:** point all three share links at the SLF page itself — `https://events.srikrishnamandir.org/sunday-love-feast` — and tweak the WhatsApp/Telegram share text to say "See you this Sunday — register at …" so the link itself is the SLF landing page.
+All point to `https://events.srikrishnamandir.org/weekend-love-feast`. Share text: "Join us for Weekend Love Feast at ISKM Singapore — every Saturday & Sunday 5–7:30 PM. Free Prasadam, Kirtan & Bhagavad Gita class."
 
-### 5. Remove "already registered" restriction
+### 6. Confirmation email (`send-slf-confirmation` → renamed `send-wlf-confirmation`)
 
-A user can register for multiple Sundays now, so the email/phone duplicate check shouldn't block a second submission.
+- All "Sunday Love Feast" → "Weekend Love Feast" (subject, hero card, body, plain text, preheader, footer link)
+- "Your Sunday" hero label → "Your Day"
+- Email shows the specific day from `event_date_iso` — already day-aware via `formatDatePretty` (works for Sat and Sun)
+- Calendar URL text "Sunday Love Feast" → "Weekend Love Feast"
+- Footer link `/sunday-love-feast` → `/weekend-love-feast`
+- Idempotency key prefix `slf-confirm-` → `wlf-confirm-`
 
-**Fix:**
-- In `supabase/functions/submit-slf-registration/index.ts`, remove the email duplicate check (lines 124–135) and phone duplicate check (lines 137–148). Keep the insert as-is — multiple rows for the same email/phone are now allowed.
-- In `src/pages/SundayLoveFeast.tsx`:
-  - Remove the `checkEmailDup` / `checkPhoneDup` invocations and `onBlur` calls.
-  - Remove the inline "already registered" warnings (lines 689 and 723).
-  - Remove the duplicate-blocks in `handleSubmit` (lines 468–474).
-  - Leave the `check-duplicate` edge function untouched (still used by NC and Prasadam).
+### 7. Backend rename (DB + edge functions + Wabo)
 
-### Test checklist
+**Migration (schema only):**
+```sql
+ALTER TABLE public.slf_registrations RENAME TO weekend_love_feast_registrations;
+```
+RLS policies auto-follow the rename. No data migration; existing Sunday rows preserved as-is.
 
-1. Open the SLF page in a non-SGT timezone (e.g. set system to UTC or India). The "Next Date" footer and the form's "Choose Date" button both show **Sunday**, not Saturday.
-2. Submit a registration. The success badge says **"Sunday, 10 May 2026"**.
-3. Receive the email. The hero card, subject preview, and plain-text body all say **Sunday**.
-4. Click "Add to Calendar" in the email — it opens the Google Calendar prefill page (not a search results page) on both desktop and mobile.
-5. Click "Get Directions" in the email — it lands on the ISKM Maps listing with the address card, not a generic search.
-6. Click the WhatsApp / Facebook / Telegram share buttons in the page footer — they all share `https://events.srikrishnamandir.org/sunday-love-feast`.
-7. Register twice with the same email + phone for two different Sundays — both submissions succeed, two confirmation emails arrive (one per Sunday), Wabo gets two updates with the corresponding `slf_attendance_date`.
+**Edge functions renamed:**
+- `submit-slf-registration` → `submit-wlf-registration`
+  - Validator updated for Sat OR Sun
+  - Inserts to `weekend_love_feast_registrations`
+  - Calls `send-wlf-confirmation`
+  - Wabo payload uses new keys including `wlf_attendance_day` (computed `"Saturday"` or `"Sunday"` from the chosen ISO date in SGT)
+- `send-slf-confirmation` → `send-wlf-confirmation`
+- Old function directories deleted via `supabase--delete_edge_functions`
+
+**Wabo whitelist (`sync-to-wabo/index.ts`):**
+- `ALLOWED_EVENT_SLUGS`: replace `"sunday_love_feast"` with `"weekend_love_feast"` (keep `nrsimhachaturdasi2026`, `prasadam_sponsor`)
+- `ALLOWED_EXTRA_KEYS`: drop `"slf_attendance_date"`, add `"wlf_attendance_date"` and `"wlf_attendance_day"`
+- Submit function passes:
+  ```ts
+  event_slug: "weekend_love_feast",
+  source: "Weekend Love Feast - Landing Page",
+  extras: {
+    wlf_attendance_date: "2026-05-02",
+    wlf_attendance_day: "Saturday",
+  }
+  ```
+
+### 8. Admin dashboard (`Admin.tsx`)
+
+- Query target `slf_registrations` → `weekend_love_feast_registrations`
+- CSV export prefix `slf_registrations` → `weekend_love_feast`
+- Tab label "Sunday Love Feast" → "Weekend Love Feast"
+- Heading "Sunday Love Feast Registrations" → "Weekend Love Feast Registrations"
+- Internal `eventTab === "slf"` keys kept (purely internal, no UI impact)
 
 ### Files touched
 
-- `src/pages/SundayLoveFeast.tsx`
-- `supabase/functions/send-slf-confirmation/index.ts`
-- `supabase/functions/submit-slf-registration/index.ts`
+- `src/pages/SundayLoveFeast.tsx` → renamed `WeekendLoveFeast.tsx` (rewritten for two-day model + new copy)
+- `src/pages/SundayLoveFeast.css` → renamed `WeekendLoveFeast.css` (Sat pink accent added)
+- `src/App.tsx` (lazy import, route, redirect for old path)
+- `index.html` (title + meta + og + twitter)
+- `src/pages/Admin.tsx` (table name, label, CSV prefix)
+- `src/integrations/supabase/types.ts` — auto-updated by migration; not hand-edited
+- `supabase/functions/submit-slf-registration/` → renamed `submit-wlf-registration/`
+- `supabase/functions/send-slf-confirmation/` → renamed `send-wlf-confirmation/`
+- `supabase/functions/sync-to-wabo/index.ts` (whitelist update)
+- `public/images/sunday-love-feast/` → renamed `weekend-love-feast/` (all references updated)
+- New SQL migration: rename table
+
+### Test checklist (after deploy)
+
+1. Visit `/sunday-love-feast` → instantly redirects to `/weekend-love-feast`
+2. Browser tab title says "Weekend Love Feast — ISKM Singapore"
+3. Hero shows "Every Saturday & Sunday"; countdown counts to whichever of Sat/Sun comes first
+4. Open the date picker → both Saturdays (pink) and Sundays (gold) selectable in the next month
+5. Pick a Saturday, register → success badge shows the chosen Saturday; confirmation email subject + hero card both show that Saturday; "Add to Calendar" prefills that Saturday's event
+6. Pick a Sunday in a different submission → confirmation flow shows that Sunday
+7. Share buttons open WhatsApp/Telegram/Facebook with text mentioning "Weekend Love Feast" and link `/weekend-love-feast`
+8. Sponsor section reads "$501 per feast sponsorship"
+9. In Wabo: new contact appears with `weekend_love_feast=yes`, `wlf_attendance_date` set to the chosen ISO date, and `wlf_attendance_day` = `"Saturday"` or `"Sunday"` matching the pick
+10. Admin dashboard "Weekend Love Feast" tab shows registrations from the renamed table
