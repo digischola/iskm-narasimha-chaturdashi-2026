@@ -16,13 +16,13 @@ const corsHeaders = {
  *   email?: string,
  *   country_code: string, // e.g. "+65"
  *   phone: string,        // local part (digits only or with separators)
- *   attendees?: string | number, // optional; sent as `pax`
+ *   attendees?: string | number, // optional; sent as `attendees`
  *   extras?: Record<string, string | number | boolean | null>, // top-level Wabo keys (must be in whitelist)
  * }
  *
  * Whitelisted Wabo custom-field keys (no others allowed):
- *   nrsimhachaturdasi2026, sunday_love_feast, prasadam_sponsor,
- *   pax, tier, preferred_date, occasion, slf_attendance_date
+ *   nrsimhachaturdasi2026, weekend_love_feast, prasadam_sponsor,
+ *   attendees, tier, preferred_date, occasion, wlf_attendance_date, wlf_attendance_day
  *
  * Auth: only `geta-host` header with WABO_API_KEY secret. No Authorization header.
  * Fire-and-forget — non-200 logs only, never blocks UX.
@@ -89,7 +89,7 @@ serve(async (req) => {
     const ph = String(phone || "").replace(/\D/g, "");
     const mobile_phone_number = cc + ph;
 
-    // Build payload — explicit fields first, then event_slug=yes, then optional pax + whitelisted extras
+    // Build payload — explicit fields first, then event_slug=yes, then optional attendees + whitelisted extras
     const payload: Record<string, string | number> = {
       name: String(name || ""),
       mobile_phone_number,
@@ -99,7 +99,7 @@ serve(async (req) => {
     };
 
     if (attendees !== undefined && attendees !== null && attendees !== "") {
-      payload.pax = String(attendees);
+      payload.attendees = String(attendees);
     }
 
     // Spread extras using only whitelisted keys

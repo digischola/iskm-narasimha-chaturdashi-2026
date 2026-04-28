@@ -223,14 +223,15 @@ function addClickTracking(html: string, trackBase: string, rid: string, et: stri
 }
 
 function buildCalendarUrl(eventDateIso: string, eventDay: string): string {
-  // Weekend Love Feast: 5:00 PM – 7:30 PM SGT (UTC+8) → 09:00–11:30 UTC
-  // Use full ISO datetime in UTC to avoid timezone-shift bugs in client calendars.
+  // Weekend Love Feast: 5:00 PM – 7:30 PM SGT (UTC+8).
+  // Pass FLOATING local times (no Z) plus ctz=Asia/Singapore so Google Calendar
+  // anchors the event to SGT and converts to the viewer's local time correctly.
   const ymd = eventDateIso.replace(/-/g, "");
-  const startUtc = `${ymd}T090000Z`;
-  const endUtc = `${ymd}T113000Z`;
+  const startLocal = `${ymd}T170000`;
+  const endLocal = `${ymd}T193000`;
   return `https://calendar.google.com/calendar/render?action=TEMPLATE` +
     `&text=${encodeURIComponent(`${eventDay} Love Feast — ISKM Singapore`)}` +
-    `&dates=${startUtc}/${endUtc}` +
+    `&dates=${startLocal}/${endLocal}` +
     `&ctz=Asia/Singapore` +
     `&details=${encodeURIComponent("Bhajan, Bhagavad Gītā Class, Ārati & Kīrtana, and free Prasādam feast.\n\nVenue: No.9 Lorong 29 Geylang, #03-02, Singapore 388065\n\nMore info: https://events.srikrishnamandir.org/weekend-love-feast")}` +
     `&location=${encodeURIComponent("No.9 Lorong 29 Geylang, #03-02, Singapore 388065")}`;
