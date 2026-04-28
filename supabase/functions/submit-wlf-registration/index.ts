@@ -139,6 +139,7 @@ Deno.serve(async (req) => {
           extras: {
             wlf_attendance_date: attendanceDate,
             wlf_attendance_day: attendanceDay,
+            wlf_attendees: attendees,
           },
         },
       });
