@@ -120,6 +120,7 @@ Deno.serve(async (req) => {
           registration_id: registrationId,
           name, email, attendees,
           event_date_iso: attendanceDate,
+          event_day: attendanceDay,
         },
       });
     } catch (emailErr) {
