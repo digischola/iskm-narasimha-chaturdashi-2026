@@ -774,7 +774,7 @@ export default function Admin() {
                         <th>Email</th>
                         <th>Phone</th>
                         {regEventTab === "nrsimha" && <><th>Pax</th><th>Conf</th><th>Reminder</th></>}
-                        {regEventTab === "slf" && <><th>Pax</th><th>Sunday</th><th>First Time</th></>}
+                        {regEventTab === "slf" && <><th>Pax</th><th>Day</th><th>First Time</th></>}
                         {regEventTab === "prasadam" && <><th>Tier</th><th>Date</th><th>Status</th></>}
                         <th>Submitted</th>
                       </tr>
@@ -812,7 +812,18 @@ export default function Admin() {
                                 <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
                                 <td style={{ color: "#1e3a6e", fontWeight: 600, fontSize: "13px", whiteSpace: "nowrap" }}>
                                   {r.attendance_date
-                                    ? new Date(r.attendance_date + "T00:00:00+08:00").toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })
+                                    ? (() => {
+                                        const d = new Date(r.attendance_date + "T00:00:00+08:00");
+                                        const dow = d.getUTCDay(); // 6 = Sat, 0 = Sun
+                                        const dayLabel = dow === 6 ? "Sat" : dow === 0 ? "Sun" : "";
+                                        const dayColor = dow === 6 ? "#f8a4c0" : "#f4c96b";
+                                        return (
+                                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                                            <span style={{ background: dayColor, color: "#1e3a6e", padding: "2px 6px", borderRadius: 4, fontSize: "11px", fontWeight: 700 }}>{dayLabel}</span>
+                                            {d.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })}
+                                          </span>
+                                        );
+                                      })()
                                     : <span style={{ color: "#aaa", fontWeight: 400 }}>—</span>}
                                 </td>
                                 <td>{r.first_time ? <span className="admin-badge sent">Yes</span> : "No"}</td>
