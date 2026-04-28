@@ -429,7 +429,7 @@
 }
 .slf .experience-section::before {
   content: ''; position: absolute; inset: 0;
-  background: url('/images/sunday-love-feast/9-congregation-seated-temple-hall-wide.webp') center/cover no-repeat;
+  background: url('/images/weekend-love-feast/9-congregation-seated-temple-hall-wide.webp') center/cover no-repeat;
   opacity: .08;
 }
 .slf .experience-content { position: relative; z-index: 1; }
@@ -635,7 +635,7 @@
 }
 .slf .final-cta::before {
   content: ''; position: absolute; inset: 0;
-  background: url('/images/sunday-love-feast/8-community-circle-dancing-joyful.webp') center/cover no-repeat;
+  background: url('/images/weekend-love-feast/8-community-circle-dancing-joyful.webp') center/cover no-repeat;
   opacity: .1;
 }
 .slf .final-cta .container { position: relative; z-index: 1; }
