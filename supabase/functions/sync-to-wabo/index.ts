@@ -16,13 +16,13 @@ const corsHeaders = {
  *   email?: string,
  *   country_code: string, // e.g. "+65"
  *   phone: string,        // local part (digits only or with separators)
- *   attendees?: string | number, // optional; sent as `pax`
+ *   attendees?: string | number, // optional; sent as `attendees`
  *   extras?: Record<string, string | number | boolean | null>, // top-level Wabo keys (must be in whitelist)
  * }
  *
  * Whitelisted Wabo custom-field keys (no others allowed):
- *   nrsimhachaturdasi2026, sunday_love_feast, prasadam_sponsor,
- *   pax, tier, preferred_date, occasion, slf_attendance_date
+ *   nrsimhachaturdasi2026, weekend_love_feast, prasadam_sponsor,
+ *   attendees, tier, preferred_date, occasion, wlf_attendance_date, wlf_attendance_day
  *
  * Auth: only `geta-host` header with WABO_API_KEY secret. No Authorization header.
  * Fire-and-forget — non-200 logs only, never blocks UX.
