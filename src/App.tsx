@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef, lazy, Suspense } from "react";
 import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 const WeekendLoveFeast = lazy(() => import("@/pages/WeekendLoveFeast"));
