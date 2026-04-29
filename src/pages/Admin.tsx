@@ -282,7 +282,7 @@ export default function Admin() {
   const emailStatFailed = uniqueEmailList.filter(e => e.status === "failed" || e.status === "dlq").length;
   const emailStatSuppressed = uniqueEmailList.filter(e => e.status === "suppressed").length;
 
-  // Tracking stats
+  // Tracking stats — overall (all events combined, used on the All-events overview & Emails page)
   const openEvents = trackingEvents.filter(t => t.event_type === "open");
   const clickEvents = trackingEvents.filter(t => t.event_type === "click");
   const uniqueOpens = new Set(openEvents.map(t => t.recipient_email)).size;
@@ -290,6 +290,39 @@ export default function Admin() {
   const kavachaClicks = clickEvents.filter(t => t.link_name === "buy_kavacha").length;
   const directionsClicks = clickEvents.filter(t => t.link_name === "directions").length;
   const openRate = emailStatSent > 0 ? ((uniqueOpens / emailStatSent) * 100).toFixed(1) : "0";
+
+  // Per-event tracking buckets — email_type prefixes:
+  //   NC      → "confirmation" / "reminder"  (legacy bare names)
+  //   WLF/SLF → "slf-*" or "wlf-*"
+  //   Prasadam→ "prasadam-*"
+  const isNcType = (et: string) => et === "confirmation" || et === "reminder" || et.startsWith("nc-") || et.startsWith("nc_");
+  const isSlfType = (et: string) => et.startsWith("slf-") || et.startsWith("wlf-") || et.startsWith("slf_") || et.startsWith("wlf_");
+  const isPrasadamType = (et: string) => et.startsWith("prasadam-") || et.startsWith("prasadam_");
+
+  const buildEventEngagement = (predicate: (et: string) => boolean, sentCount: number) => {
+    const opens = trackingEvents.filter(t => t.event_type === "open" && predicate(t.email_type || ""));
+    const clicks = trackingEvents.filter(t => t.event_type === "click" && predicate(t.email_type || ""));
+    const uniq = new Set(opens.map(t => t.recipient_email)).size;
+    return {
+      opens: opens.length,
+      uniqueOpens: uniq,
+      openRate: sentCount > 0 ? ((uniq / sentCount) * 100).toFixed(1) : "0",
+      calendarClicks: clicks.filter(c => c.link_name === "calendar").length,
+      directionsClicks: clicks.filter(c => c.link_name === "directions").length,
+      kavachaClicks: clicks.filter(c => c.link_name === "buy_kavacha").length,
+      shareClicks: clicks.filter(c => (c.link_name || "").startsWith("share_")).length,
+    };
+  };
+
+  // Sent-counts per event are best approximated by template_name on email_send_log
+  const ncSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("nc-")).length
+              || uniqueEmailList.filter(e => e.status === "sent" && !((e.template_name || "").includes("wlf") || (e.template_name || "").includes("prasadam"))).length;
+  const slfSent = uniqueEmailList.filter(e => e.status === "sent" && ((e.template_name || "").includes("wlf") || (e.template_name || "").includes("slf"))).length;
+  const prasadamSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("prasadam")).length;
+
+  const ncEng = buildEventEngagement(isNcType, ncSent);
+  const slfEng = buildEventEngagement(isSlfType, slfSent);
+  const prasadamEng = buildEventEngagement(isPrasadamType, prasadamSent);
 
   // ═══ CHART: Registrations over time (combined) ═══
   const buildChartData = (tab: EventTab) => {
@@ -618,16 +651,16 @@ export default function Admin() {
                   <div className="admin-stats-row">
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Email Open Rate</div>
-                      <div className="admin-stat-value green">{openRate}%</div>
-                      <div className="admin-stat-sub">{uniqueOpens} unique opens</div>
+                      <div className="admin-stat-value green">{ncEng.openRate}%</div>
+                      <div className="admin-stat-sub">{ncEng.uniqueOpens} unique opens</div>
                     </div>
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Calendar Saves</div>
-                      <div className="admin-stat-value">{calendarClicks}</div>
+                      <div className="admin-stat-value">{ncEng.calendarClicks}</div>
                     </div>
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Kavacha Clicks</div>
-                      <div className="admin-stat-value">{kavachaClicks}</div>
+                      <div className="admin-stat-value">{ncEng.kavachaClicks}</div>
                     </div>
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Reminders Sent</div>
@@ -639,26 +672,48 @@ export default function Admin() {
 
               {/* ═══ SLF ═══ */}
               {eventTab === "slf" && (
-                <div className="admin-stats-row">
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">Total Registrations</div>
-                    <div className="admin-stat-value">{slfTotal}</div>
+                <>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Registrations</div>
+                      <div className="admin-stat-value">{slfTotal}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Attendees</div>
+                      <div className="admin-stat-value gold">{slfAttendees}</div>
+                      <div className="admin-stat-sub">Avg group: {slfAvgGroup}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">First-Time Visitors</div>
+                      <div className="admin-stat-value green">{slfFirstTime}</div>
+                      <div className="admin-stat-sub">{slfTotal > 0 ? `${((slfFirstTime / slfTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Returning</div>
+                      <div className="admin-stat-value">{slfReturning}</div>
+                    </div>
                   </div>
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">Total Attendees</div>
-                    <div className="admin-stat-value gold">{slfAttendees}</div>
-                    <div className="admin-stat-sub">Avg group: {slfAvgGroup}</div>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Email Open Rate</div>
+                      <div className="admin-stat-value green">{slfEng.openRate}%</div>
+                      <div className="admin-stat-sub">{slfEng.uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Calendar Saves</div>
+                      <div className="admin-stat-value">{slfEng.calendarClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Directions Clicks</div>
+                      <div className="admin-stat-value">{slfEng.directionsClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Reminders Sent</div>
+                      <div className="admin-stat-value" style={{ color: "var(--text-light)" }}>—</div>
+                      <div className="admin-stat-sub">Coming soon</div>
+                    </div>
                   </div>
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">First-Time Visitors</div>
-                    <div className="admin-stat-value green">{slfFirstTime}</div>
-                    <div className="admin-stat-sub">{slfTotal > 0 ? `${((slfFirstTime / slfTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
-                  </div>
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">Returning</div>
-                    <div className="admin-stat-value">{slfReturning}</div>
-                  </div>
-                </div>
+                </>
               )}
 
               {/* ═══ PRASADAM ═══ */}
@@ -682,6 +737,28 @@ export default function Admin() {
                       <div className="admin-stat-label">Sponsorship Value</div>
                       <div className="admin-stat-value gold">${totalSponsorshipValue.toLocaleString()}</div>
                       <div className="admin-stat-sub">Confirmed + completed</div>
+                    </div>
+                  </div>
+
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Email Open Rate</div>
+                      <div className="admin-stat-value green">{prasadamEng.openRate}%</div>
+                      <div className="admin-stat-sub">{prasadamEng.uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Email Opens</div>
+                      <div className="admin-stat-value">{prasadamEng.opens}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Link Clicks</div>
+                      <div className="admin-stat-value">{prasadamEng.calendarClicks + prasadamEng.directionsClicks + prasadamEng.shareClicks}</div>
+                      <div className="admin-stat-sub">Calendar / directions / share</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Reminders Sent</div>
+                      <div className="admin-stat-value" style={{ color: "var(--text-light)" }}>—</div>
+                      <div className="admin-stat-sub">Coming soon</div>
                     </div>
                   </div>
 
