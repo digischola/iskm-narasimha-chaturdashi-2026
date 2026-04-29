@@ -2,12 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ═══ BRAND TOKENS ═══ */
+/* ═══ BRAND TOKENS — single source of truth (see ISKM-Brand-Guidelines.md) ═══ */
 :root {
-  --navy:#1e3a6e;--pink:#f8a4c0;--gold:#f4c96b;--cream:#fdf5ed;
-  --navy-2:#2d4a7c;--pink-light:#ffb6c1;--gold-light:#f5d78e;
-  --text-dark:#333;--text-muted:#666;--red:#d32f2f;--green:#4caf50;--white:#fff;
-  --navy-deep:#162d58;--cream-warm:#f9efe2;
+  /* Brand primary */
+  --navy:#1e3a6e;--navy-2:#2d4a7c;--navy-deep:#162d58;
+  --gold:#f4c96b;--gold-light:#f5d78e;--gold-dark:#c79a3a;
+  --pink:#f8a4c0;--pink-light:#ffb6c1;--pink-hover:#f590b3;
+  /* Surface */
+  --cream:#fdf5ed;--cream-warm:#f9efe2;--white:#fff;
+  --surface-admin:#fdf5ed;
+  /* Text */
+  --text-dark:#333;--text-muted:#666;--text-light:#999;
+  /* Borders */
+  --border:#e5ded5;--border-soft:#eee8df;--border-warm:#e8e2d9;--border-light:#f0ebe3;
+  /* Status */
+  --red:#d32f2f;--green:#4caf50;
+  --warn:#e67e22;--warn-bg:#fff8e8;--warn-border:#f0d894;--warn-ink:#6d4a1a;
+  --ok:#2e7d32;--ok-bg:#e8f5e9;
+  --err:#c62828;--err-bg:#fce4ec;--err-ink:#c0392b;
+  --suppressed:#6a1b9a;--suppressed-bg:#f3e5f5;
+  --pending-ink:#e65100;--pending-bg:#fff3e0;
+  /* Channel */
+  --whatsapp:#25D366;--telegram:#0088cc;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
