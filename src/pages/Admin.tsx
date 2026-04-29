@@ -740,6 +740,28 @@ export default function Admin() {
                     </div>
                   </div>
 
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Email Open Rate</div>
+                      <div className="admin-stat-value green">{prasadamEng.openRate}%</div>
+                      <div className="admin-stat-sub">{prasadamEng.uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Email Opens</div>
+                      <div className="admin-stat-value">{prasadamEng.opens}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Link Clicks</div>
+                      <div className="admin-stat-value">{prasadamEng.calendarClicks + prasadamEng.directionsClicks + prasadamEng.shareClicks}</div>
+                      <div className="admin-stat-sub">Calendar / directions / share</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Reminders Sent</div>
+                      <div className="admin-stat-value" style={{ color: "var(--text-light)" }}>—</div>
+                      <div className="admin-stat-sub">Coming soon</div>
+                    </div>
+                  </div>
+
                   {prasadamNeedsBackfill.length > 0 && (
                     <div className="admin-nudge-banner">
                       <i className="fas fa-exclamation-triangle"></i>
