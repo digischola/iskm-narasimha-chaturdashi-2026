@@ -16,6 +16,10 @@
   --white: #fff;
   --navy-deep: #162d58;
   --cream-warm: #f9efe2;
+  --border: #e5ded5;
+  --placeholder: #b5aea5;
+  --whatsapp: #25D366;
+  --telegram: #0088cc;
 }
 
 .fpp * { margin: 0; padding: 0; box-sizing: border-box; }
