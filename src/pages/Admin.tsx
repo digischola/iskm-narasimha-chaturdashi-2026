@@ -672,26 +672,48 @@ export default function Admin() {
 
               {/* ═══ SLF ═══ */}
               {eventTab === "slf" && (
-                <div className="admin-stats-row">
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">Total Registrations</div>
-                    <div className="admin-stat-value">{slfTotal}</div>
+                <>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Registrations</div>
+                      <div className="admin-stat-value">{slfTotal}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Attendees</div>
+                      <div className="admin-stat-value gold">{slfAttendees}</div>
+                      <div className="admin-stat-sub">Avg group: {slfAvgGroup}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">First-Time Visitors</div>
+                      <div className="admin-stat-value green">{slfFirstTime}</div>
+                      <div className="admin-stat-sub">{slfTotal > 0 ? `${((slfFirstTime / slfTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Returning</div>
+                      <div className="admin-stat-value">{slfReturning}</div>
+                    </div>
                   </div>
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">Total Attendees</div>
-                    <div className="admin-stat-value gold">{slfAttendees}</div>
-                    <div className="admin-stat-sub">Avg group: {slfAvgGroup}</div>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Email Open Rate</div>
+                      <div className="admin-stat-value green">{slfEng.openRate}%</div>
+                      <div className="admin-stat-sub">{slfEng.uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Calendar Saves</div>
+                      <div className="admin-stat-value">{slfEng.calendarClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Directions Clicks</div>
+                      <div className="admin-stat-value">{slfEng.directionsClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Reminders Sent</div>
+                      <div className="admin-stat-value" style={{ color: "var(--text-light)" }}>—</div>
+                      <div className="admin-stat-sub">Coming soon</div>
+                    </div>
                   </div>
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">First-Time Visitors</div>
-                    <div className="admin-stat-value green">{slfFirstTime}</div>
-                    <div className="admin-stat-sub">{slfTotal > 0 ? `${((slfFirstTime / slfTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
-                  </div>
-                  <div className="admin-stat-card">
-                    <div className="admin-stat-label">Returning</div>
-                    <div className="admin-stat-value">{slfReturning}</div>
-                  </div>
-                </div>
+                </>
               )}
 
               {/* ═══ PRASADAM ═══ */}
