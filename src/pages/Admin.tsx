@@ -651,16 +651,16 @@ export default function Admin() {
                   <div className="admin-stats-row">
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Email Open Rate</div>
-                      <div className="admin-stat-value green">{openRate}%</div>
-                      <div className="admin-stat-sub">{uniqueOpens} unique opens</div>
+                      <div className="admin-stat-value green">{ncEng.openRate}%</div>
+                      <div className="admin-stat-sub">{ncEng.uniqueOpens} unique opens</div>
                     </div>
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Calendar Saves</div>
-                      <div className="admin-stat-value">{calendarClicks}</div>
+                      <div className="admin-stat-value">{ncEng.calendarClicks}</div>
                     </div>
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Kavacha Clicks</div>
-                      <div className="admin-stat-value">{kavachaClicks}</div>
+                      <div className="admin-stat-value">{ncEng.kavachaClicks}</div>
                     </div>
                     <div className="admin-stat-card">
                       <div className="admin-stat-label">Reminders Sent</div>
