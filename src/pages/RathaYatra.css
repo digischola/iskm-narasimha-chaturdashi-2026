@@ -201,6 +201,11 @@ button { cursor: pointer; font-family: inherit; }
 /* Soft vignette behind hero text — gentle dimming where words sit */
 .hero-content {
   position: relative; z-index: 2;
+  animation: hero-content-in 0.8s ease-out 0.3s both;
+}
+@keyframes hero-content-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .hero-content::before {
   content: '';
