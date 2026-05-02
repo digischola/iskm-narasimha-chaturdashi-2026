@@ -329,6 +329,7 @@ export default function Admin() {
   const isNcType = (et: string) => et === "confirmation" || et === "reminder" || et.startsWith("nc-") || et.startsWith("nc_");
   const isSlfType = (et: string) => et.startsWith("slf-") || et.startsWith("wlf-") || et.startsWith("slf_") || et.startsWith("wlf_");
   const isPrasadamType = (et: string) => et.startsWith("prasadam-") || et.startsWith("prasadam_");
+  const isRyType = (et: string) => et.startsWith("ry-") || et.startsWith("ry_");
 
   const buildEventEngagement = (predicate: (et: string) => boolean, sentCount: number) => {
     const opens = trackingEvents.filter(t => t.event_type === "open" && predicate(t.email_type || ""));
@@ -347,13 +348,15 @@ export default function Admin() {
 
   // Sent-counts per event are best approximated by template_name on email_send_log
   const ncSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("nc-")).length
-              || uniqueEmailList.filter(e => e.status === "sent" && !((e.template_name || "").includes("wlf") || (e.template_name || "").includes("prasadam"))).length;
+              || uniqueEmailList.filter(e => e.status === "sent" && !((e.template_name || "").includes("wlf") || (e.template_name || "").includes("prasadam") || (e.template_name || "").includes("ry-"))).length;
   const slfSent = uniqueEmailList.filter(e => e.status === "sent" && ((e.template_name || "").includes("wlf") || (e.template_name || "").includes("slf"))).length;
   const prasadamSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("prasadam")).length;
+  const rySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("ry-")).length;
 
   const ncEng = buildEventEngagement(isNcType, ncSent);
   const slfEng = buildEventEngagement(isSlfType, slfSent);
   const prasadamEng = buildEventEngagement(isPrasadamType, prasadamSent);
+  const ryEng = buildEventEngagement(isRyType, rySent);
 
   // ═══ CHART: Registrations over time (combined) ═══
   const buildChartData = (tab: EventTab) => {
