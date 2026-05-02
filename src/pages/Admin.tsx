@@ -379,9 +379,10 @@ export default function Admin() {
   const chartData = buildChartData(eventTab);
 
   // ═══ FILTERED VIEWS ═══
-  const activeRegList: (Registration | SlfRegistration | PrasadamSponsorship)[] =
+  const activeRegList: (Registration | SlfRegistration | PrasadamSponsorship | RyRegistration)[] =
     regEventTab === "slf" ? slfData
       : regEventTab === "prasadam" ? prasadamData
+      : regEventTab === "ratha_yatra" ? ryData
       : ncData;
 
   const filteredReg = activeRegList.filter((r: any) => {
