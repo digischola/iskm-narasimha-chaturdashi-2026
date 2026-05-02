@@ -1,84 +1,39 @@
+## Changes
 
-# Performance Optimization — Ratha Yatra Page
+### 1. About section: collapsible "Read more" text
 
-The Lighthouse report shows FCP 5.4s, LCP 10.5s, Speed Index 10.9s. Here are the key bottlenecks and fixes, all preserving existing functionality and animations.
+Show only the first two paragraphs (heading + "Ratha Yatra is one of India's oldest..." + "Traditionally held on the second day..."). The remaining three paragraphs will be hidden behind a "Read more about the festival" toggle button, with a smooth expand/collapse animation.
 
----
+- Add `readMore` state to the `About` component
+- Wrap paragraphs 3-5 in a `.read-more-content` div
+- Add a toggle button styled like the Rama Utsav page (text-only, navy color, with arrow indicator)
+- Add `.read-more-content` CSS with max-height/opacity transition
 
-## 1. Compress images (~6.2 MB total, biggest win)
+### 2. Reduce sticky nav height
 
-All 25 images in `/public/images/ratha-yatra/` are unoptimized webp files (146KB–409KB each). Resize and re-compress them to appropriate display dimensions:
-- Hero image: max 1200px wide, quality 80 → ~80KB
-- Gallery images (g1–g12): max 600px wide, quality 75 → ~40–60KB each
-- Highlight cards (h1–h6): max 500px wide, quality 75 → ~30–50KB each
-- Story/about/other images: similar treatment
+The sticky header currently has `height: 56px`. After removing the ribbon, there's too much visual gap. Reduce the nav height to `48px` and adjust the logo size from 32px to 28px. Update `.chip-bar` top offset and `scroll-padding-top` accordingly.
 
-Target: reduce total from ~6.2MB to ~1.2MB.
+### 3. Map/Location layout cleanup
 
-## 2. Defer YouTube iframe until visible
+The current location section has a separate grid with `.loc-map` using absolute-positioned iframe causing whitespace issues. Switch to the Rama Utsav pattern:
 
-The YouTube embed loads immediately with `autoplay=1`, pulling in ~1–2MB of YouTube scripts/player resources. Replace it with an IntersectionObserver-based facade:
-- Show a static thumbnail initially (use YouTube's thumbnail URL)
-- Only insert the actual `<iframe>` when the section scrolls into view
-- Keeps autoplay behavior once loaded — no functionality change
+- Use a `bg-white rounded-2xl overflow-hidden shadow grid grid-cols-1 md:grid-cols-2` container (via CSS classes on `.location-wrap`)
+- Make the map iframe use `w-full h-full min-h` instead of absolute positioning
+- Remove the `.loc-map` absolute positioning and let the iframe flow naturally within the grid cell
+- This eliminates the whitespace gap around the map
 
-## 3. Defer Google Maps iframe until visible
+### Files modified
 
-Same pattern as YouTube — only load the Maps iframe when the Location section enters the viewport.
-
-## 4. Optimize font loading (render-blocking)
-
-Currently in `index.html`:
-- Google Fonts CSS is render-blocking (`<link rel="stylesheet">`)
-- Font Awesome full CSS (~100KB) is loaded for only ~39 icons
-
-Fixes:
-- Add `font-display: swap` via the Google Fonts URL parameter (`&display=swap` — already present, good)
-- Add `rel="preload"` + `as="style"` for the Google Fonts link, with `onload` swap to stylesheet
-- For Font Awesome: add `media="print" onload="this.media='all'"` pattern to defer it
-
-## 5. Add explicit width/height to all images
-
-Several images lack `width`/`height` attributes, contributing to CLS (0.102). Add dimensions to:
-- Story images, highlight cards, about image, gallery images
-
-## 6. Preload hero image with correct path
-
-The `<link rel="preload">` for the hero is in the Helmet component (rendered client-side), so it fires too late. Move it to `index.html` for the Ratha Yatra route, or add it as a conditional preload.
-
----
-
-## Technical Details
-
-### Image compression script
-Will use ImageMagick via nix to batch-resize all images in-place, keeping webp format.
-
-### YouTube facade component
-```tsx
-function LazyYouTube({ src, title }) {
-  const [load, setLoad] = useState(false);
-  const ref = useRef(null);
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setLoad(true); obs.disconnect(); } }, { rootMargin: '200px' });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
-  return (
-    <div ref={ref} className="yt-responsive">
-      {load ? <iframe src={src} title={title} ... /> : <div className="yt-placeholder" />}
-    </div>
-  );
-}
-```
-
-### Font Awesome deferral
-```html
-<link rel="stylesheet" href="...font-awesome..." media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="...font-awesome..."></noscript>
-```
-
-### Estimated impact
-- Image compression: FCP -1s, LCP -3–5s, Speed Index -3–4s
-- YouTube defer: FCP -0.5s, TBT reduction
-- Font defer: FCP -0.5–1s
-- Combined target: LCP under 4s, FCP under 2.5s
+- `src/pages/RathaYatra.tsx` -- Add `readMore` state to About, wrap paragraphs, add toggle button
+- `src/pages/RathaYatra.css` -- Add `.read-more-content` styles, reduce nav height, fix map layout  
+  
+4. Copy fix on the Ratha Yatra exit-intent modal — current text says "14,000+ already saved their seat" which is factually wrong since 2026 registrations are just opening. The 14,000+ figure refers to 2025 attendance, not 2026 sign-ups, and we don't want to claim social proof we haven't earned yet.
+  In src/pages/RathaYatra.tsx, inside the ExitIntentModal component, please update the modal copy as follows:
+  1. Eyebrow line: change to "Wait, don't leave yet"
+     (drop the em-dash, replace with comma — em-dashes are banned across this brand's voice)
+  2. Headline (h3): change "14,000+ already saved their seat" to "14,000+ joined us last year"
+  3. Body paragraph (p): change to:
+     "Sunday, 5 July at Clementi Stadium. Three chariots, ecstatic kīrtana, free 5-course Prasadam. Drop your name and email and we'll send you a reminder so you don't miss it."
+  4. Keep the CTA "Save my spot →" and the "No thanks, I'll register later" skip link as-is.
+  5. Success state: keep the existing copy ("You're on the list! · We'll send you a reminder before Sunday, 5 July. See you at Clementi Stadium.") — that one is already grounded.
+  This keeps the FOMO (14,000+ is a real number that builds authority) but anchors it correctly in last year's scale rather than implying current-year over-claim. Voice principle for this brand: factual, grounded, no marketing puff, no em-dashes. 
