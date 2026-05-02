@@ -216,7 +216,7 @@ button { cursor: pointer; font-family: inherit; }
 /* Framed hero painting — Narasimha style */
 .hero-painting {
   position: relative;
-  width: 300px;
+  width: min(420px, 50vw);
   flex-shrink: 0;
   margin-bottom: 28px;
 }
