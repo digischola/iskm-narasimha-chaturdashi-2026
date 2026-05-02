@@ -334,18 +334,6 @@ function Hero() {
         ))}
       </div>
       <div className="hero-top">
-        {/* Framed hero painting */}
-        <div className="hero-painting" ref={parallaxRef}>
-          <img
-            src="/images/ratha-yatra/hero.webp"
-            alt="Lord Jagannath chariot procession at Clementi Stadium"
-            fetchPriority="high"
-            decoding="async"
-            loading="eager"
-            width="680"
-            height="850"
-          />
-        </div>
         <div className="hero-content hero-centered">
           <div className="hero-eyebrow">ISKM Singapore Presents</div>
           <h1>
@@ -399,6 +387,18 @@ function Hero() {
           <a href="#register" className="btn-hero-cta cta-glow">
             Register Free →
           </a>
+        </div>
+        {/* Framed hero painting */}
+        <div className="hero-painting" ref={parallaxRef}>
+          <img
+            src="/images/ratha-yatra/hero.webp"
+            alt="Lord Jagannath chariot procession at Clementi Stadium"
+            fetchPriority="high"
+            decoding="async"
+            loading="eager"
+            width="680"
+            height="850"
+          />
         </div>
       </div>
     </section>
