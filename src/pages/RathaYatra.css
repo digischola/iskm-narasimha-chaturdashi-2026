@@ -1645,8 +1645,8 @@ button { cursor: pointer; font-family: inherit; }
 /* ─── Split-flap countdown digit (per-digit flip card) — Ratha Yātrā page only ─── */
 .ry-countdown .flip-num {
   font-family: 'Playfair Display', serif;
-  font-size: 24px; font-weight: 700;
-  color: var(--cream); line-height: 1;
+  font-size: 26px; font-weight: 700;
+  color: var(--gold); line-height: 1;
   display: inline-flex;
   gap: 3px;
   font-variant-numeric: tabular-nums;
