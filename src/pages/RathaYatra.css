@@ -74,10 +74,11 @@ button { cursor: pointer; font-family: inherit; }
   position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
   background: linear-gradient(135deg, var(--navy), var(--navy-deep));
   color: var(--white); text-align: center;
-  padding: 10px 20px; font-size: 13px; font-weight: 600;
+  padding: 8px 20px; font-size: 13px; font-weight: 600;
   letter-spacing: .3px;
   display: flex; align-items: center; justify-content: center;
-  gap: 8px; flex-wrap: wrap;
+  gap: 8px; flex-wrap: nowrap;
+  height: 37px;
 }
 .ribbon .hl { color: var(--gold); }
 .ribbon .ribbon-cta {
