@@ -370,11 +370,12 @@ button { cursor: pointer; font-family: inherit; }
   50% { box-shadow: 0 8px 32px rgba(248, 164, 192, .7); }
 }
 @media (max-width: 768px) {
-  .hero-top { grid-template-columns: 1fr; text-align: center; padding: 40px 30px 40px; }
+  .hero-top { grid-template-columns: 1fr; text-align: center; padding: 30px 20px 30px; }
   .hero-content { padding-right: 0; display: flex; flex-direction: column; align-items: center; }
-  .hero-painting { width: 280px; margin: 0 auto 24px; order: -1; }
+  .hero-painting { width: 240px; margin: 0 auto 24px; order: -1; }
   .hero-meta { align-items: center; }
   .hero-meta-stacked { flex-direction: column; gap: 12px; }
+  .hero-tagline { text-align: center; }
   .countdown-row { gap: 8px; }
   .cd-pill { padding: 10px 12px; min-width: 60px; }
   .cd-pill .num { font-size: 22px; }
