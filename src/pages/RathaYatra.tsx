@@ -1089,18 +1089,14 @@ function ExitIntentModal() {
       triggerModal();
     };
 
-    // Mobile: inactivity (no scroll/touch for 45s after 15s on page & 15% scroll)
+    // Inactivity: no scroll/touch for 15s triggers modal
     const resetInactivity = () => {
       if (shownRef.current) return;
       if (inactivityTimer) clearTimeout(inactivityTimer);
       inactivityTimer = setTimeout(() => {
         if (shownRef.current) return;
-        if (Date.now() - loadTime < 15000) return;
-        const docH = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docH > 0 ? window.scrollY / docH : 0;
-        if (progress < 0.15) return;
         triggerModal();
-      }, 45000);
+      }, 15000);
     };
 
     const triggerModal = () => {
