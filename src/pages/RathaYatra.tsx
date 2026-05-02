@@ -1029,8 +1029,8 @@ function Footer() {
     <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-col">
-          <img src="/images/logo.webp" alt="Sri Krishna Mandir" width="38" height="38" />
-          <p className="footer-brand">Sri Krishna Mandir Singapore</p>
+          <img src="/images/logo.webp" alt="ISKM Singapore" width="52" height="52" />
+          <p className="footer-brand">ISKM Singapore</p>
           <p className="footer-tag">25+ years of seva</p>
           <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">srikrishnamandir.org</a>
         </div>
@@ -1047,11 +1047,10 @@ function Footer() {
           <p>No.9 Lorong 29 Geylang<br />#03-02, Singapore 388065</p>
           <p>+65 6250 2280</p>
           <a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a>
-          <a href="https://wa.me/6562502280" target="_blank" rel="noopener noreferrer">WhatsApp us →</a>
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; 2026 Sri Krishna Mandir Singapore. All rights reserved.</p>
+        <p>&copy; 2026 International Sri Krishna Mandir. All rights reserved.</p>
       </div>
     </footer>
   );
