@@ -1753,16 +1753,23 @@ function ExitIntentModal() {
   );
 }
 
-/* ═══ MOBILE BOTTOM NAV (4 icons) ═══ */
-function MobileSticky() {
+/* ═══ MOBILE BOTTOM NAV ═══ */
+function MobileSticky({ pastHero }: { pastHero: boolean }) {
   return (
     <>
-      <nav className="mobile-bottom-nav" aria-label="Quick navigation">
+      {/* Sticky Register button — visible while in hero */}
+      <div className={`mobile-register-sticky${pastHero ? " hidden" : ""}`}>
+        <a href="#register" className="btn-mobile-register cta-glow">
+          Register Now — Free
+        </a>
+      </div>
+      {/* Nav bar — slides up after scrolling past hero */}
+      <nav className={`mobile-bottom-nav${pastHero ? " visible" : ""}`} aria-label="Quick navigation">
         <a href="#schedule" className="mb-item">
           <i className="fas fa-calendar-day"></i>
           <span>Schedule</span>
         </a>
-        <a href="#main-content" className="mb-item">
+        <a href="#highlights" className="mb-item">
           <i className="fas fa-star"></i>
           <span>Highlights</span>
         </a>
