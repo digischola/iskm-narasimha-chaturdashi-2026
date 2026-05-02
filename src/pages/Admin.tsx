@@ -20,6 +20,18 @@ interface Registration {
   reminder_sent?: boolean;
 }
 
+interface RyRegistration {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  attendees: number;
+  is_volunteer: boolean;
+  confirmation_sent: boolean;
+  reminder_sent: boolean;
+  created_at: string;
+}
+
 interface SlfRegistration {
   id: string;
   name: string;
