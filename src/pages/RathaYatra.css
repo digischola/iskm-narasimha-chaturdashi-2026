@@ -241,10 +241,14 @@ button { cursor: pointer; font-family: inherit; }
   pointer-events: none;
 }
 .hero-eyebrow {
-  font-size: 12px; letter-spacing: 3.5px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; letter-spacing: 2.5px;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 16px; font-weight: 600;
+  margin-bottom: 18px; font-weight: 600;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; width: 30px; height: 1.5px; background: var(--gold);
 }
 .hero h1 {
   font-size: clamp(40px, 7vw, 76px);
