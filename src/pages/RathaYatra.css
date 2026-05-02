@@ -35,7 +35,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 62px; }
+html { scroll-behavior: smooth; scroll-padding-top: 56px; }
 body {
   font-family: 'Source Sans Pro', sans-serif;
   color: var(--text);
@@ -148,7 +148,7 @@ button { cursor: pointer; font-family: inherit; }
 
 /* ═══ MOBILE CHIP BAR — sticky below the header on mobile, always visible ═══ */
 .chip-bar {
-  position: fixed; top: 48px; left: 0; right: 0; z-index: 999;
+  position: fixed; top: 42px; left: 0; right: 0; z-index: 999;
   display: none; gap: 6px; padding: 10px 12px;
   background: rgba(253, 245, 237, .98);
   backdrop-filter: blur(14px);
