@@ -508,6 +508,25 @@ button { cursor: pointer; font-family: inherit; }
   margin-bottom: 14px; line-height: 1.7;
 }
 .editorial-text p strong { color: var(--navy-deep); font-weight: 700; }
+
+/* ═══ Read more toggle ═══ */
+.read-more-btn {
+  display: inline-block;
+  background: none; border: none; padding: 0; margin: 6px 0 0;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px; font-weight: 700;
+  color: var(--navy-2); cursor: pointer;
+}
+.read-more-btn:hover { text-decoration: underline; }
+.read-more-content {
+  max-height: 0; overflow: hidden;
+  transition: max-height .5s ease, opacity .4s ease;
+  opacity: 0;
+}
+.read-more-content.open {
+  max-height: 600px; opacity: 1;
+}
+
 @media (max-width: 768px) {
   .editorial-inner { grid-template-columns: 1fr; gap: 30px; }
 }
