@@ -1,6 +1,31 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.101.1/cors";
 
+/**
+ * Multi-event registration handler.
+ * Accepts optional `event_slug` to dispatch to the right table + confirmation email.
+ * Default (no slug) = Narasimha Caturdasi (registrations table).
+ */
+
+interface EventConfig {
+  table: string;
+  confirmationFn: string;
+  phoneRequired: boolean;
+}
+
+const EVENT_CONFIGS: Record<string, EventConfig> = {
+  default: {
+    table: "registrations",
+    confirmationFn: "send-nc-confirmation",
+    phoneRequired: true,
+  },
+  ratha_yatra_2026: {
+    table: "ratha_yatra_registrations",
+    confirmationFn: "send-rathayatra-confirmation",
+    phoneRequired: true,
+  },
+};
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -8,6 +33,8 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
+    const eventSlug = typeof body.event_slug === "string" ? body.event_slug : "default";
+    const config = EVENT_CONFIGS[eventSlug] || EVENT_CONFIGS["default"];
 
     // Validate required fields
     const name = typeof body.name === "string" ? body.name.trim() : "";
@@ -28,11 +55,14 @@ Deno.serve(async (req) => {
     const attendees = Math.min(Math.max(parseInt(body.attendees) || 1, 1), 20);
     const rawPhone = typeof body.phone === "string" ? body.phone.trim().slice(0, 30) : "";
     const phone = rawPhone ? rawPhone.replace(/[\s\-().]/g, "") : "";
-    if (!phone || !/^\+\d{8,15}$/.test(phone)) {
-      return new Response(JSON.stringify({ error: "Valid phone number is required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+
+    if (config.phoneRequired) {
+      if (!phone || !/^\+\d{8,15}$/.test(phone)) {
+        return new Response(JSON.stringify({ error: "Valid phone number is required" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -41,7 +71,7 @@ Deno.serve(async (req) => {
 
     // Check for duplicate email
     const { data: emailMatch } = await supabase
-      .from("registrations")
+      .from(config.table)
       .select("id")
       .eq("email", email)
       .maybeSingle();
@@ -56,7 +86,7 @@ Deno.serve(async (req) => {
     // Check for duplicate phone (if provided)
     if (phone) {
       const { data: phoneMatch } = await supabase
-        .from("registrations")
+        .from(config.table)
         .select("id")
         .eq("phone", phone)
         .maybeSingle();
@@ -72,13 +102,20 @@ Deno.serve(async (req) => {
     // Generate registration ID for tracking
     const registrationId = crypto.randomUUID();
 
-    const { error } = await supabase.from("registrations").insert({
+    const insertData: Record<string, unknown> = {
       id: registrationId,
       name,
       email,
-      phone,
+      phone: phone || null,
       attendees,
-    });
+    };
+
+    // Only include is_volunteer if the table supports it
+    if (typeof body.is_volunteer === "boolean") {
+      insertData.is_volunteer = body.is_volunteer;
+    }
+
+    const { error } = await supabase.from(config.table).insert(insertData);
 
     if (error) {
       console.error("Insert error:", error);
@@ -90,7 +127,7 @@ Deno.serve(async (req) => {
 
     // Trigger confirmation email (fire and forget)
     try {
-      await supabase.functions.invoke("send-nc-confirmation", {
+      await supabase.functions.invoke(config.confirmationFn, {
         body: {
           registration_id: registrationId,
           name,
@@ -100,7 +137,6 @@ Deno.serve(async (req) => {
     } catch (emailErr) {
       console.error("Failed to trigger confirmation email:", emailErr);
     }
-
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,

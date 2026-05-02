@@ -20,6 +20,18 @@ interface Registration {
   reminder_sent?: boolean;
 }
 
+interface RyRegistration {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  attendees: number;
+  is_volunteer: boolean;
+  confirmation_sent: boolean;
+  reminder_sent: boolean;
+  created_at: string;
+}
+
 interface SlfRegistration {
   id: string;
   name: string;
@@ -69,7 +81,7 @@ interface TrackingEvent {
 }
 
 type Page = "overview" | "registrations" | "prasadam" | "emails";
-type EventTab = "all" | "nrsimha" | "slf" | "prasadam";
+type EventTab = "all" | "nrsimha" | "slf" | "prasadam" | "ratha_yatra";
 
 const ROWS_PER_PAGE = 10;
 
@@ -91,6 +103,7 @@ const TIER_LABEL: Record<string, string> = {
 export default function Admin() {
   const [page, setPage] = useState<Page>("overview");
   const [ncData, setNcData] = useState<Registration[]>([]);
+  const [ryData, setRyData] = useState<RyRegistration[]>([]);
   const [slfData, setSlfData] = useState<SlfRegistration[]>([]);
   const [prasadamData, setPrasadamData] = useState<PrasadamSponsorship[]>([]);
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
@@ -102,7 +115,7 @@ export default function Admin() {
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [eventTab, setEventTab] = useState<EventTab>("all");
-  const [regEventTab, setRegEventTab] = useState<"nrsimha" | "slf" | "prasadam">("nrsimha");
+  const [regEventTab, setRegEventTab] = useState<"nrsimha" | "slf" | "prasadam" | "ratha_yatra">("nrsimha");
   const [regPage, setRegPage] = useState(1);
   const [emailPage, setEmailPage] = useState(1);
   const [prasadamPage, setPrasadamPage] = useState(1);
@@ -131,14 +144,16 @@ export default function Admin() {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [ncRes, slfRes, prasadamRes, emailRes, trackRes] = await Promise.all([
+    const [ncRes, ryRes, slfRes, prasadamRes, emailRes, trackRes] = await Promise.all([
       supabase.from("registrations").select("*").order("created_at", { ascending: false }),
+      supabase.from("ratha_yatra_registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("weekend_love_feast_registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("prasadam_sponsorships").select("*").order("created_at", { ascending: false }),
       supabase.from("email_send_log").select("*").order("created_at", { ascending: false }).limit(1000),
       supabase.from("email_tracking_events").select("*").order("created_at", { ascending: false }).limit(1000),
     ]);
     setNcData((ncRes.data as Registration[]) || []);
+    setRyData((ryRes.data as RyRegistration[]) || []);
     setSlfData((slfRes.data as SlfRegistration[]) || []);
     setPrasadamData((prasadamRes.data as PrasadamSponsorship[]) || []);
     setEmailLogs((emailRes.data as EmailLog[]) || []);
@@ -200,8 +215,11 @@ export default function Admin() {
   const prasadamEmails = new Set(
     prasadamData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
   );
+  const ryEmails = new Set(
+    ryData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
+  );
 
-  const allEmailsUnion = new Set<string>([...ncEmails, ...slfEmails, ...prasadamEmails]);
+  const allEmailsUnion = new Set<string>([...ncEmails, ...slfEmails, ...prasadamEmails, ...ryEmails]);
   const uniquePeopleCount = allEmailsUnion.size;
 
   // Overlap: emails appearing in 2+ tables
@@ -210,19 +228,26 @@ export default function Admin() {
     if (ncEmails.has(e)) count++;
     if (slfEmails.has(e)) count++;
     if (prasadamEmails.has(e)) count++;
+    if (ryEmails.has(e)) count++;
     return count >= 2;
   });
   const overlapCount = overlapEmails.length;
 
-  // Triple overlap (devotees engaged across all 3 surfaces)
-  const tripleOverlap = [...allEmailsUnion].filter(e =>
-    ncEmails.has(e) && slfEmails.has(e) && prasadamEmails.has(e)
-  ).length;
+  // Triple overlap (devotees engaged across all 3+ surfaces)
+  const tripleOverlap = [...allEmailsUnion].filter(e => {
+    let count = 0;
+    if (ncEmails.has(e)) count++;
+    if (slfEmails.has(e)) count++;
+    if (prasadamEmails.has(e)) count++;
+    if (ryEmails.has(e)) count++;
+    return count >= 3;
+  }).length;
 
-  const totalRegistrationsAcross = ncData.length + slfData.length + prasadamData.length;
+  const totalRegistrationsAcross = ncData.length + slfData.length + prasadamData.length + ryData.length;
   const totalAttendeesAcross =
     ncData.reduce((s, r) => s + r.attendees, 0) +
-    slfData.reduce((s, r) => s + r.attendees, 0);
+    slfData.reduce((s, r) => s + r.attendees, 0) +
+    ryData.reduce((s, r) => s + r.attendees, 0);
 
   const totalSponsorshipValue = prasadamData
     .filter(r => r.status === "confirmed" || r.status === "completed")
@@ -237,7 +262,13 @@ export default function Admin() {
   const ncRemindersSent = ncData.filter(r => r.reminder_sent).length;
   const ncVolunteers = ncData.filter(r => r.is_volunteer).length;
 
-  // SLF
+  // RY (Ratha Yatra)
+  const ryTotal = ryData.length;
+  const ryAttendees = ryData.reduce((s, r) => s + r.attendees, 0);
+  const ryAvgGroup = ryTotal > 0 ? (ryAttendees / ryTotal).toFixed(1) : "0";
+  const ryConfirmed = ryData.filter(r => r.confirmation_sent).length;
+  const ryRemindersSent = ryData.filter(r => r.reminder_sent).length;
+
   const slfTotal = slfData.length;
   const slfAttendees = slfData.reduce((s, r) => s + r.attendees, 0);
   const slfAvgGroup = slfTotal > 0 ? (slfAttendees / slfTotal).toFixed(1) : "0";
@@ -298,6 +329,7 @@ export default function Admin() {
   const isNcType = (et: string) => et === "confirmation" || et === "reminder" || et.startsWith("nc-") || et.startsWith("nc_");
   const isSlfType = (et: string) => et.startsWith("slf-") || et.startsWith("wlf-") || et.startsWith("slf_") || et.startsWith("wlf_");
   const isPrasadamType = (et: string) => et.startsWith("prasadam-") || et.startsWith("prasadam_");
+  const isRyType = (et: string) => et.startsWith("ry-") || et.startsWith("ry_");
 
   const buildEventEngagement = (predicate: (et: string) => boolean, sentCount: number) => {
     const opens = trackingEvents.filter(t => t.event_type === "open" && predicate(t.email_type || ""));
@@ -316,13 +348,15 @@ export default function Admin() {
 
   // Sent-counts per event are best approximated by template_name on email_send_log
   const ncSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("nc-")).length
-              || uniqueEmailList.filter(e => e.status === "sent" && !((e.template_name || "").includes("wlf") || (e.template_name || "").includes("prasadam"))).length;
+              || uniqueEmailList.filter(e => e.status === "sent" && !((e.template_name || "").includes("wlf") || (e.template_name || "").includes("prasadam") || (e.template_name || "").includes("ry-"))).length;
   const slfSent = uniqueEmailList.filter(e => e.status === "sent" && ((e.template_name || "").includes("wlf") || (e.template_name || "").includes("slf"))).length;
   const prasadamSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("prasadam")).length;
+  const rySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("ry-")).length;
 
   const ncEng = buildEventEngagement(isNcType, ncSent);
   const slfEng = buildEventEngagement(isSlfType, slfSent);
   const prasadamEng = buildEventEngagement(isPrasadamType, prasadamSent);
+  const ryEng = buildEventEngagement(isRyType, rySent);
 
   // ═══ CHART: Registrations over time (combined) ═══
   const buildChartData = (tab: EventTab) => {
@@ -330,6 +364,8 @@ export default function Admin() {
     const sources: Array<{ created_at: string; count: number }> = [];
     if (tab === "all" || tab === "nrsimha")
       ncData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
+    if (tab === "all" || tab === "ratha_yatra")
+      ryData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
     if (tab === "all" || tab === "slf")
       slfData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
     if (tab === "all" || tab === "prasadam")
@@ -343,9 +379,10 @@ export default function Admin() {
   const chartData = buildChartData(eventTab);
 
   // ═══ FILTERED VIEWS ═══
-  const activeRegList: (Registration | SlfRegistration | PrasadamSponsorship)[] =
+  const activeRegList: (Registration | SlfRegistration | PrasadamSponsorship | RyRegistration)[] =
     regEventTab === "slf" ? slfData
       : regEventTab === "prasadam" ? prasadamData
+      : regEventTab === "ratha_yatra" ? ryData
       : ncData;
 
   const filteredReg = activeRegList.filter((r: any) => {
@@ -428,6 +465,11 @@ export default function Admin() {
       const rows = prasadamData.map(r => [r.full_name, r.email, r.country_code, r.phone, r.tier, r.preferred_date, r.status, new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "prasadam_sponsorships";
+    } else if (page === "registrations" && regEventTab === "ratha_yatra") {
+      const headers = ["Name", "Email", "Phone", "Attendees", "Confirmation", "Reminder", "Registered At"];
+      const rows = ryData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "ratha_yatra_registrations";
     } else {
       const headers = ["Name", "Email", "Phone", "Attendees", "Volunteer", "Confirmation", "Reminder", "Registered At"];
       const rows = ncData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.is_volunteer ? "Yes" : "No", r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
@@ -832,13 +874,14 @@ export default function Admin() {
 
               <div className="admin-event-tabs">
                 <button className={`admin-event-tab${regEventTab === "nrsimha" ? " active" : ""}`} onClick={() => { setRegEventTab("nrsimha"); setRegPage(1); }}>Nṛsiṁha Caturdaśī ({ncTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "ratha_yatra" ? " active" : ""}`} onClick={() => { setRegEventTab("ratha_yatra"); setRegPage(1); }}>Ratha Yātrā ({ryTotal})</button>
                 <button className={`admin-event-tab${regEventTab === "slf" ? " active" : ""}`} onClick={() => { setRegEventTab("slf"); setRegPage(1); }}>Weekend Love Feast ({slfTotal})</button>
                 <button className={`admin-event-tab${regEventTab === "prasadam" ? " active" : ""}`} onClick={() => { setRegEventTab("prasadam"); setRegPage(1); }}>Prasadam ({prasadamTotal})</button>
               </div>
 
               <div className="admin-table-card">
                 <div className="admin-table-header">
-                  <h3>{regEventTab === "nrsimha" ? "Nṛsiṁha Registrations" : regEventTab === "slf" ? "Weekend Love Feast Registrations" : "Prasadam Sponsorships"}</h3>
+                  <h3>{regEventTab === "nrsimha" ? "Nṛsiṁha Registrations" : regEventTab === "ratha_yatra" ? "Ratha Yātrā Registrations" : regEventTab === "slf" ? "Weekend Love Feast Registrations" : "Prasadam Sponsorships"}</h3>
                   <span style={{ fontSize: "13px", color: "#888" }}>
                     Showing {Math.min((regPage - 1) * ROWS_PER_PAGE + 1, filteredReg.length)}-{Math.min(regPage * ROWS_PER_PAGE, filteredReg.length)} of {filteredReg.length} entries
                   </span>
@@ -850,7 +893,7 @@ export default function Admin() {
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        {regEventTab === "nrsimha" && <><th>Pax</th><th>Conf</th><th>Reminder</th></>}
+                        {(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") && <><th>Pax</th><th>Conf</th><th>Reminder</th></>}
                         {regEventTab === "slf" && <><th>Pax</th><th>Day</th><th>First Time</th></>}
                         {regEventTab === "prasadam" && <><th>Tier</th><th>Date</th><th>Status</th></>}
                         <th>Submitted</th>
@@ -877,7 +920,7 @@ export default function Admin() {
                               {phone}
                               {r.phone_needs_verification && <span className="admin-badge pending" style={{ marginLeft: 6 }}>verify</span>}
                             </td>
-                            {regEventTab === "nrsimha" && (
+                            {(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") && (
                               <>
                                 <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
                                 <td><span className={`admin-badge-icon ${r.confirmation_sent ? "yes" : "no"}`}>{r.confirmation_sent ? "✅" : "—"}</span></td>
@@ -921,7 +964,7 @@ export default function Admin() {
                         );
                       })}
                       {regSlice.length === 0 && (
-                        <tr><td colSpan={regEventTab === "nrsimha" ? 7 : 6} className="admin-empty">No registrations found</td></tr>
+                        <tr><td colSpan={(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") ? 7 : 6} className="admin-empty">No registrations found</td></tr>
                       )}
                     </tbody>
                   </table>
