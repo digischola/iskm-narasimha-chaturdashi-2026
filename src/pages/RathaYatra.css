@@ -368,9 +368,10 @@ button { cursor: pointer; font-family: inherit; }
   50% { box-shadow: 0 8px 32px rgba(248, 164, 192, .7); }
 }
 @media (max-width: 768px) {
-  .hero-top { padding: 40px 20px 40px; }
-  .hero-painting { width: 240px; margin-bottom: 20px; }
-  .hero-meta { gap: 12px; flex-direction: column; align-items: center; }
+  .hero-top { grid-template-columns: 1fr; text-align: center; padding: 40px 30px 40px; }
+  .hero-content { padding-right: 0; display: flex; flex-direction: column; align-items: center; }
+  .hero-painting { width: 280px; margin: 0 auto 24px; order: -1; }
+  .hero-meta { align-items: center; }
   .hero-meta-stacked { flex-direction: column; gap: 12px; }
   .countdown-row { gap: 8px; }
   .cd-pill { padding: 10px 12px; min-width: 60px; }

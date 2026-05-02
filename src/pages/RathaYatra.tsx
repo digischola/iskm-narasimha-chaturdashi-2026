@@ -347,7 +347,7 @@ function Hero() {
           />
         </div>
         <div className="hero-content hero-centered">
-          <div className="hero-eyebrow">International Sri Krishna Mandir presents</div>
+          <div className="hero-eyebrow">ISKM Singapore Presents</div>
           <h1>
             Ratha Yātrā <span className="accent">2026</span>
           </h1>
