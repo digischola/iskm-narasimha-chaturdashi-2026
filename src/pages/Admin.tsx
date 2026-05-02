@@ -262,7 +262,13 @@ export default function Admin() {
   const ncRemindersSent = ncData.filter(r => r.reminder_sent).length;
   const ncVolunteers = ncData.filter(r => r.is_volunteer).length;
 
-  // SLF
+  // RY (Ratha Yatra)
+  const ryTotal = ryData.length;
+  const ryAttendees = ryData.reduce((s, r) => s + r.attendees, 0);
+  const ryAvgGroup = ryTotal > 0 ? (ryAttendees / ryTotal).toFixed(1) : "0";
+  const ryConfirmed = ryData.filter(r => r.confirmation_sent).length;
+  const ryRemindersSent = ryData.filter(r => r.reminder_sent).length;
+
   const slfTotal = slfData.length;
   const slfAttendees = slfData.reduce((s, r) => s + r.attendees, 0);
   const slfAvgGroup = slfTotal > 0 ? (slfAttendees / slfTotal).toFixed(1) : "0";
