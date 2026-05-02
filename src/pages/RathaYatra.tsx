@@ -230,7 +230,7 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
       </a>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
         <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand">
-          <img src="/images/logo.webp" alt="ISKM Singapore" width="32" height="32" />
+          <img src="/images/logo.webp" alt="ISKM Singapore" width="28" height="28" />
           <span>ISKM Singapore</span>
         </a>
         <div className="nav-links">
