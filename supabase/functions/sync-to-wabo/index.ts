@@ -32,6 +32,7 @@ const ALLOWED_EVENT_SLUGS = new Set([
   "nrsimhachaturdasi2026",
   "weekend_love_feast",
   "prasadam_sponsor",
+  "ratha_yatra_2026",
 ]);
 
 const ALLOWED_EXTRA_KEYS = new Set([
