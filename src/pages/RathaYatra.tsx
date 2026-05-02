@@ -770,7 +770,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
             {submitting ? "Submitting..." : "Register Free →"}
           </button>
           <div className="form-trust">
-            <span>⭐ 4.6/5 on Google · 14,000+ joined in 2025 · 25+ years of seva</span>
+            <span>​</span>
           </div>
           <div className="form-walkin">
             <i className="fas fa-info-circle"></i>
