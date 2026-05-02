@@ -188,6 +188,42 @@ export type Database = {
         }
         Relationships: []
       }
+      ratha_yatra_registrations: {
+        Row: {
+          attendees: number
+          confirmation_sent: boolean
+          created_at: string
+          email: string
+          id: string
+          is_volunteer: boolean
+          name: string
+          phone: string | null
+          reminder_sent: boolean
+        }
+        Insert: {
+          attendees?: number
+          confirmation_sent?: boolean
+          created_at?: string
+          email: string
+          id?: string
+          is_volunteer?: boolean
+          name: string
+          phone?: string | null
+          reminder_sent?: boolean
+        }
+        Update: {
+          attendees?: number
+          confirmation_sent?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          is_volunteer?: boolean
+          name?: string
+          phone?: string | null
+          reminder_sent?: boolean
+        }
+        Relationships: []
+      }
       registrations: {
         Row: {
           age: string | null
