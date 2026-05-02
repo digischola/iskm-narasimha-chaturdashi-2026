@@ -215,8 +215,11 @@ export default function Admin() {
   const prasadamEmails = new Set(
     prasadamData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
   );
+  const ryEmails = new Set(
+    ryData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
+  );
 
-  const allEmailsUnion = new Set<string>([...ncEmails, ...slfEmails, ...prasadamEmails]);
+  const allEmailsUnion = new Set<string>([...ncEmails, ...slfEmails, ...prasadamEmails, ...ryEmails]);
   const uniquePeopleCount = allEmailsUnion.size;
 
   // Overlap: emails appearing in 2+ tables
@@ -225,19 +228,26 @@ export default function Admin() {
     if (ncEmails.has(e)) count++;
     if (slfEmails.has(e)) count++;
     if (prasadamEmails.has(e)) count++;
+    if (ryEmails.has(e)) count++;
     return count >= 2;
   });
   const overlapCount = overlapEmails.length;
 
-  // Triple overlap (devotees engaged across all 3 surfaces)
-  const tripleOverlap = [...allEmailsUnion].filter(e =>
-    ncEmails.has(e) && slfEmails.has(e) && prasadamEmails.has(e)
-  ).length;
+  // Triple overlap (devotees engaged across all 3+ surfaces)
+  const tripleOverlap = [...allEmailsUnion].filter(e => {
+    let count = 0;
+    if (ncEmails.has(e)) count++;
+    if (slfEmails.has(e)) count++;
+    if (prasadamEmails.has(e)) count++;
+    if (ryEmails.has(e)) count++;
+    return count >= 3;
+  }).length;
 
-  const totalRegistrationsAcross = ncData.length + slfData.length + prasadamData.length;
+  const totalRegistrationsAcross = ncData.length + slfData.length + prasadamData.length + ryData.length;
   const totalAttendeesAcross =
     ncData.reduce((s, r) => s + r.attendees, 0) +
-    slfData.reduce((s, r) => s + r.attendees, 0);
+    slfData.reduce((s, r) => s + r.attendees, 0) +
+    ryData.reduce((s, r) => s + r.attendees, 0);
 
   const totalSponsorshipValue = prasadamData
     .filter(r => r.status === "confirmed" || r.status === "completed")
