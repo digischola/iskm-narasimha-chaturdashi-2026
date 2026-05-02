@@ -1229,6 +1229,20 @@ function LandingPage() {
 
   return (
     <>
+      <Helmet>
+        <title>Ratha Yātrā 2026 — Sri Krishna Mandir Singapore</title>
+        <meta name="description" content="Register free for Ratha Yātrā 2026 at Clementi Stadium, Singapore. Three grand chariots, ecstatic kirtan, cultural performances & free 5-course prasādam. 5 July 2026." />
+        <meta property="og:title" content="Ratha Yātrā 2026 — Sri Krishna Mandir Singapore" />
+        <meta property="og:description" content="Pull the rope. Sing the kirtan. Take home the blessing. Free entry, 5 July 2026, Clementi Stadium." />
+        <meta property="og:image" content="https://events.srikrishnamandir.org/images/ratha-yatra/hero.webp" />
+        <meta property="og:url" content="https://events.srikrishnamandir.org/ratha-yatra-2026" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Ratha Yātrā 2026 — Sri Krishna Mandir Singapore" />
+        <meta name="twitter:image" content="https://events.srikrishnamandir.org/images/ratha-yatra/hero.webp" />
+        <link rel="preload" as="image" href="/images/ratha-yatra/hero.webp" />
+        <link rel="canonical" href="https://events.srikrishnamandir.org/ratha-yatra-2026" />
+      </Helmet>
       <div className="scroll-progress" style={{ transform: `scaleX(${progress})` }}></div>
       <Navbar scrolled={scrolled} />
       <ChipBar visible={true} />
