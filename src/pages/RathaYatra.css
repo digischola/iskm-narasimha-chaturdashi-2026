@@ -1377,7 +1377,7 @@ button { cursor: pointer; font-family: inherit; }
 }
 .footer-tag {
   font-size: 14px; opacity: .6 !important;
-  font-style: italic;
+  font-style: normal;
   margin-bottom: 20px !important;
 }
 .footer-bottom {
