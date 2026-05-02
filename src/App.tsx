@@ -876,15 +876,18 @@ import Unsubscribe from "@/pages/Unsubscribe";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/nrsimha-caturdasi-2026" element={<LandingPage />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/weekend-love-feast" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><WeekendLoveFeast /></Suspense>} />
-        <Route path="/unsubscribe" element={<Unsubscribe />} />
-        <Route path="/free-prasadam-program" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><FreePrasadamProgram /></Suspense>} />
-      </Routes>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/nrsimha-caturdasi-2026" element={<LandingPage />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/weekend-love-feast" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><WeekendLoveFeast /></Suspense>} />
+          <Route path="/unsubscribe" element={<Unsubscribe />} />
+          <Route path="/free-prasadam-program" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><FreePrasadamProgram /></Suspense>} />
+          <Route path="/ratha-yatra-2026" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><RathaYatra /></Suspense>} />
+        </Routes>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
