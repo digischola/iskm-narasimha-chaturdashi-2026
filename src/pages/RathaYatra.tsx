@@ -748,12 +748,16 @@ function VideoSection() {
     <div className="section video-section" id="video">
       <div className="sec-header animate-in"><div className="overline">Watch the 2026 promo</div><h2>What awaits you on 5 July</h2><div className="divider"></div><p>Built from 2025 footage</p></div>
       <div className="video-wrap animate-in">
-        <video controls preload="metadata" poster="/images/ratha-yatra/hero.webp" playsInline className="video-desktop">
-          <source src="/videos/ratha-yatra-2026-website-L.mp4" type="video/mp4" />
-        </video>
-        <video controls preload="metadata" poster="/images/ratha-yatra/hero.webp" playsInline className="video-mobile">
-          <source src="/videos/ratha-yatra-2026-website-V.mp4" type="video/mp4" />
-        </video>
+        <div className="yt-responsive">
+          <iframe
+            src="https://www.youtube.com/embed/mYkgIK1HxFc?autoplay=1&mute=1&loop=1&playlist=mYkgIK1HxFc&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+            title="Ratha Yātrā 2026 Promo"
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            loading="lazy"
+          ></iframe>
+        </div>
       </div>
     </div>
   );
