@@ -1027,7 +1027,7 @@ function ChariotStickyStory() {
         {STORY_STAGES.map((s, i) => (
           <article key={i} className={`story-card animate-in${i % 2 ? " story-card-reverse" : ""}`}>
             <div className="story-card-photo">
-              <img src={s.img} alt={s.title} loading="lazy" />
+              <img src={s.img} alt={s.title} loading="lazy" decoding="async" width="600" height="400" />
             </div>
             <div className="story-card-text">
               <div className="story-card-label">{String(i + 1).padStart(2, "0")}</div>
@@ -1038,6 +1038,30 @@ function ChariotStickyStory() {
         ))}
       </div>
     </section>
+  );
+}
+
+/* ═══ LAZY IFRAME — loads only when visible ═══ */
+function LazyIframe({ src, title, className, allow, allowFullScreen, rootMargin = "300px" }: {
+  src: string; title: string; className?: string; allow?: string; allowFullScreen?: boolean; rootMargin?: string;
+}) {
+  const [load, setLoad] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setLoad(true); obs.disconnect(); } }, { rootMargin });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [rootMargin]);
+  return (
+    <div ref={ref} style={{ minHeight: load ? undefined : "200px" }}>
+      {load ? (
+        <iframe src={src} title={title} className={className} frameBorder="0" allow={allow} allowFullScreen={allowFullScreen} loading="lazy" />
+      ) : (
+        <div style={{ background: "#1a1a2e", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "200px", borderRadius: "12px", color: "#ccc", fontSize: "14px" }}>Loading…</div>
+      )}
+    </div>
   );
 }
 
@@ -1052,14 +1076,12 @@ function VideoSection() {
       </div>
       <div className="video-wrap animate-in">
         <div className="yt-responsive">
-          <iframe
+          <LazyIframe
             src="https://www.youtube.com/embed/mYkgIK1HxFc?autoplay=1&mute=1&loop=1&playlist=mYkgIK1HxFc&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
             title="Ratha Yātrā 2026 Promo"
-            frameBorder="0"
             allow="autoplay; encrypted-media"
             allowFullScreen
-            loading="lazy"
-          ></iframe>
+          />
         </div>
       </div>
     </div>
@@ -1385,12 +1407,11 @@ function Location() {
       </div>
       <div className="location-wrap animate-in">
         <div className="loc-map">
-          <iframe
+          <LazyIframe
             src="https://www.google.com/maps?q=Clementi+Stadium,+10+West+Coast+Walk,+Singapore+127156&output=embed"
             allowFullScreen
-            loading="lazy"
             title="Clementi Stadium Map"
-          ></iframe>
+          />
         </div>
         <div className="loc-info">
           <h3>Clementi Stadium</h3>
