@@ -205,7 +205,7 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
     <>
       <a href="#main-content" className="skip-link">Skip to content</a>
       <div className="ribbon">
-        <span className="ribbon-text"><span className="hl"><span className="urgency-dot"></span><i className="fas fa-fire"></i> 14,000+ joined in 2025</span> — Register free for {EVENT.title}</span>
+        <span className="ribbon-text">Register free for {EVENT.title}</span>
         <a href="#register" className="ribbon-cta">Reserve Your Spot &rarr;</a>
       </div>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
