@@ -1582,8 +1582,7 @@ button { cursor: pointer; font-family: inherit; }
 
 /* Reduced motion — respect user preference */
 @media (prefers-reduced-motion: reduce) {
-  .hero-wheel, .petal { animation: none; }
-  .petal { display: none; }
+  .petal { animation: none; display: none; }
 }
 
 /* ─── Schedule: each dot pops as it enters viewport (per-element scroll-driven) ─── */
