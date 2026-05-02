@@ -324,7 +324,8 @@ function Hero() {
             Ratha Yātrā <span className="accent">2026</span>
           </h1>
           <p className="hero-tagline">
-            Pull the rope. Sing the kīrtana.<br />
+            Pull the rope. Sing the kīrtana.
+            <br />
             Take home the blessing.
           </p>
           <div className="hero-meta hero-meta-stacked">
@@ -871,18 +872,15 @@ function About() {
               Traditionally held on the second day of the waxing moon in the month of Āṣāḍha (late June or early July),
               it has become one of the most famous Hindu festivals in India and around the world.
             </p>
-            <button
-              onClick={() => setReadMore(!readMore)}
-              className="read-more-btn"
-            >
+            <button onClick={() => setReadMore(!readMore)} className="read-more-btn">
               {readMore ? "Show less ↑" : "Read more about the festival ↓"}
             </button>
             <div className={`read-more-content ${readMore ? "open" : ""}`}>
               <p>
                 In Singapore, Sri Krishna Mandir has carried this tradition for over 25 years. In 2025, three new
-                hand-pulled chariots were built — replacing units that had served devotees for decades. Each year, between
-                10,000 and 15,000 attendees gather at Clementi Stadium for an evening of chariots, cultural performances,
-                ecstatic kirtan, and a free 5-course vegetarian feast.
+                hand-pulled chariots were built — replacing units that had served devotees for decades. Each year,
+                between 10,000 and 15,000 attendees gather at Clementi Stadium for an evening of chariots, cultural
+                performances, ecstatic kirtan, and a free 5-course vegetarian feast.
               </p>
               <p>
                 Unlike most temple festivals, Ratha Yātrā is open to everyone. There are no barriers. The Lord himself
@@ -1040,24 +1038,65 @@ function ChariotStickyStory() {
 }
 
 /* ═══ LAZY IFRAME — loads only when visible ═══ */
-function LazyIframe({ src, title, className, allow, allowFullScreen, rootMargin = "300px" }: {
-  src: string; title: string; className?: string; allow?: string; allowFullScreen?: boolean; rootMargin?: string;
+function LazyIframe({
+  src,
+  title,
+  className,
+  allow,
+  allowFullScreen,
+  rootMargin = "300px",
+}: {
+  src: string;
+  title: string;
+  className?: string;
+  allow?: string;
+  allowFullScreen?: boolean;
+  rootMargin?: string;
 }) {
   const [load, setLoad] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setLoad(true); obs.disconnect(); } }, { rootMargin });
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setLoad(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin },
+    );
     obs.observe(el);
     return () => obs.disconnect();
   }, [rootMargin]);
   return (
     <div ref={ref} style={{ minHeight: load ? undefined : "200px" }}>
       {load ? (
-        <iframe src={src} title={title} className={className} frameBorder="0" allow={allow} allowFullScreen={allowFullScreen} loading="lazy" />
+        <iframe
+          src={src}
+          title={title}
+          className={className}
+          frameBorder="0"
+          allow={allow}
+          allowFullScreen={allowFullScreen}
+          loading="lazy"
+        />
       ) : (
-        <div style={{ background: "#1a1a2e", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "200px", borderRadius: "12px", color: "#ccc", fontSize: "14px" }}>Loading…</div>
+        <div
+          style={{
+            background: "#1a1a2e",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "200px",
+            borderRadius: "12px",
+            color: "#ccc",
+            fontSize: "14px",
+          }}
+        >
+          Loading…
+        </div>
       )}
     </div>
   );
@@ -1716,7 +1755,6 @@ function ExitIntentModal() {
         ) : (
           <>
             <div className="exit-intent-eyebrow">Wait — don't miss it</div>
-            <h3>14,000+ already saved their seat</h3>
             <p>
               Drop your name and email and we'll send you a reminder before {EVENT.date}. Free entry, free 5-course
               feast.
