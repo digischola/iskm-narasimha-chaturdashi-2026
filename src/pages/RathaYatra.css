@@ -138,6 +138,8 @@ button { cursor: pointer; font-family: inherit; }
   box-shadow: 0 6px 16px rgba(248, 164, 192, .5);
 }
 @media (max-width: 768px) {
+  .ribbon .ribbon-text { display: none; }
+  .ribbon { font-size: 12px; }
   .sticky-nav { padding: 0 16px; }
   .nav-links a.desk-link { display: none; }
   .nav-brand span { font-size: 15px; }
