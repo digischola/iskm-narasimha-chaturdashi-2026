@@ -920,7 +920,7 @@ export default function Admin() {
                               {phone}
                               {r.phone_needs_verification && <span className="admin-badge pending" style={{ marginLeft: 6 }}>verify</span>}
                             </td>
-                            {regEventTab === "nrsimha" && (
+                            {(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") && (
                               <>
                                 <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
                                 <td><span className={`admin-badge-icon ${r.confirmation_sent ? "yes" : "no"}`}>{r.confirmation_sent ? "✅" : "—"}</span></td>
