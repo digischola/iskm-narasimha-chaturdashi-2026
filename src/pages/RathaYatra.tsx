@@ -1843,7 +1843,7 @@ function LandingPage() {
       <Share />
       <FinalCTA />
       <Footer />
-      <MobileSticky />
+      <MobileSticky pastHero={pastHero} />
       <ExitIntentModal />
     </>
   );
