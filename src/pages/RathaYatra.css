@@ -178,7 +178,8 @@ button { cursor: pointer; font-family: inherit; }
 /* ═══ HERO ═══ */
 .hero {
   position: relative;
-  margin-top: 0;
+  margin-top: 48px;
+  padding-top: env(safe-area-inset-top, 0px);
   background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 40%, var(--navy-2) 100%);
   overflow: hidden;
 }
