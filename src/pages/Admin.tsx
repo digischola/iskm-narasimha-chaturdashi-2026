@@ -144,14 +144,16 @@ export default function Admin() {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [ncRes, slfRes, prasadamRes, emailRes, trackRes] = await Promise.all([
+    const [ncRes, ryRes, slfRes, prasadamRes, emailRes, trackRes] = await Promise.all([
       supabase.from("registrations").select("*").order("created_at", { ascending: false }),
+      supabase.from("ratha_yatra_registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("weekend_love_feast_registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("prasadam_sponsorships").select("*").order("created_at", { ascending: false }),
       supabase.from("email_send_log").select("*").order("created_at", { ascending: false }).limit(1000),
       supabase.from("email_tracking_events").select("*").order("created_at", { ascending: false }).limit(1000),
     ]);
     setNcData((ncRes.data as Registration[]) || []);
+    setRyData((ryRes.data as RyRegistration[]) || []);
     setSlfData((slfRes.data as SlfRegistration[]) || []);
     setPrasadamData((prasadamRes.data as PrasadamSponsorship[]) || []);
     setEmailLogs((emailRes.data as EmailLog[]) || []);
