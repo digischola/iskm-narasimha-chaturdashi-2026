@@ -1758,13 +1758,13 @@ function MobileSticky() {
   return (
     <>
       <nav className="mobile-bottom-nav" aria-label="Quick navigation">
-        <a href="#main-content" className="mb-item">
-          <i className="fas fa-house"></i>
-          <span>Home</span>
-        </a>
         <a href="#schedule" className="mb-item">
           <i className="fas fa-calendar-day"></i>
           <span>Schedule</span>
+        </a>
+        <a href="#main-content" className="mb-item">
+          <i className="fas fa-star"></i>
+          <span>Highlights</span>
         </a>
         <a href="#seva" className="mb-item">
           <i className="fas fa-hand-holding-heart"></i>

@@ -1457,7 +1457,7 @@ button { cursor: pointer; font-family: inherit; }
   box-shadow: 0 -4px 20px rgba(30, 58, 110, .08);
   padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
   justify-content: space-around;
-  align-items: stretch;
+  align-items: flex-end;
 }
 .mb-item {
   flex: 1;
