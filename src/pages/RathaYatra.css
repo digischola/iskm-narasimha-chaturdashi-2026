@@ -1635,8 +1635,8 @@ button { cursor: pointer; font-family: inherit; }
 /* ─── Split-flap countdown digit (per-digit flip card) — Ratha Yātrā page only ─── */
 .ry-countdown .flip-num {
   font-family: 'Playfair Display', serif;
-  font-size: 22px; font-weight: 700;
-  color: var(--gold); line-height: 1;
+  font-size: 24px; font-weight: 700;
+  color: var(--cream); line-height: 1;
   display: inline-flex;
   gap: 3px;
   font-variant-numeric: tabular-nums;
@@ -1655,7 +1655,7 @@ button { cursor: pointer; font-family: inherit; }
   left: 0; right: 0;
   height: 50%;
   overflow: hidden;
-  background: var(--cream);
+  background: rgba(255, 255, 255, .08);
 }
 .ry-countdown .flip-half > span,
 .ry-countdown .flip-flap > span {
@@ -1665,7 +1665,7 @@ button { cursor: pointer; font-family: inherit; }
   line-height: 1em;
   text-align: center;
   display: block;
-  color: var(--navy-deep);
+  color: var(--cream);
 }
 .ry-countdown .flip-top,
 .ry-countdown .flip-flap-top {
