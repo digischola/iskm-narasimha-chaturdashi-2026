@@ -840,6 +840,7 @@ function Stats() {
 
 /* ═══ ABOUT ═══ */
 function About() {
+  const [readMore, setReadMore] = useState(false);
   return (
     <div className="editorial-section" id="about">
       <div className="editorial-inner">
@@ -881,20 +882,28 @@ function About() {
               Traditionally held on the second day of the waxing moon in the month of Āṣāḍha (late June or early July),
               it has become one of the most famous Hindu festivals in India and around the world.
             </p>
-            <p>
-              In Singapore, Sri Krishna Mandir has carried this tradition for over 25 years. In 2025, three new
-              hand-pulled chariots were built — replacing units that had served devotees for decades. Each year, between
-              10,000 and 15,000 attendees gather at Clementi Stadium for an evening of chariots, cultural performances,
-              ecstatic kirtan, and a free 5-course vegetarian feast.
-            </p>
-            <p>
-              Unlike most temple festivals, Ratha Yātrā is open to everyone. There are no barriers. The Lord himself
-              comes out to bless the streets — and tradition holds that anyone who pulls the rope receives that
-              blessing.
-            </p>
-            <p>
-              <strong>Whether you've come every year or it's your first time, you are welcome here.</strong>
-            </p>
+            <button
+              onClick={() => setReadMore(!readMore)}
+              className="read-more-btn"
+            >
+              {readMore ? "Show less ↑" : "Read more about the festival ↓"}
+            </button>
+            <div className={`read-more-content ${readMore ? "open" : ""}`}>
+              <p>
+                In Singapore, Sri Krishna Mandir has carried this tradition for over 25 years. In 2025, three new
+                hand-pulled chariots were built — replacing units that had served devotees for decades. Each year, between
+                10,000 and 15,000 attendees gather at Clementi Stadium for an evening of chariots, cultural performances,
+                ecstatic kirtan, and a free 5-course vegetarian feast.
+              </p>
+              <p>
+                Unlike most temple festivals, Ratha Yātrā is open to everyone. There are no barriers. The Lord himself
+                comes out to bless the streets — and tradition holds that anyone who pulls the rope receives that
+                blessing.
+              </p>
+              <p>
+                <strong>Whether you've come every year or it's your first time, you are welcome here.</strong>
+              </p>
+            </div>
           </div>
         </div>
       </div>

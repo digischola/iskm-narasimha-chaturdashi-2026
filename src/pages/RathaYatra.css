@@ -102,7 +102,7 @@ button { cursor: pointer; font-family: inherit; }
   border-bottom: 1px solid rgba(30, 58, 110, .06);
   padding: 0 30px;
   display: flex; justify-content: space-between; align-items: center;
-  height: 56px; transition: box-shadow .3s;
+  height: 48px; transition: box-shadow .3s;
 }
 .sticky-nav.scrolled { box-shadow: 0 2px 20px rgba(30, 58, 110, .08); }
 .nav-brand {
