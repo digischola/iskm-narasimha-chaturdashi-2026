@@ -81,7 +81,7 @@ interface TrackingEvent {
 }
 
 type Page = "overview" | "registrations" | "prasadam" | "emails";
-type EventTab = "all" | "nrsimha" | "slf" | "prasadam";
+type EventTab = "all" | "nrsimha" | "slf" | "prasadam" | "ratha_yatra";
 
 const ROWS_PER_PAGE = 10;
 
