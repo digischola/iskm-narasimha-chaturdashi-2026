@@ -178,7 +178,8 @@ button { cursor: pointer; font-family: inherit; }
 /* ═══ HERO ═══ */
 .hero {
   position: relative;
-  margin-top: 0;
+  margin-top: 48px;
+  padding-top: env(safe-area-inset-top, 0px);
   background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 40%, var(--navy-2) 100%);
   overflow: hidden;
 }
@@ -187,12 +188,13 @@ button { cursor: pointer; font-family: inherit; }
   background-size: 300% 300%;
   animation: gradient-shift 12s ease infinite;
 }
-/* Sacred geometry pattern overlay */
+/* Sacred geometry pattern overlay — contrast layer */
 .hero::before {
   content: '';
   position: absolute; inset: 0;
   pointer-events: none;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%23f4c96b' stop-opacity='0.06'/%3E%3Cstop offset='100%25' stop-color='%23f4c96b' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='400' cy='400' r='350' fill='url(%23g1)'/%3E%3Cg fill='none' stroke='%23f4c96b' stroke-width='0.4' opacity='0.1'%3E%3Ccircle cx='400' cy='400' r='150'/%3E%3Ccircle cx='400' cy='400' r='220'/%3E%3Ccircle cx='400' cy='400' r='290'/%3E%3C/g%3E%3C/svg%3E") center/80% no-repeat;
+  background: radial-gradient(ellipse at center, rgba(15,31,58,0.3) 0%, rgba(15,31,58,0.65) 100%);
+  z-index: 1;
 }
 .hero-content {
   position: relative; z-index: 2;
@@ -269,6 +271,7 @@ button { cursor: pointer; font-family: inherit; }
   color: var(--cream); opacity: .96;
   margin: 0 0 28px;
   max-width: 580px;
+  text-align: right;
   text-shadow: 0 1px 16px rgba(0, 0, 0, .35);
 }
 .hero-meta {
@@ -368,11 +371,12 @@ button { cursor: pointer; font-family: inherit; }
   50% { box-shadow: 0 8px 32px rgba(248, 164, 192, .7); }
 }
 @media (max-width: 768px) {
-  .hero-top { grid-template-columns: 1fr; text-align: center; padding: 40px 30px 40px; }
+  .hero-top { grid-template-columns: 1fr; text-align: center; padding: 30px 20px 30px; }
   .hero-content { padding-right: 0; display: flex; flex-direction: column; align-items: center; }
-  .hero-painting { width: 280px; margin: 0 auto 24px; order: -1; }
+  .hero-painting { width: 240px; margin: 0 auto 24px; order: -1; }
   .hero-meta { align-items: center; }
   .hero-meta-stacked { flex-direction: column; gap: 12px; }
+  .hero-tagline { text-align: center; }
   .countdown-row { gap: 8px; }
   .cd-pill { padding: 10px 12px; min-width: 60px; }
   .cd-pill .num { font-size: 22px; }
@@ -1518,23 +1522,28 @@ button { cursor: pointer; font-family: inherit; }
    PHASE 2 BEAUTIFICATION — particles, wheel, dot pop, shimmer, pulse, spotlight
    ════════════════════════════════════════════════════════════════════ */
 
-/* ─── Hero: spinning chariot wheel SVG behind title ─── */
-.hero-wheel {
+/* ─── Hero: ornate chariot wheel background layer ─── */
+.hero-wheel-layer {
   position: absolute;
-  top: 50%; left: 50%;
-  width: min(80vmin, 720px);
-  height: min(80vmin, 720px);
-  transform: translate(-50%, -50%);
-  color: var(--gold);
-  opacity: 0.07;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
   z-index: 0;
-  animation: hero-wheel-spin 90s linear infinite;
-  filter: drop-shadow(0 0 20px rgba(244, 201, 107, .3));
+  overflow: visible;
 }
-@keyframes hero-wheel-spin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
+.hero-wheel-ornate {
+  width: 140%;
+  height: 140%;
+  opacity: 0.15;
+}
+@media (max-width: 768px) {
+  .hero-wheel-ornate {
+    width: 180%;
+    height: 180%;
+    opacity: 0.12;
+  }
 }
 
 /* ─── Hero: floating gold marigold petals ─── */
@@ -1574,8 +1583,7 @@ button { cursor: pointer; font-family: inherit; }
 
 /* Reduced motion — respect user preference */
 @media (prefers-reduced-motion: reduce) {
-  .hero-wheel, .petal { animation: none; }
-  .petal { display: none; }
+  .petal { animation: none; display: none; }
 }
 
 /* ─── Schedule: each dot pops as it enters viewport (per-element scroll-driven) ─── */

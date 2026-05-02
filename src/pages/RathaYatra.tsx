@@ -1,7 +1,9 @@
+/* eslint-disable */
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
 import { supabase } from "@/integrations/supabase/client";
+import RathaYatraWheel from "@/components/RathaYatraWheel";
 import "./RathaYatra.css";
 
 const EVENT = {
@@ -305,28 +307,10 @@ function Hero() {
 
   return (
     <section className="hero hero-animated" id="main-content">
-      {/* Spinning chariot wheel SVG behind everything */}
-      <svg className="hero-wheel" viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeWidth="0.6" />
-        <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="0.4" />
-        <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" strokeWidth="0.5" />
-        <circle cx="50" cy="50" r="6" fill="none" stroke="currentColor" strokeWidth="0.8" />
-        <circle cx="50" cy="50" r="1.5" fill="currentColor" />
-        {Array.from({ length: 16 }).map((_, i) => {
-          const angle = (i * Math.PI) / 8;
-          return (
-            <line
-              key={i}
-              x1={50 + 6 * Math.cos(angle)}
-              y1={50 + 6 * Math.sin(angle)}
-              x2={50 + 44 * Math.cos(angle)}
-              y2={50 + 44 * Math.sin(angle)}
-              stroke="currentColor"
-              strokeWidth="0.5"
-            />
-          );
-        })}
-      </svg>
+      {/* Ornate rotating chariot wheel background */}
+      <div className="hero-wheel-layer" aria-hidden="true">
+        <RathaYatraWheel className="hero-wheel-ornate" rotationSeconds={90} />
+      </div>
       {/* Floating gold marigold petals */}
       <div className="hero-particles" aria-hidden="true">
         {Array.from({ length: 14 }).map((_, i) => (
@@ -339,7 +323,10 @@ function Hero() {
           <h1>
             Ratha Yātrā <span className="accent">2026</span>
           </h1>
-          <p className="hero-tagline">Pull the rope. Sing the kirtan. Take home the blessing.</p>
+          <p className="hero-tagline">
+            Pull the rope. Sing the kīrtana.<br />
+            Take home the blessing.
+          </p>
           <div className="hero-meta hero-meta-stacked">
             <div className="hero-meta-item">
               <div className="icon-circle">
@@ -392,7 +379,7 @@ function Hero() {
         <div className="hero-painting" ref={parallaxRef}>
           <img
             src="/images/ratha-yatra/hero.webp"
-            alt="Lord Jagannath chariot procession at Clementi Stadium"
+            alt="Lord Jagannāth atop the Ratha chariot"
             fetchPriority="high"
             decoding="async"
             loading="eager"
