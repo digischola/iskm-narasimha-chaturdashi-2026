@@ -770,7 +770,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
             {submitting ? "Submitting..." : "Register Free →"}
           </button>
           <div className="form-trust">
-            <span>​</span>
+            <span>⭐ 4.6/5 on Google · 14,000+ joined in 2025 · 25+ years of seva</span>
           </div>
           <div className="form-walkin">
             <i className="fas fa-info-circle"></i>
@@ -993,13 +993,6 @@ function Schedule() {
             </div>
           ))}
         </div>
-      </div>
-      <div className="walkin-card animate-in">
-        <i className="fas fa-info-circle"></i>
-        <p>
-          <strong>Pre-register for priority seating</strong> — registered attendees get the best spots, parking
-          guidance, a confirmation reminder, and an exclusive WhatsApp update on event day.
-        </p>
       </div>
     </div>
   );
