@@ -780,18 +780,17 @@ button { cursor: pointer; font-family: inherit; }
   box-shadow: 0 16px 60px rgba(30, 58, 110, .18);
   background: #000;
 }
-.video-wrap video {
-  width: 100%;
-  background: #000;
-  max-height: 540px;
-  object-fit: contain;
+.yt-responsive {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
 }
-/* Specificity: .video-wrap .video-* beats .video-wrap video */
-.video-wrap .video-desktop { display: block; }
-.video-wrap .video-mobile { display: none; }
-@media (max-width: 768px) {
-  .video-wrap .video-desktop { display: none; }
-  .video-wrap .video-mobile { display: block; max-height: 70vh; }
+.yt-responsive iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
 }
 
 /* ═══ HIGHLIGHTS CARDS ═══ */
