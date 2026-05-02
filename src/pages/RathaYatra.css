@@ -179,30 +179,21 @@ button { cursor: pointer; font-family: inherit; }
 .hero {
   position: relative;
   margin-top: 0;
-  min-height: 100vh;
-  padding: 130px 20px 60px;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  isolation: isolate;
-}
-.hero-bg {
-  position: absolute; inset: 0; z-index: -2;
+  background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 40%, var(--navy-2) 100%);
   overflow: hidden;
 }
-.hero-bg img {
-  width: 100%; height: 100%; object-fit: cover;
-  animation: kenburns 30s ease-in-out 1s infinite alternate;
+.hero-animated {
+  background: linear-gradient(160deg, var(--navy-deep), var(--navy), var(--navy-2), var(--navy), var(--navy-deep));
+  background-size: 300% 300%;
+  animation: gradient-shift 12s ease infinite;
 }
-@keyframes kenburns {
-  0% { transform: scale(1.0) translate(0, 0); }
-  100% { transform: scale(1.12) translate(-2%, -1%); }
+/* Sacred geometry pattern overlay */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%23f4c96b' stop-opacity='0.06'/%3E%3Cstop offset='100%25' stop-color='%23f4c96b' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='400' cy='400' r='350' fill='url(%23g1)'/%3E%3Cg fill='none' stroke='%23f4c96b' stroke-width='0.4' opacity='0.1'%3E%3Ccircle cx='400' cy='400' r='150'/%3E%3Ccircle cx='400' cy='400' r='220'/%3E%3Ccircle cx='400' cy='400' r='290'/%3E%3C/g%3E%3C/svg%3E") center/80% no-repeat;
 }
-.hero-overlay {
-  position: absolute; inset: 0; z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(15, 31, 58, .60) 0%, rgba(15, 31, 58, .30) 30%, rgba(15, 31, 58, .45) 60%, rgba(15, 31, 58, .82) 100%);
-}
-/* Soft vignette behind hero text — gentle dimming where words sit */
 .hero-content {
   position: relative; z-index: 2;
   animation: hero-content-in 0.8s ease-out 0.3s both;
@@ -211,44 +202,60 @@ button { cursor: pointer; font-family: inherit; }
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.hero-content::before {
-  content: '';
-  position: absolute;
-  inset: -60px -180px;
-  z-index: -1;
-  background:
-    radial-gradient(ellipse 65% 60% at center, rgba(15,31,58,.65) 0%, rgba(15,31,58,.30) 50%, rgba(15,31,58,0) 85%);
-  pointer-events: none;
-  filter: blur(12px);
-}
-/* Strong text shadows on hero copy for guaranteed readability */
-.hero h1,
-.hero-tagline,
-.hero-eyebrow,
-.hero-meta-item {
-  text-shadow:
-    0 2px 8px rgba(0,0,0,.6),
-    0 0 24px rgba(15,31,58,.7);
-}
-.hero h1 { text-shadow: 0 2px 12px rgba(0,0,0,.7), 0 0 40px rgba(15,31,58,.85); }
 .hero-top {
-  position: relative; z-index: 1;
-  width: 100%; max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 50px 50px;
+  position: relative; z-index: 2;
   text-align: center;
   color: var(--cream);
 }
+/* Framed hero painting — Narasimha style */
+.hero-painting {
+  position: relative;
+  width: min(420px, 50vw);
+  flex-shrink: 0;
+  margin-bottom: 28px;
+}
+.hero-painting img {
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 0 0 1px rgba(244,201,107,.15);
+  display: block;
+}
+.hero-painting::before {
+  content: '';
+  position: absolute; inset: -6px;
+  border: 2px solid rgba(244,201,107,.2);
+  border-radius: 20px;
+  pointer-events: none;
+}
+.hero-painting::after {
+  content: '';
+  position: absolute; inset: -12px;
+  border: 1px solid rgba(244,201,107,.08);
+  border-radius: 24px;
+  pointer-events: none;
+}
 .hero-eyebrow {
-  font-size: 12px; letter-spacing: 3.5px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; letter-spacing: 2.5px;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 16px; font-weight: 600;
+  margin-bottom: 18px; font-weight: 600;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; width: 30px; height: 1.5px; background: var(--gold);
 }
 .hero h1 {
-  font-size: clamp(40px, 7vw, 76px);
-  line-height: 1.05;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
   color: var(--cream);
-  margin-bottom: 18px;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, .4);
+  margin-bottom: 14px;
 }
 .hero h1 .accent { color: var(--cream); font-style: italic; }
 .hero-tagline {
@@ -357,7 +364,8 @@ button { cursor: pointer; font-family: inherit; }
   50% { box-shadow: 0 8px 32px rgba(248, 164, 192, .7); }
 }
 @media (max-width: 768px) {
-  .hero { padding: 175px 16px 50px; }
+  .hero-top { padding: 40px 20px 40px; }
+  .hero-painting { width: 240px; margin-bottom: 20px; }
   .hero-meta { gap: 12px; flex-direction: column; align-items: center; }
   .hero-meta-stacked { flex-direction: column; gap: 12px; }
   .countdown-row { gap: 8px; }

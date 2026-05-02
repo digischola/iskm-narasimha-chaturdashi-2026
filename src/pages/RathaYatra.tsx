@@ -305,17 +305,7 @@ function Hero() {
 
   return (
     <section className="hero hero-animated" id="main-content">
-      <div className="hero-bg" ref={parallaxRef}>
-        <img
-          src="/images/ratha-yatra/hero.webp"
-          alt="Lord Jagannath chariot procession at Clementi Stadium"
-          fetchPriority="high"
-          decoding="async"
-          loading="eager"
-        />
-        <div className="hero-overlay"></div>
-      </div>
-      {/* Spinning chariot wheel SVG behind title */}
+      {/* Spinning chariot wheel SVG behind everything */}
       <svg className="hero-wheel" viewBox="0 0 100 100" aria-hidden="true">
         <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeWidth="0.6" />
         <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="0.4" />
@@ -344,6 +334,18 @@ function Hero() {
         ))}
       </div>
       <div className="hero-top">
+        {/* Framed hero painting */}
+        <div className="hero-painting" ref={parallaxRef}>
+          <img
+            src="/images/ratha-yatra/hero.webp"
+            alt="Lord Jagannath chariot procession at Clementi Stadium"
+            fetchPriority="high"
+            decoding="async"
+            loading="eager"
+            width="680"
+            height="850"
+          />
+        </div>
         <div className="hero-content hero-centered">
           <div className="hero-eyebrow">International Sri Krishna Mandir presents</div>
           <h1>
