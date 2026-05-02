@@ -35,7 +35,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+html { scroll-behavior: smooth; scroll-padding-top: 62px; }
 body {
   font-family: 'Source Sans Pro', sans-serif;
   color: var(--text);
@@ -110,7 +110,7 @@ button { cursor: pointer; font-family: inherit; }
   font-family: 'Playfair Display', serif;
   font-size: 18px; font-weight: 700; color: var(--navy);
 }
-.nav-brand img { height: 32px; border-radius: 50%; }
+.nav-brand img { height: 28px; border-radius: 50%; }
 .nav-links { display: flex; gap: 26px; align-items: center; }
 .nav-links a {
   font-size: 13px; font-weight: 600;
@@ -148,7 +148,7 @@ button { cursor: pointer; font-family: inherit; }
 
 /* ═══ MOBILE CHIP BAR — sticky below the header on mobile, always visible ═══ */
 .chip-bar {
-  position: fixed; top: 56px; left: 0; right: 0; z-index: 999;
+  position: fixed; top: 48px; left: 0; right: 0; z-index: 999;
   display: none; gap: 6px; padding: 10px 12px;
   background: rgba(253, 245, 237, .98);
   backdrop-filter: blur(14px);
@@ -368,7 +368,7 @@ button { cursor: pointer; font-family: inherit; }
   .ry-countdown .cd-pill .num { font-size: 18px; }
   .ry-countdown .cd-pill .lbl { font-size: 8px; margin-top: 4px; }
   /* Bump scroll-padding to accommodate chip-bar height */
-  html { scroll-padding-top: 165px; }
+  html { scroll-padding-top: 155px; }
 }
 
 /* ═══ STATS STRIP ═══ */
