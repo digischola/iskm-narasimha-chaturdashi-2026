@@ -19,7 +19,18 @@ import React from "react";
  *   - color            Primary gold tone (default brand gold #f4c96b)
  *   - accent           Inner accent (default brand navy #1e3a6e)
  */
-const RathaYatraWheel = ({
+interface RathaYatraWheelProps {
+  className?: string;
+  rotationSeconds?: number;
+  reverse?: boolean;
+  color?: string;
+  accent?: string;
+  highlight?: string;
+  shadow?: string;
+  uid?: string;
+}
+
+const RathaYatraWheel: React.FC<RathaYatraWheelProps> = ({
   className = "",
   rotationSeconds = 90,
   reverse = false,
