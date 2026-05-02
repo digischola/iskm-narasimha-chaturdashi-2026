@@ -209,7 +209,7 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
         <a href="#register" className="ribbon-cta">Reserve Your Spot &rarr;</a>
       </div>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
-        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand"><img src="/images/logo.webp" alt="Sri Krishna Mandir" width="32" height="32" /><span>Sri Krishna Mandir</span></a>
+        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand"><img src="/images/logo.webp" alt="ISKM Singapore" width="32" height="32" /><span>ISKM Singapore</span></a>
         <div className="nav-links">
           <a href="#about" className="desk-link">About</a>
           <a href="#schedule" className="desk-link">Schedule</a>
@@ -254,8 +254,8 @@ function Hero() {
 
   return (
     <section className="hero hero-animated" id="main-content">
-      <div className="hero-bg ken-burns" ref={parallaxRef}>
-        <img src="/images/ratha-yatra/hero.webp" alt="Lord Jagannath chariot procession at Clementi Stadium" fetchPriority="high" decoding="async" />
+      <div className="hero-bg" ref={parallaxRef}>
+        <img src="/images/ratha-yatra/hero.webp" alt="Lord Jagannath chariot procession at Clementi Stadium" fetchPriority="high" decoding="async" loading="eager" />
         <div className="hero-overlay"></div>
       </div>
       {/* Spinning chariot wheel SVG behind title */}
@@ -287,7 +287,7 @@ function Hero() {
       </div>
       <div className="hero-top">
         <div className="hero-content hero-centered">
-          <div className="hero-eyebrow">Sri Krishna Mandir presents</div>
+          <div className="hero-eyebrow">International Sri Krishna Mandir presents</div>
           <h1>Ratha Yātrā <span className="accent">2026</span></h1>
           <p className="hero-tagline">Pull the rope. Sing the kirtan. Take home the blessing.</p>
           <div className="hero-meta hero-meta-stacked">
