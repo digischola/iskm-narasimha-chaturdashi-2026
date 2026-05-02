@@ -196,7 +196,7 @@ button { cursor: pointer; font-family: inherit; }
 .hero-overlay {
   position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(180deg, rgba(15, 31, 58, .45) 0%, rgba(15, 31, 58, .15) 35%, rgba(15, 31, 58, .35) 70%, rgba(15, 31, 58, .75) 100%);
+    linear-gradient(180deg, rgba(15, 31, 58, .60) 0%, rgba(15, 31, 58, .30) 30%, rgba(15, 31, 58, .45) 60%, rgba(15, 31, 58, .82) 100%);
 }
 /* Soft vignette behind hero text — gentle dimming where words sit */
 .hero-content {
@@ -210,12 +210,12 @@ button { cursor: pointer; font-family: inherit; }
 .hero-content::before {
   content: '';
   position: absolute;
-  inset: -40px -140px;
+  inset: -60px -180px;
   z-index: -1;
   background:
-    radial-gradient(ellipse 60% 55% at center, rgba(15,31,58,.55) 0%, rgba(15,31,58,.25) 55%, rgba(15,31,58,0) 90%);
+    radial-gradient(ellipse 65% 60% at center, rgba(15,31,58,.65) 0%, rgba(15,31,58,.30) 50%, rgba(15,31,58,0) 85%);
   pointer-events: none;
-  filter: blur(10px);
+  filter: blur(12px);
 }
 /* Strong text shadows on hero copy for guaranteed readability */
 .hero h1,
