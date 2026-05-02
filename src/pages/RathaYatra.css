@@ -187,7 +187,7 @@ button { cursor: pointer; font-family: inherit; }
 }
 .hero-bg img {
   width: 100%; height: 100%; object-fit: cover;
-  animation: kenburns 30s ease-in-out infinite alternate;
+  animation: kenburns 30s ease-in-out 1s infinite alternate;
 }
 @keyframes kenburns {
   0% { transform: scale(1.0) translate(0, 0); }
