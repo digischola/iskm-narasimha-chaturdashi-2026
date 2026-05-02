@@ -209,7 +209,7 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
         <a href="#register" className="ribbon-cta">Reserve Your Spot &rarr;</a>
       </div>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
-        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand"><img src="/images/logo.webp" alt="Sri Krishna Mandir" width="32" height="32" /><span>Sri Krishna Mandir</span></a>
+        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand"><img src="/images/logo.webp" alt="ISKM Singapore" width="32" height="32" /><span>ISKM Singapore</span></a>
         <div className="nav-links">
           <a href="#about" className="desk-link">About</a>
           <a href="#schedule" className="desk-link">Schedule</a>
@@ -254,8 +254,8 @@ function Hero() {
 
   return (
     <section className="hero hero-animated" id="main-content">
-      <div className="hero-bg ken-burns" ref={parallaxRef}>
-        <img src="/images/ratha-yatra/hero.webp" alt="Lord Jagannath chariot procession at Clementi Stadium" fetchPriority="high" decoding="async" />
+      <div className="hero-bg" ref={parallaxRef}>
+        <img src="/images/ratha-yatra/hero.webp" alt="Lord Jagannath chariot procession at Clementi Stadium" fetchPriority="high" decoding="async" loading="eager" />
         <div className="hero-overlay"></div>
       </div>
       {/* Spinning chariot wheel SVG behind title */}
@@ -287,7 +287,7 @@ function Hero() {
       </div>
       <div className="hero-top">
         <div className="hero-content hero-centered">
-          <div className="hero-eyebrow">Sri Krishna Mandir presents</div>
+          <div className="hero-eyebrow">International Sri Krishna Mandir presents</div>
           <h1>Ratha Yātrā <span className="accent">2026</span></h1>
           <p className="hero-tagline">Pull the rope. Sing the kirtan. Take home the blessing.</p>
           <div className="hero-meta hero-meta-stacked">
@@ -1029,8 +1029,8 @@ function Footer() {
     <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-col">
-          <img src="/images/logo.webp" alt="Sri Krishna Mandir" width="38" height="38" />
-          <p className="footer-brand">Sri Krishna Mandir Singapore</p>
+          <img src="/images/logo.webp" alt="ISKM Singapore" width="52" height="52" />
+          <p className="footer-brand">ISKM Singapore</p>
           <p className="footer-tag">25+ years of seva</p>
           <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">srikrishnamandir.org</a>
         </div>
@@ -1047,11 +1047,10 @@ function Footer() {
           <p>No.9 Lorong 29 Geylang<br />#03-02, Singapore 388065</p>
           <p>+65 6250 2280</p>
           <a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a>
-          <a href="https://wa.me/6562502280" target="_blank" rel="noopener noreferrer">WhatsApp us →</a>
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; 2026 Sri Krishna Mandir Singapore. All rights reserved.</p>
+        <p>&copy; 2026 International Sri Krishna Mandir. All rights reserved.</p>
       </div>
     </footer>
   );
@@ -1071,19 +1070,27 @@ function ExitIntentModal() {
     if (typeof window === "undefined") return;
     if (sessionStorage.getItem("ry_exit_intent_seen")) return;
 
+    // Only trigger on genuine exit: mouse leaves through the very top of the viewport
     const handler = (e: MouseEvent) => {
       if (shownRef.current) return;
-      if (e.clientY > 0 || e.relatedTarget) return;
+      // Must be leaving through the top edge (clientY <= 0)
+      if (e.clientY > 5) return;
+      // relatedTarget being non-null means focus moved to another element (not leaving page)
+      if (e.relatedTarget) return;
+      // User must have scrolled at least 15% of the page
       const docH = document.documentElement.scrollHeight - window.innerHeight;
       const progress = docH > 0 ? window.scrollY / docH : 0;
-      if (progress < 0.12) return;
+      if (progress < 0.15) return;
+      // Must have spent at least 8 seconds on the page
+      if (Date.now() - loadTime < 8000) return;
       shownRef.current = true;
       sessionStorage.setItem("ry_exit_intent_seen", "1");
       setOpen(true);
     };
 
-    document.addEventListener("mouseleave", handler);
-    return () => document.removeEventListener("mouseleave", handler);
+    const loadTime = Date.now();
+    document.addEventListener("mouseout", handler);
+    return () => document.removeEventListener("mouseout", handler);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

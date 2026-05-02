@@ -187,7 +187,7 @@ button { cursor: pointer; font-family: inherit; }
 }
 .hero-bg img {
   width: 100%; height: 100%; object-fit: cover;
-  animation: kenburns 30s ease-in-out infinite alternate;
+  animation: kenburns 30s ease-in-out 1s infinite alternate;
 }
 @keyframes kenburns {
   0% { transform: scale(1.0) translate(0, 0); }
@@ -201,6 +201,11 @@ button { cursor: pointer; font-family: inherit; }
 /* Soft vignette behind hero text — gentle dimming where words sit */
 .hero-content {
   position: relative; z-index: 2;
+  animation: hero-content-in 0.8s ease-out 0.3s both;
+}
+@keyframes hero-content-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .hero-content::before {
   content: '';
@@ -241,7 +246,7 @@ button { cursor: pointer; font-family: inherit; }
   margin-bottom: 18px;
   text-shadow: 0 2px 30px rgba(0, 0, 0, .4);
 }
-.hero h1 .accent { color: var(--gold); }
+.hero h1 .accent { color: var(--cream); font-style: italic; }
 .hero-tagline {
   font-family: 'Playfair Display', serif;
   font-style: italic;
@@ -254,6 +259,10 @@ button { cursor: pointer; font-family: inherit; }
 .hero-meta {
   display: flex; justify-content: center; flex-wrap: wrap;
   gap: 22px; margin: 28px 0 32px;
+}
+.hero-meta-stacked {
+  flex-direction: row;
+  gap: 32px;
 }
 .hero-meta-item {
   display: flex; align-items: center; gap: 10px;
@@ -292,24 +301,26 @@ button { cursor: pointer; font-family: inherit; }
   margin-top: 6px;
 }
 
-/* ─── Ratha Yātrā page-scoped countdown overrides ─── */
+/* ─── Ratha Yātrā page-scoped countdown overrides — frosted glass ─── */
 .ry-countdown.cd-pill,
 .ry-countdown .cd-pill {
-  background: rgba(253, 245, 237, .92);
-  border: 1px solid rgba(244, 201, 107, .55);
-  border-radius: 10px;
-  padding: 9px 14px;
-  min-width: 56px;
-  box-shadow: 0 6px 18px rgba(15, 31, 58, .22);
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 12px;
+  padding: 12px 16px;
+  min-width: 64px;
+  box-shadow: 0 8px 32px rgba(15, 31, 58, .3), inset 0 1px 0 rgba(255, 255, 255, .15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 .ry-countdown .cd-pill .num {
-  font-size: 22px;
-  color: var(--navy-deep);
+  font-size: 24px;
+  color: var(--cream);
 }
 .ry-countdown .cd-pill .lbl {
   font-size: 9px;
-  color: var(--navy-2);
-  opacity: .8;
+  color: rgba(253, 245, 237, .7);
+  opacity: 1;
   margin-top: 6px;
   font-weight: 700;
 }
@@ -343,6 +354,7 @@ button { cursor: pointer; font-family: inherit; }
 @media (max-width: 768px) {
   .hero { padding: 175px 16px 50px; }
   .hero-meta { gap: 12px; flex-direction: column; align-items: center; }
+  .hero-meta-stacked { flex-direction: column; gap: 12px; }
   .countdown-row { gap: 8px; }
   .cd-pill { padding: 10px 12px; min-width: 60px; }
   .cd-pill .num { font-size: 22px; }
@@ -1149,10 +1161,10 @@ button { cursor: pointer; font-family: inherit; }
 .loc-map {
   border-radius: 14px; overflow: hidden;
   box-shadow: 0 10px 30px rgba(30, 58, 110, .12);
-  aspect-ratio: 4 / 3;
+  min-height: 380px;
 }
 .loc-map iframe {
-  width: 100%; height: 100%; border: none;
+  width: 100%; height: 100%; min-height: 380px; border: none;
 }
 .loc-info {
   background: var(--cream-warm);
@@ -1334,7 +1346,7 @@ button { cursor: pointer; font-family: inherit; }
   gap: 50px;
   max-width: 1080px; margin: 0 auto;
 }
-.footer-col img { height: 42px; border-radius: 50%; margin-bottom: 16px; }
+.footer-col img { height: 52px; width: 52px; border-radius: 50%; margin-bottom: 16px; }
 .footer-col h5 {
   font-size: 12px; font-weight: 700; letter-spacing: 2px;
   text-transform: uppercase; color: var(--gold);
@@ -1628,8 +1640,8 @@ button { cursor: pointer; font-family: inherit; }
 /* ─── Split-flap countdown digit (per-digit flip card) — Ratha Yātrā page only ─── */
 .ry-countdown .flip-num {
   font-family: 'Playfair Display', serif;
-  font-size: 22px; font-weight: 700;
-  color: var(--gold); line-height: 1;
+  font-size: 24px; font-weight: 700;
+  color: var(--cream); line-height: 1;
   display: inline-flex;
   gap: 3px;
   font-variant-numeric: tabular-nums;
@@ -1648,7 +1660,7 @@ button { cursor: pointer; font-family: inherit; }
   left: 0; right: 0;
   height: 50%;
   overflow: hidden;
-  background: var(--cream);
+  background: rgba(255, 255, 255, .08);
 }
 .ry-countdown .flip-half > span,
 .ry-countdown .flip-flap > span {
@@ -1658,15 +1670,14 @@ button { cursor: pointer; font-family: inherit; }
   line-height: 1em;
   text-align: center;
   display: block;
-  color: var(--navy-deep);
+  color: var(--cream);
 }
 .ry-countdown .flip-top,
 .ry-countdown .flip-flap-top {
   top: 0;
   border-radius: 4px 4px 0 0;
   box-shadow:
-    inset 0 -1px 0 rgba(199, 154, 58, 0.18),
-    inset 0 -3px 5px -2px rgba(15, 31, 58, 0.06);
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
 }
 .ry-countdown .flip-top > span,
 .ry-countdown .flip-flap-top > span { top: 0; }
@@ -1675,8 +1686,7 @@ button { cursor: pointer; font-family: inherit; }
   bottom: 0;
   border-radius: 0 0 4px 4px;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 3px 5px -2px rgba(15, 31, 58, 0.03);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .ry-countdown .flip-bottom > span,
 .ry-countdown .flip-flap-bottom > span { top: -0.5em; }
