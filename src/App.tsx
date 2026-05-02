@@ -836,6 +836,17 @@ function LandingPage() {
 
   return (
     <>
+      <Helmet>
+        <title>Śrī Nṛsiṁha Caturdaśī 2026 — ISKM Singapore</title>
+        <meta name="description" content="Register free for Śrī Nṛsiṁha Caturdaśī 2026 at ISKM Singapore. Grand Abhiṣeka, Kīrtana, cultural programme & Prasādam. 30 April 2026." />
+        <meta property="og:title" content="Śrī Nṛsiṁha Caturdaśī 2026 — ISKM Singapore" />
+        <meta property="og:description" content="Register free for the grand celebration. 30 April 2026, 6:30–10 PM." />
+        <meta property="og:image" content="https://events.srikrishnamandir.org/images/hero-image.webp" />
+        <meta property="og:url" content="https://events.srikrishnamandir.org/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Śrī Nṛsiṁha Caturdaśī 2026 — ISKM Singapore" />
+        <meta name="twitter:image" content="https://events.srikrishnamandir.org/images/hero-image.webp" />
+      </Helmet>
       <div className="scroll-progress" style={{ transform: `scaleX(${progress})` }}></div>
       <Navbar scrolled={scrolled} />
       <Hero spotsCount={spotsCount} />
