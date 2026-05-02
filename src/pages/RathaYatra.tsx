@@ -228,12 +228,6 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
-      <div className="ribbon">
-        <span className="ribbon-text">Register free for {EVENT.title}</span>
-        <a href="#register" className="ribbon-cta">
-          Reserve Your Spot &rarr;
-        </a>
-      </div>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
         <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand">
           <img src="/images/logo.webp" alt="ISKM Singapore" width="32" height="32" />
