@@ -1,10 +1,12 @@
 import { useEffect, useState, useCallback, useRef, lazy, Suspense } from "react";
 import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 
 const WeekendLoveFeast = lazy(() => import("@/pages/WeekendLoveFeast"));
 const FreePrasadamProgram = lazy(() => import("@/pages/FreePrasadamProgram"));
+const RathaYatra = lazy(() => import("@/pages/RathaYatra"));
 
 
 /* ═══ HOOKS ═══ */
