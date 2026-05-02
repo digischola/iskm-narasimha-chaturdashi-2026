@@ -1405,6 +1405,14 @@ function Location() {
             loading="lazy"
             title="Clementi Stadium Map"
           ></iframe>
+          <a
+            href="https://maps.app.goo.gl/nN1MNCH681zEcqdT6"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="loc-map-overlay"
+          >
+            <i className="fas fa-external-link-alt"></i> Open in Google Maps
+          </a>
         </div>
         <div className="loc-info">
           <h3>Clementi Stadium</h3>
