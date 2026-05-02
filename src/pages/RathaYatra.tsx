@@ -1071,19 +1071,27 @@ function ExitIntentModal() {
     if (typeof window === "undefined") return;
     if (sessionStorage.getItem("ry_exit_intent_seen")) return;
 
+    // Only trigger on genuine exit: mouse leaves through the very top of the viewport
     const handler = (e: MouseEvent) => {
       if (shownRef.current) return;
-      if (e.clientY > 0 || e.relatedTarget) return;
+      // Must be leaving through the top edge (clientY <= 0)
+      if (e.clientY > 5) return;
+      // relatedTarget being non-null means focus moved to another element (not leaving page)
+      if (e.relatedTarget) return;
+      // User must have scrolled at least 15% of the page
       const docH = document.documentElement.scrollHeight - window.innerHeight;
       const progress = docH > 0 ? window.scrollY / docH : 0;
-      if (progress < 0.12) return;
+      if (progress < 0.15) return;
+      // Must have spent at least 8 seconds on the page
+      if (Date.now() - loadTime < 8000) return;
       shownRef.current = true;
       sessionStorage.setItem("ry_exit_intent_seen", "1");
       setOpen(true);
     };
 
-    document.addEventListener("mouseleave", handler);
-    return () => document.removeEventListener("mouseleave", handler);
+    const loadTime = Date.now();
+    document.addEventListener("mouseout", handler);
+    return () => document.removeEventListener("mouseout", handler);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
