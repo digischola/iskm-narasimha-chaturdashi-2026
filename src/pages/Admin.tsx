@@ -364,6 +364,8 @@ export default function Admin() {
     const sources: Array<{ created_at: string; count: number }> = [];
     if (tab === "all" || tab === "nrsimha")
       ncData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
+    if (tab === "all" || tab === "ratha_yatra")
+      ryData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
     if (tab === "all" || tab === "slf")
       slfData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
     if (tab === "all" || tab === "prasadam")
