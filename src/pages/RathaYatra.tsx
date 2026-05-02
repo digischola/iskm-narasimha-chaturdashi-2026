@@ -748,12 +748,16 @@ function VideoSection() {
     <div className="section video-section" id="video">
       <div className="sec-header animate-in"><div className="overline">Watch the 2026 promo</div><h2>What awaits you on 5 July</h2><div className="divider"></div><p>Built from 2025 footage</p></div>
       <div className="video-wrap animate-in">
-        <video controls preload="metadata" poster="/images/ratha-yatra/hero.webp" playsInline className="video-desktop">
-          <source src="/videos/ratha-yatra-2026-website-L.mp4" type="video/mp4" />
-        </video>
-        <video controls preload="metadata" poster="/images/ratha-yatra/hero.webp" playsInline className="video-mobile">
-          <source src="/videos/ratha-yatra-2026-website-V.mp4" type="video/mp4" />
-        </video>
+        <div className="yt-responsive">
+          <iframe
+            src="https://www.youtube.com/embed/mYkgIK1HxFc?autoplay=1&mute=1&loop=1&playlist=mYkgIK1HxFc&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+            title="Ratha Yātrā 2026 Promo"
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            loading="lazy"
+          ></iframe>
+        </div>
       </div>
     </div>
   );
@@ -1070,27 +1074,55 @@ function ExitIntentModal() {
     if (typeof window === "undefined") return;
     if (sessionStorage.getItem("ry_exit_intent_seen")) return;
 
-    // Only trigger on genuine exit: mouse leaves through the very top of the viewport
-    const handler = (e: MouseEvent) => {
+    const loadTime = Date.now();
+    let inactivityTimer: ReturnType<typeof setTimeout> | null = null;
+
+    // Desktop: mouse leaves through the top edge
+    const handleMouseOut = (e: MouseEvent) => {
       if (shownRef.current) return;
-      // Must be leaving through the top edge (clientY <= 0)
       if (e.clientY > 5) return;
-      // relatedTarget being non-null means focus moved to another element (not leaving page)
       if (e.relatedTarget) return;
-      // User must have scrolled at least 15% of the page
       const docH = document.documentElement.scrollHeight - window.innerHeight;
       const progress = docH > 0 ? window.scrollY / docH : 0;
       if (progress < 0.15) return;
-      // Must have spent at least 8 seconds on the page
       if (Date.now() - loadTime < 8000) return;
+      triggerModal();
+    };
+
+    // Mobile: inactivity (no scroll/touch for 45s after 15s on page & 15% scroll)
+    const resetInactivity = () => {
+      if (shownRef.current) return;
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        if (shownRef.current) return;
+        if (Date.now() - loadTime < 15000) return;
+        const docH = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docH > 0 ? window.scrollY / docH : 0;
+        if (progress < 0.15) return;
+        triggerModal();
+      }, 45000);
+    };
+
+    const triggerModal = () => {
+      if (shownRef.current) return;
       shownRef.current = true;
       sessionStorage.setItem("ry_exit_intent_seen", "1");
       setOpen(true);
     };
 
-    const loadTime = Date.now();
-    document.addEventListener("mouseout", handler);
-    return () => document.removeEventListener("mouseout", handler);
+    document.addEventListener("mouseout", handleMouseOut);
+    // Mobile listeners
+    window.addEventListener("scroll", resetInactivity, { passive: true });
+    window.addEventListener("touchstart", resetInactivity, { passive: true });
+    // Start the inactivity timer
+    resetInactivity();
+
+    return () => {
+      document.removeEventListener("mouseout", handleMouseOut);
+      window.removeEventListener("scroll", resetInactivity);
+      window.removeEventListener("touchstart", resetInactivity);
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

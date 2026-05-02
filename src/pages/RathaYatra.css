@@ -196,7 +196,7 @@ button { cursor: pointer; font-family: inherit; }
 .hero-overlay {
   position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(180deg, rgba(15, 31, 58, .45) 0%, rgba(15, 31, 58, .15) 35%, rgba(15, 31, 58, .35) 70%, rgba(15, 31, 58, .75) 100%);
+    linear-gradient(180deg, rgba(15, 31, 58, .60) 0%, rgba(15, 31, 58, .30) 30%, rgba(15, 31, 58, .45) 60%, rgba(15, 31, 58, .82) 100%);
 }
 /* Soft vignette behind hero text — gentle dimming where words sit */
 .hero-content {
@@ -210,12 +210,12 @@ button { cursor: pointer; font-family: inherit; }
 .hero-content::before {
   content: '';
   position: absolute;
-  inset: -40px -140px;
+  inset: -60px -180px;
   z-index: -1;
   background:
-    radial-gradient(ellipse 60% 55% at center, rgba(15,31,58,.55) 0%, rgba(15,31,58,.25) 55%, rgba(15,31,58,0) 90%);
+    radial-gradient(ellipse 65% 60% at center, rgba(15,31,58,.65) 0%, rgba(15,31,58,.30) 50%, rgba(15,31,58,0) 85%);
   pointer-events: none;
-  filter: blur(10px);
+  filter: blur(12px);
 }
 /* Strong text shadows on hero copy for guaranteed readability */
 .hero h1,
@@ -301,28 +301,29 @@ button { cursor: pointer; font-family: inherit; }
   margin-top: 6px;
 }
 
-/* ─── Ratha Yātrā page-scoped countdown overrides — frosted glass ─── */
+/* ─── Ratha Yātrā page-scoped countdown overrides — dark glass cards ─── */
 .ry-countdown.cd-pill,
 .ry-countdown .cd-pill {
-  background: rgba(255, 255, 255, .12);
-  border: 1px solid rgba(255, 255, 255, .25);
-  border-radius: 12px;
-  padding: 12px 16px;
-  min-width: 64px;
-  box-shadow: 0 8px 32px rgba(15, 31, 58, .3), inset 0 1px 0 rgba(255, 255, 255, .15);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(15, 31, 58, .65);
+  border: 1px solid rgba(244, 201, 107, .30);
+  border-radius: 14px;
+  padding: 14px 18px;
+  min-width: 72px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 .ry-countdown .cd-pill .num {
-  font-size: 24px;
-  color: var(--cream);
+  font-size: 26px;
+  color: var(--gold);
 }
 .ry-countdown .cd-pill .lbl {
   font-size: 9px;
-  color: rgba(253, 245, 237, .7);
+  color: rgba(253, 245, 237, .8);
   opacity: 1;
   margin-top: 6px;
   font-weight: 700;
+  letter-spacing: 1px;
 }
 .btn-hero-cta {
   display: inline-block;
@@ -780,18 +781,17 @@ button { cursor: pointer; font-family: inherit; }
   box-shadow: 0 16px 60px rgba(30, 58, 110, .18);
   background: #000;
 }
-.video-wrap video {
-  width: 100%;
-  background: #000;
-  max-height: 540px;
-  object-fit: contain;
+.yt-responsive {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
 }
-/* Specificity: .video-wrap .video-* beats .video-wrap video */
-.video-wrap .video-desktop { display: block; }
-.video-wrap .video-mobile { display: none; }
-@media (max-width: 768px) {
-  .video-wrap .video-desktop { display: none; }
-  .video-wrap .video-mobile { display: block; max-height: 70vh; }
+.yt-responsive iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
 }
 
 /* ═══ HIGHLIGHTS CARDS ═══ */
@@ -1161,10 +1161,15 @@ button { cursor: pointer; font-family: inherit; }
 .loc-map {
   border-radius: 14px; overflow: hidden;
   box-shadow: 0 10px 30px rgba(30, 58, 110, .12);
-  min-height: 380px;
+  position: relative;
+  padding-bottom: 75%; /* aspect ratio for map */
+  height: 0;
 }
 .loc-map iframe {
-  width: 100%; height: 100%; min-height: 380px; border: none;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
 }
 .loc-info {
   background: var(--cream-warm);
@@ -1640,8 +1645,8 @@ button { cursor: pointer; font-family: inherit; }
 /* ─── Split-flap countdown digit (per-digit flip card) — Ratha Yātrā page only ─── */
 .ry-countdown .flip-num {
   font-family: 'Playfair Display', serif;
-  font-size: 24px; font-weight: 700;
-  color: var(--cream); line-height: 1;
+  font-size: 26px; font-weight: 700;
+  color: var(--gold); line-height: 1;
   display: inline-flex;
   gap: 3px;
   font-variant-numeric: tabular-nums;
@@ -1660,7 +1665,7 @@ button { cursor: pointer; font-family: inherit; }
   left: 0; right: 0;
   height: 50%;
   overflow: hidden;
-  background: rgba(255, 255, 255, .08);
+  background: rgba(244, 201, 107, .10);
 }
 .ry-countdown .flip-half > span,
 .ry-countdown .flip-flap > span {
@@ -1670,7 +1675,7 @@ button { cursor: pointer; font-family: inherit; }
   line-height: 1em;
   text-align: center;
   display: block;
-  color: var(--cream);
+  color: var(--gold);
 }
 .ry-countdown .flip-top,
 .ry-countdown .flip-flap-top {
