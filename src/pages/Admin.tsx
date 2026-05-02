@@ -465,6 +465,11 @@ export default function Admin() {
       const rows = prasadamData.map(r => [r.full_name, r.email, r.country_code, r.phone, r.tier, r.preferred_date, r.status, new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "prasadam_sponsorships";
+    } else if (page === "registrations" && regEventTab === "ratha_yatra") {
+      const headers = ["Name", "Email", "Phone", "Attendees", "Confirmation", "Reminder", "Registered At"];
+      const rows = ryData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "ratha_yatra_registrations";
     } else {
       const headers = ["Name", "Email", "Phone", "Attendees", "Volunteer", "Confirmation", "Reminder", "Registered At"];
       const rows = ncData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.is_volunteer ? "Yes" : "No", r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
