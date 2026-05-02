@@ -251,11 +251,11 @@ button { cursor: pointer; font-family: inherit; }
   content: ''; width: 30px; height: 1.5px; background: var(--gold);
 }
 .hero h1 {
-  font-size: clamp(40px, 7vw, 76px);
-  line-height: 1.05;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
   color: var(--cream);
-  margin-bottom: 18px;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, .4);
+  margin-bottom: 14px;
 }
 .hero h1 .accent { color: var(--cream); font-style: italic; }
 .hero-tagline {
