@@ -62,7 +62,7 @@ button { cursor: pointer; font-family: inherit; }
 
 /* ═══ SCROLL PROGRESS ═══ */
 .scroll-progress {
-  position: fixed; top: 37px; left: 0; right: 0;
+  position: fixed; top: 0; left: 0; right: 0;
   height: 3px; z-index: 1002;
   transform-origin: left;
   transition: transform .1s linear;
