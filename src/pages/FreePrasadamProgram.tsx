@@ -73,19 +73,16 @@ const IMPACT_STATS = [
 /* ═══ PICTURE HELPER ═══ */
 function Pic({ n, alt, loading = "lazy", className, width, height, eager }: { n: string; alt: string; loading?: "lazy" | "eager"; className?: string; width?: number; height?: number; eager?: boolean }) {
   return (
-    <picture>
-      <source srcSet={`${IMG}/${n}.webp`} type="image/webp" />
-      <img
-        src={`${IMG}/${n}.jpg`}
-        alt={alt}
-        loading={eager ? "eager" : loading}
-        decoding={eager ? "async" : "async"}
-        className={className}
-        width={width}
-        height={height}
-        {...(eager ? { fetchPriority: "high" as const } : {})}
-      />
-    </picture>
+    <img
+      src={`${IMG}/${n}.webp`}
+      alt={alt}
+      loading={eager ? "eager" : loading}
+      decoding="async"
+      className={className}
+      width={width || 600}
+      height={height || 400}
+      {...(eager ? { fetchPriority: "high" as const } : {})}
+    />
   );
 }
 
