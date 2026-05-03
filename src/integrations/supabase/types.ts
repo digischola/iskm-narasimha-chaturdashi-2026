@@ -199,6 +199,9 @@ export type Database = {
           name: string
           phone: string | null
           reminder_sent: boolean
+          t1_reminder_sent: boolean
+          t14_reminder_sent: boolean
+          thankyou_sent: boolean
         }
         Insert: {
           attendees?: number
@@ -210,6 +213,9 @@ export type Database = {
           name: string
           phone?: string | null
           reminder_sent?: boolean
+          t1_reminder_sent?: boolean
+          t14_reminder_sent?: boolean
+          thankyou_sent?: boolean
         }
         Update: {
           attendees?: number
@@ -221,6 +227,9 @@ export type Database = {
           name?: string
           phone?: string | null
           reminder_sent?: boolean
+          t1_reminder_sent?: boolean
+          t14_reminder_sent?: boolean
+          thankyou_sent?: boolean
         }
         Relationships: []
       }
