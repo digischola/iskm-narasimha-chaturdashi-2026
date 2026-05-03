@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 
 const EVENT_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026";
 const WLF_URL = "https://events.srikrishnamandir.org/weekend-love-feast";
-const SEVA_URL = "https://srikrishnamandir.org/product/chariot-construction-seva-2026/";
+const SEVA_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026#seva";
 
 const THANKYOU_HTML = `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
