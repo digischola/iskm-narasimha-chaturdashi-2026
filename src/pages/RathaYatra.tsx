@@ -379,7 +379,7 @@ function Hero() {
         {/* Framed hero painting */}
         <div className="hero-painting" ref={parallaxRef}>
           <img
-            src="/images/ratha-yatra/hero.webp"
+            src="/images/ratha-yatra/hero.svg"
             alt="Lord Jagannāth atop the Ratha chariot"
             fetchPriority="high"
             decoding="async"
@@ -611,7 +611,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           <div className="reg-badge">
             <i className="fas fa-ticket-alt"></i> &nbsp;Free Entry
           </div>
-          <h3>Reserve your place</h3>
+          <h3>Register here</h3>
           <p>Free entry · Free 5-course feast · Whole family welcome</p>
         </div>
         <form onSubmit={handleSubmit}>
@@ -758,7 +758,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           </div>
           <div className="form-walkin">
             <i className="fas fa-info-circle"></i>
-            <span>Free entry · Confirmation email · Priority seating for registered guests</span>
+            <span>Free entry · Confirmation email sent upon registration</span>
           </div>
         </form>
       </div>
@@ -928,31 +928,23 @@ const SCHEDULE_ITEMS = [
   },
   {
     time: "5:30 – 6:00 PM",
-    title: "Cultural Odissi Dance",
-    desc: "Classical Odissi dancers welcome the arrival of the deities.",
+    title: "Cultural Odissi Dance · Deities Ascend Chariots & Mahā Ārati",
+    desc: "Classical Odissi dancers welcome the arrival of the deities. Lord Jagannath, Lord Baladeva, and Goddess Subhadra take their place atop the three chariots, blessed by temple priests.",
     icon: <i className="fas fa-music"></i>,
     highlight: false,
   },
   {
-    time: "6:00 – 6:30 PM",
-    title: "Deities Ascend Chariots & Mahā Ārati",
-    desc: "Lord Jagannath, Lord Baladeva, and Goddess Subhadra take their place atop the three chariots, blessed by temple priests.",
-    icon: <i className="fas fa-fire"></i>,
-    highlight: false,
-  },
-  {
-    time: "6:30 – 9:00 PM",
+    time: "6:00 – 9:00 PM",
     title: "Inauguration of Chariot Procession",
     desc: "Three hand-pulled chariots roll. Pull the rope yourself. Live ecstatic kirtan, free 5-course prasadam, and the Vaikuntha Spiritual Bazaar — the festival in full force.",
     icon: <ChariotIcon />,
     highlight: true,
     tag: "Peak Moment",
   },
-  { time: "9:00 – 9:15 PM", title: "End of Chariot Procession", desc: "", icon: <ChariotIcon />, highlight: false },
   {
-    time: "9:15 – 9:30 PM",
+    time: "9:00 – 9:30 PM",
     title: "Final Ārati & Deities depart stadium",
-    desc: "",
+    desc: "The chariots return, the final Ārati is offered, and the Lordships depart the festival ground.",
     icon: <i className="fas fa-fire"></i>,
     highlight: false,
   },
@@ -1372,7 +1364,7 @@ function Seva() {
 const FAQ_DATA = [
   {
     q: "Do I need to register to attend?",
-    a: "Yes — please pre-register so we can plan seating, food, and parking properly. Registration is free and takes 30 seconds. Registered attendees receive priority seating, a confirmation reminder, and an exclusive WhatsApp update on event day.",
+    a: "Yes — please pre-register so we can plan seating, food, and parking properly. Registration is free and takes 30 seconds. Registered attendees receive a confirmation reminder and an exclusive WhatsApp update on event day.",
   },
   {
     q: "Is the event free?",
@@ -1596,7 +1588,7 @@ function Footer() {
       <div className="footer-inner">
         <div className="footer-col">
           <img src="/images/logo.webp" alt="ISKM Singapore" width="52" height="52" />
-          <p className="footer-brand">Sri Krishna Mandir Singapore</p>
+          <p className="footer-brand">ISKM Singapore</p>
           <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">
             srikrishnamandir.org
           </a>
@@ -1624,7 +1616,7 @@ function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; 2026 Sri Krishna Mandir Singapore. All rights reserved.</p>
+        <p>&copy; 2026 ISKM Singapore. All rights reserved.</p>
       </div>
     </footer>
   );
@@ -1854,13 +1846,13 @@ function LandingPage() {
           property="og:description"
           content="Pull the rope. Sing the kirtan. Take home the blessing. Free entry, 5 July 2026, Clementi Stadium."
         />
-        <meta property="og:image" content="https://events.srikrishnamandir.org/images/ratha-yatra/hero.webp" />
+        <meta property="og:image" content="https://events.srikrishnamandir.org/images/ratha-yatra/hero.svg" />
         <meta property="og:url" content="https://events.srikrishnamandir.org/ratha-yatra-2026" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Ratha Yātrā 2026 — Sri Krishna Mandir Singapore" />
-        <meta name="twitter:image" content="https://events.srikrishnamandir.org/images/ratha-yatra/hero.webp" />
-        <link rel="preload" as="image" href="/images/ratha-yatra/hero.webp" />
+        <meta name="twitter:image" content="https://events.srikrishnamandir.org/images/ratha-yatra/hero.svg" />
+        <link rel="preload" as="image" href="/images/ratha-yatra/hero.svg" />
         <link rel="canonical" href="https://events.srikrishnamandir.org/ratha-yatra-2026" />
       </Helmet>
       <div className="scroll-progress" style={{ transform: `scaleX(${progress})` }}></div>
