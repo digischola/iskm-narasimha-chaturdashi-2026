@@ -572,6 +572,7 @@ export default function Admin() {
                 <button className={`admin-event-tab${eventTab === "nrsimha" ? " active" : ""}`} onClick={() => setEventTab("nrsimha")}>Nṛsiṁha Caturdaśī</button>
                 <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => setEventTab("slf")}>Weekend Love Feast</button>
                 <button className={`admin-event-tab${eventTab === "prasadam" ? " active" : ""}`} onClick={() => setEventTab("prasadam")}>Prasadam Program</button>
+                <button className={`admin-event-tab${eventTab === "ratha_yatra" ? " active" : ""}`} onClick={() => setEventTab("ratha_yatra")}>Ratha Yatra</button>
               </div>
 
               {/* ═══ ALL EVENTS ═══ */}
