@@ -1,0 +1,1 @@
+UPDATE ratha_yatra_registrations SET t14_reminder_sent = false WHERE email = 'digischola@gmail.com';
