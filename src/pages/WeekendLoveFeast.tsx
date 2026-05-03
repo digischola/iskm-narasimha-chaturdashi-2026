@@ -834,7 +834,7 @@ export default function WeekendLoveFeast() {
           <div className="schedule-grid">
             {SCHEDULE.map((s, i) => (
               <div className={`schedule-card reveal reveal-delay-${i + 1}`} key={i}>
-                <img className="schedule-card-img" loading="lazy" src={s.img} alt={s.alt} />
+                <img className="schedule-card-img" loading="lazy" decoding="async" src={s.img} alt={s.alt} width="600" height="400" />
                 <div className="schedule-card-body">
                   <span className="schedule-time">{s.time}</span>
                   <h3>{s.title}</h3>
@@ -948,14 +948,14 @@ export default function WeekendLoveFeast() {
           <div className="marquee-track marquee-ltr">
             {[...GALLERY_ROW1, ...GALLERY_ROW1].map((g, i) => (
               <div className="marquee-item" key={i}>
-                <img loading="lazy" decoding="async" src={g.src} alt={g.alt} />
+                <img loading="lazy" decoding="async" src={g.src} alt={g.alt} width="400" height="280" />
               </div>
             ))}
           </div>
           <div className="marquee-track marquee-rtl">
             {[...GALLERY_ROW2, ...GALLERY_ROW2].map((g, i) => (
               <div className="marquee-item" key={i}>
-                <img loading="lazy" decoding="async" src={g.src} alt={g.alt} />
+                <img loading="lazy" decoding="async" src={g.src} alt={g.alt} width="400" height="280" />
               </div>
             ))}
           </div>

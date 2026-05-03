@@ -618,7 +618,7 @@ function MilkAbhisekaSection() {
     <div className="kavacha-section">
       <div className="kavacha-inner animate-in">
         <div className="kavacha-image abhiseka-image">
-          <img src="/images/sacred-abhisheka.webp" alt="Śrī Nṛsiṁha Caturdaśī Milk Abhiṣeka" loading="lazy" decoding="async" />
+          <img src="/images/sacred-abhisheka.webp" alt="Śrī Nṛsiṁha Caturdaśī Milk Abhiṣeka" loading="lazy" decoding="async" width="800" height="500" />
         </div>
         <div className="kavacha-content">
           <div className="overline" style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: "var(--navy-2)", marginBottom: "12px" }}>Sacred Bathing Ceremony</div>

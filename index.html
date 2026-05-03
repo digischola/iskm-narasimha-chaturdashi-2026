@@ -6,30 +6,31 @@
   <title>ISKM Singapore Events — Festivals &amp; Celebrations</title>
   <meta name="description" content="Join ISKM Singapore for sacred Vedic festivals, temple celebrations, kīrtana, cultural programmes, and free prasādam. All are welcome">
   <link rel="icon" type="image/x-icon" href="/images/logo.webp">
-  <link rel="preload" as="image" href="/images/Free-Prasadam-Program/1.webp" type="image/webp">
   <link rel="preload" as="image" href="/images/hero-image.webp" type="image/webp">
-  <link rel="preload" as="image" href="/images/ratha-yatra/hero.webp" type="image/webp">
   <link rel="preload" as="image" href="/images/logo.webp" type="image/webp">
-  <!-- Meta Pixel Code -->
+  <!-- Meta Pixel Code (deferred) -->
   <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '584081669242535');
-  fbq('track', 'PageView');
+  // Defer Meta Pixel loading until after page is interactive
+  window.addEventListener('load', function() {
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '584081669242535');
+    fbq('track', 'PageView');
+  });
   </script>
   <!-- End Meta Pixel Code -->
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <!-- Google Tag Manager (deferred) -->
+  <script>window.addEventListener('load', function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-M5WMWJHT');</script>
+  })(window,document,'script','dataLayer','GTM-M5WMWJHT');});</script>
   <!-- End Google Tag Manager -->
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet"></noscript>

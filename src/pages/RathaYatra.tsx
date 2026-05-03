@@ -1565,7 +1565,7 @@ function FinalCTA() {
   return (
     <div className="final-cta animate-in">
       <div className="final-cta-bg">
-        <img src="/images/ratha-yatra/final-cta.webp" alt="" loading="lazy" decoding="async" />
+        <img src="/images/ratha-yatra/final-cta.webp" alt="" loading="lazy" decoding="async" width="1200" height="600" />
       </div>
       <div className="final-cta-overlay"></div>
       <div className="final-cta-content">
