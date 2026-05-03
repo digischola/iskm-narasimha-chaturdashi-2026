@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 
 const EVENT_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026";
-const SEVA_URL = "https://srikrishnamandir.org/product/chariot-construction-seva-2026/";
+const SEVA_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026#seva";
 const MAPS_URL = "https://maps.app.goo.gl/nN1MNCH681zEcqdT6";
 
 /* ═══════════════════════════════════════════════════════
