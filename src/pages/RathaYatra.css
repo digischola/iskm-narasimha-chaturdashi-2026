@@ -271,7 +271,7 @@ button { cursor: pointer; font-family: inherit; }
   color: var(--cream); opacity: .96;
   margin: 0 0 28px;
   max-width: 580px;
-  text-align: right;
+  text-align: left;
   text-shadow: 0 1px 16px rgba(0, 0, 0, .35);
 }
 .hero-meta {
@@ -294,7 +294,7 @@ button { cursor: pointer; font-family: inherit; }
   color: var(--gold); font-size: 14px;
 }
 .countdown-row {
-  display: flex; justify-content: center; gap: 14px;
+  display: flex; justify-content: flex-start; gap: 14px;
   margin: 24px 0 32px;
 }
 .cd-pill {

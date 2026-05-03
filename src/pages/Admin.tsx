@@ -572,6 +572,7 @@ export default function Admin() {
                 <button className={`admin-event-tab${eventTab === "nrsimha" ? " active" : ""}`} onClick={() => setEventTab("nrsimha")}>Nṛsiṁha Caturdaśī</button>
                 <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => setEventTab("slf")}>Weekend Love Feast</button>
                 <button className={`admin-event-tab${eventTab === "prasadam" ? " active" : ""}`} onClick={() => setEventTab("prasadam")}>Prasadam Program</button>
+                <button className={`admin-event-tab${eventTab === "ratha_yatra" ? " active" : ""}`} onClick={() => setEventTab("ratha_yatra")}>Ratha Yatra</button>
               </div>
 
               {/* ═══ ALL EVENTS ═══ */}
@@ -659,6 +660,13 @@ export default function Admin() {
                             <td>{prasadamTotal}</td>
                             <td>—</td>
                             <td>{uniquePeopleCount > 0 ? `${((prasadamEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
+                          </tr>
+                          <tr>
+                            <td><span className="admin-name-text">Ratha Yātrā</span></td>
+                            <td>{ryEmails.size}</td>
+                            <td>{ryTotal}</td>
+                            <td>{ryAttendees}</td>
+                            <td>{uniquePeopleCount > 0 ? `${((ryEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -843,6 +851,51 @@ export default function Admin() {
                       </ResponsiveContainer>
                     </div>
                   )}
+                </>
+              )}
+
+              {/* ═══ RATHA YATRA ═══ */}
+              {eventTab === "ratha_yatra" && (
+                <>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Registrations</div>
+                      <div className="admin-stat-value">{ryTotal}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Attendees</div>
+                      <div className="admin-stat-value gold">{ryAttendees}</div>
+                      <div className="admin-stat-sub">Avg group: {ryAvgGroup}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Confirmations Sent</div>
+                      <div className="admin-stat-value green">{ryConfirmed}</div>
+                      <div className="admin-stat-sub">{ryTotal > 0 ? `${((ryConfirmed / ryTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Reminders Sent</div>
+                      <div className="admin-stat-value">{ryRemindersSent}</div>
+                    </div>
+                  </div>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Email Open Rate</div>
+                      <div className="admin-stat-value green">{ryEng.openRate}%</div>
+                      <div className="admin-stat-sub">{ryEng.uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Calendar Saves</div>
+                      <div className="admin-stat-value">{ryEng.calendarClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Directions Clicks</div>
+                      <div className="admin-stat-value">{ryEng.directionsClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Share Clicks</div>
+                      <div className="admin-stat-value">{ryEng.shareClicks}</div>
+                    </div>
+                  </div>
                 </>
               )}
 
