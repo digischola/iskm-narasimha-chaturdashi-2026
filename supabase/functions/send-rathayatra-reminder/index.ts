@@ -1,6 +1,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 
-const REMINDER_HTML = `<!DOCTYPE html>
+const EVENT_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026";
+const SEVA_URL = "https://srikrishnamandir.org/product/chariot-construction-seva-2026/";
+const MAPS_URL = "https://maps.app.goo.gl/nN1MNCH681zEcqdT6";
+
+/* ═══════════════════════════════════════════════════════
+   SHARED STYLES & STRUCTURE
+   ═══════════════════════════════════════════════════════ */
+
+const EMAIL_HEAD = `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +17,7 @@ const REMINDER_HTML = `<!DOCTYPE html>
 <meta name="x-apple-disable-message-reformatting">
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
-<title>Tomorrow — Ratha Yātrā 2026</title>
+<title>Ratha Y&#x101;tr&#x101; 2026</title>
 <!--[if mso]>
 <xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
 <style>* { font-family: Georgia, serif !important; }</style>
@@ -25,96 +33,35 @@ const REMINDER_HTML = `<!DOCTYPE html>
   @media screen and (max-width: 600px) {
     .container { width: 100% !important; max-width: 100% !important; }
     .p-mobile { padding: 24px !important; }
-    .hero-title { font-size: 36px !important; }
+    .hero-title { font-size: 32px !important; }
   }
 </style>
 </head>
-<body style="margin:0;padding:0;background:#fdf5ed;font-family:'Source Sans Pro',-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#333333;">
+<body style="margin:0;padding:0;background:#fdf5ed;font-family:'Source Sans Pro',-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#333333;">`;
 
-<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#fdf5ed;">
-  Ratha Yātrā is tomorrow. Three chariots. One evening. Your final checklist inside.
-  &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj;
-</div>
-
-<center style="width:100%;background:#fdf5ed;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fdf5ed;">
-  <tr><td align="center" style="padding:32px 16px;">
-
-    <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(30,58,110,0.08);">
-
-      <tr><td style="height:4px;background:linear-gradient(90deg,#f8a4c0,#f4c96b);background-color:#f4c96b;line-height:4px;font-size:0;">&nbsp;</td></tr>
-
-      <tr><td align="center" style="padding:32px 24px 16px;background:#ffffff;">
-        <img src="https://events.srikrishnamandir.org/images/logo.webp" width="72" height="72" alt="Sri Krishna Mandir" style="display:block;border-radius:50%;border:2px solid #f4c96b;">
-        <div style="font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:700;color:#1e3a6e;letter-spacing:2px;text-transform:uppercase;margin-top:12px;">Sri Krishna Mandir</div>
+const FOOTER = `
+      <tr><td style="padding:16px 32px 32px;" class="p-mobile">
+        <p style="margin:0 0 4px;font-size:15px;color:#444;">Yours in service,</p>
+        <p style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:#1e3a6e;">ISKM Singapore</p>
       </td></tr>
 
-      <tr><td align="center" style="padding:24px 32px 8px;" class="p-mobile">
-        <h1 class="hero-title" style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:42px;font-weight:700;color:#1e3a6e;line-height:1.15;">
-          Tomorrow, {{first_name}}.
-        </h1>
-      </td></tr>
-
-      <tr><td align="center" style="padding:8px 32px 24px;" class="p-mobile">
-        <p style="margin:0;font-size:17px;line-height:1.6;color:#555;max-width:460px;">
-          Three grand chariots. Ecstatic kirtan. Free 5-course feast. It's all happening at Clementi Stadium.
-        </p>
-      </td></tr>
-
-      <!-- DATE CARD -->
-      <tr><td style="padding:0 24px 32px;" class="p-mobile">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1e3a6e;border-radius:14px;">
-          <tr><td align="center" style="padding:28px 24px;color:#ffffff;">
-            <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Tomorrow</div>
-            <div style="font-family:'Playfair Display',Georgia,serif;font-size:32px;font-weight:700;color:#ffffff;line-height:1.2;margin-bottom:6px;">Sunday, 5 July 2026</div>
-            <div style="font-size:16px;color:#f8a4c0;font-weight:600;margin-bottom:20px;">5:00 PM – 9:30 PM</div>
-            <div style="font-size:14px;color:#ffffff;opacity:0.85;line-height:1.5;">
-              Clementi Stadium<br>
-              10 West Coast Walk, Singapore 127156
-            </div>
-          </td></tr>
-        </table>
-      </td></tr>
-
-      <!-- QUICK CHECKLIST -->
-      <tr><td style="padding:0 32px 24px;" class="p-mobile">
-        <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Quick Checklist</div>
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-          <tr><td style="padding:8px 0;font-size:15px;color:#444;line-height:1.6;">✅ Wear comfortable shoes (you'll want to pull the rope!)</td></tr>
-          <tr><td style="padding:8px 0;font-size:15px;color:#444;line-height:1.6;">✅ Arrive by 5 PM for priority seating</td></tr>
-          <tr><td style="padding:8px 0;font-size:15px;color:#444;line-height:1.6;">✅ Free 5-course feast served during procession — come hungry!</td></tr>
-          <tr><td style="padding:8px 0;font-size:15px;color:#444;line-height:1.6;">✅ Bring family & friends — everyone is welcome</td></tr>
-        </table>
-      </td></tr>
-
-      <!-- CTA -->
-      <tr><td align="center" style="padding:8px 32px 32px;" class="p-mobile">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-          <tr><td align="center" style="border-radius:999px;background:#f8a4c0;">
-            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ratha+Y%C4%81tr%C4%81+2026+%E2%80%93+Clementi+Stadium&dates=20260705T090000Z/20260705T133000Z&details=Three+chariots%2C+ecstatic+kirtan%2C+cultural+performances%2C+free+5-course+prasadam.%0A%0AVenue%3A+10+West+Coast+Walk%2C+Singapore+127156%0A%0AMore+info%3A+https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026&location=Clementi+Stadium%2C+10+West+Coast+Walk%2C+Singapore+127156" class="btn-primary" style="display:inline-block;padding:16px 36px;font-family:'Source Sans Pro',Arial,sans-serif;font-size:16px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:999px;background:#f8a4c0;">Add to Calendar →</a>
-          </td></tr>
-        </table>
-        <div style="margin-top:12px;">
-          <a href="https://www.google.com/maps/place/Clementi+Stadium/@1.3145,103.7630,17z" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;text-decoration:none;border:2px solid #1e3a6e;border-radius:999px;">Get Directions →</a>
-        </div>
-      </td></tr>
-
-      <!-- SIGN OFF -->
-      <tr><td style="padding:8px 32px 32px;" class="p-mobile">
-        <p style="margin:0 0 4px;font-size:15px;color:#444;">See you tomorrow,</p>
-        <p style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:#1e3a6e;">Sri Krishna Mandir</p>
-      </td></tr>
-
-      <!-- FOOTER -->
       <tr><td style="padding:0;background:#1e3a6e;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
           <tr><td align="center" style="padding:32px 24px;color:#ffffff;">
-            <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;">Sri Krishna Mandir</div>
-            <div style="font-size:12px;color:#ffffff;opacity:0.5;margin-top:12px;line-height:1.6;">
-              © 2026 International Sri Krishna Mandir
+            <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:#ffffff;margin-bottom:8px;">ISKM Singapore</div>
+            <div style="font-size:13px;color:#f8a4c0;margin-bottom:16px;">International Sri Krishna Mandir</div>
+            <div style="font-size:13px;color:#ffffff;opacity:0.7;line-height:1.8;">
+              <a href="https://srikrishnamandir.org" style="color:#f4c96b;text-decoration:none;">srikrishnamandir.org</a> &nbsp;&#183;&nbsp;
+              <a href="https://www.facebook.com/iskm.sg/" style="color:#f4c96b;text-decoration:none;">Facebook</a> &nbsp;&#183;&nbsp;
+              <a href="mailto:contact@srikrishnamandir.org" style="color:#f4c96b;text-decoration:none;">contact@srikrishnamandir.org</a>
+            </div>
+            <div style="font-size:12px;color:#ffffff;opacity:0.5;margin-top:16px;line-height:1.6;">
+              No. 9 Lorong 29 Geylang, Singapore 388062<br>
+              +65 6250 2280<br>
+              &#169; 2026 International Sri Krishna Mandir
             </div>
             <div style="font-size:11px;color:#ffffff;opacity:0.4;margin-top:16px;">
-              You received this because you registered for Ratha Yātrā 2026.<br>
+              You received this because you registered for Ratha Y&#x101;tr&#x101; 2026.<br>
               <a href="{{unsubscribe_url}}" style="color:#ffffff;opacity:0.7;">Unsubscribe</a>
             </div>
           </td></tr>
@@ -128,8 +75,207 @@ const REMINDER_HTML = `<!DOCTYPE html>
 </center>
 {{tracking_pixel}}
 </body>
-</html>
-`;
+</html>`;
+
+/* ═══════════════════════════════════════════════════════
+   T-14 TEMPLATE (21 Jun 2026)
+   ═══════════════════════════════════════════════════════ */
+
+const T14_HTML = `${EMAIL_HEAD}
+
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#fdf5ed;">
+  Programme schedule, what first-timers should know, and how to participate.
+  &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj;
+</div>
+
+<center style="width:100%;background:#fdf5ed;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fdf5ed;">
+  <tr><td align="center" style="padding:32px 16px;">
+
+    <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(30,58,110,0.08);">
+
+      <tr><td style="height:4px;background:linear-gradient(90deg,#f8a4c0,#f4c96b);background-color:#f4c96b;line-height:4px;font-size:0;">&nbsp;</td></tr>
+
+      <tr><td align="center" style="padding:32px 24px 16px;background:#ffffff;">
+        <img src="https://events.srikrishnamandir.org/images/logo.webp" width="72" height="72" alt="ISKM Singapore" style="display:block;border-radius:50%;border:2px solid #f4c96b;">
+        <div style="font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:700;color:#1e3a6e;letter-spacing:2px;text-transform:uppercase;margin-top:12px;">ISKM Singapore</div>
+      </td></tr>
+
+      <tr><td align="center" style="padding:24px 32px 8px;" class="p-mobile">
+        <div style="display:inline-block;padding:6px 14px;background:#fdf5ed;border:1px solid #f4c96b;border-radius:999px;font-size:11px;font-weight:700;color:#1e3a6e;letter-spacing:1.5px;text-transform:uppercase;">&#128197; 2 Weeks Away</div>
+      </td></tr>
+
+      <tr><td align="center" style="padding:16px 32px 8px;" class="p-mobile">
+        <h1 class="hero-title" style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:600;color:#1e3a6e;line-height:1.15;">
+          Two weeks to Ratha Y&#x101;tr&#x101; &#127802;
+        </h1>
+      </td></tr>
+
+      <tr><td style="padding:16px 32px 24px;" class="p-mobile">
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#444444;">
+          {{first_name}}, two weeks until Sunday, 5 July at Clementi Stadium.
+        </p>
+      </td></tr>
+
+      <!-- PROGRAMME SCHEDULE -->
+      <tr><td style="padding:0 32px 8px;" class="p-mobile">
+        <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Programme Schedule &#127926;</div>
+      </td></tr>
+
+      <tr><td style="padding:0 32px 24px;" class="p-mobile">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9efe2;border-radius:12px;">
+          <tr><td style="padding:20px 24px;">
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">5:00 PM.</strong> Guest of Honour and Temple President's address</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">5:30 PM.</strong> Cultural Odissi dance, deities ascend the chariots</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:00 PM.</strong> The chariot procession begins. This is the peak moment. &#10024;</p>
+            <p style="margin:0;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">9:00 PM.</strong> Final &#x101;rati and deities depart</p>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- FIRST-TIMERS NOTE -->
+      <tr><td style="padding:0 32px 24px;" class="p-mobile">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #f4c96b;border-radius:8px;">
+          <tr><td style="padding:16px 20px;">
+            <p style="margin:0;font-size:15px;line-height:1.7;color:#555;">
+              <strong style="color:#1e3a6e;">A short note for first-timers.</strong> Tradition holds that anyone who pulls the rope receives the blessing. Bring your family. &#128588;
+            </p>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- CTA -->
+      <tr><td align="center" style="padding:0 32px 24px;" class="p-mobile">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+          <tr><td align="center" style="border-radius:10px;background:#f8a4c0;">
+            <a href="${EVENT_URL}#schedule" class="btn-primary" style="display:inline-block;padding:14px 28px;font-family:'Source Sans Pro',Arial,sans-serif;font-size:16px;font-weight:700;color:#1e3a6e;text-decoration:none;border-radius:10px;background:#f8a4c0;">View full schedule &#8594;</a>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- DIVIDER -->
+      <tr><td style="padding:0 32px;" class="p-mobile"><div style="height:1px;background:#eee6d8;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
+
+      <!-- SEVA -->
+      <tr><td style="padding:24px 32px;" class="p-mobile">
+        <p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#555;">
+          Want to be part of making it happen? Sponsor a sev&#x101;. From chariot construction to annad&#x101;nam (food sponsorship), every contribution helps. &#128591;
+        </p>
+        <a href="${SEVA_URL}" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;text-decoration:none;border:2px solid #1e3a6e;border-radius:10px;">See sev&#x101; options &#8594;</a>
+      </td></tr>
+
+${FOOTER}`;
+
+/* ═══════════════════════════════════════════════════════
+   T-1 TEMPLATE (4 Jul 2026, 6 PM)
+   ═══════════════════════════════════════════════════════ */
+
+const T1_HTML = `${EMAIL_HEAD}
+
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#fdf5ed;">
+  Logistics, transport, what to bring.
+  &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj;
+</div>
+
+<center style="width:100%;background:#fdf5ed;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fdf5ed;">
+  <tr><td align="center" style="padding:32px 16px;">
+
+    <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(30,58,110,0.08);">
+
+      <tr><td style="height:4px;background:linear-gradient(90deg,#f8a4c0,#f4c96b);background-color:#f4c96b;line-height:4px;font-size:0;">&nbsp;</td></tr>
+
+      <tr><td align="center" style="padding:32px 24px 16px;background:#ffffff;">
+        <img src="https://events.srikrishnamandir.org/images/logo.webp" width="72" height="72" alt="ISKM Singapore" style="display:block;border-radius:50%;border:2px solid #f4c96b;">
+        <div style="font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:700;color:#1e3a6e;letter-spacing:2px;text-transform:uppercase;margin-top:12px;">ISKM Singapore</div>
+      </td></tr>
+
+      <tr><td align="center" style="padding:24px 32px 8px;" class="p-mobile">
+        <div style="display:inline-block;padding:6px 14px;background:#fdf5ed;border:1px solid #f4c96b;border-radius:999px;font-size:11px;font-weight:700;color:#1e3a6e;letter-spacing:1.5px;text-transform:uppercase;">&#9200; Tomorrow</div>
+      </td></tr>
+
+      <tr><td align="center" style="padding:16px 32px 8px;" class="p-mobile">
+        <h1 class="hero-title" style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:600;color:#1e3a6e;line-height:1.15;">
+          Tomorrow at 5 PM &#127802;
+        </h1>
+      </td></tr>
+
+      <tr><td style="padding:16px 32px 24px;" class="p-mobile">
+        <p style="margin:0 0 8px;font-size:16px;line-height:1.7;color:#444444;">
+          {{first_name}}, tomorrow is the day.
+        </p>
+        <p style="margin:0;font-size:16px;line-height:1.7;color:#444444;">
+          Sunday, 5 July, doors 5:00 PM. Chariots roll at 6:00 PM.<br>
+          Clementi Stadium, 10 West Coast Walk, Singapore 127156
+        </p>
+      </td></tr>
+
+      <!-- TRANSPORT -->
+      <tr><td style="padding:0 32px 24px;" class="p-mobile">
+        <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Quick Checklist &#128203;</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9efe2;border-radius:12px;">
+          <tr><td style="padding:20px 24px;">
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; Take public transport. 14,000+ expected.</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">MRT:</strong> Clementi (EW23), 15-minute walk &#128646;</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">Buses</strong> 96, 175, 184, 282, 285 stop nearby &#128652;</p>
+            <p style="margin:0;font-size:15px;line-height:1.7;color:#444;">&#183; On-site carpark fills early. Public transport is faster.</p>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- WHAT TO BRING -->
+      <tr><td style="padding:0 32px 24px;" class="p-mobile">
+        <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">What to Bring &#127890;</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-left:4px solid #f4c96b;border-radius:8px;">
+          <tr><td style="padding:16px 20px;">
+            <p style="margin:0 0 8px;font-size:15px;line-height:1.7;color:#555;">&#183; A water bottle &#128167;</p>
+            <p style="margin:0 0 8px;font-size:15px;line-height:1.7;color:#555;">&#183; Comfortable shoes for standing and walking &#128095;</p>
+            <p style="margin:0;font-size:15px;line-height:1.7;color:#555;">&#183; Modest dress, especially if you're joining the procession</p>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- LATE NOTE -->
+      <tr><td style="padding:0 32px 24px;" class="p-mobile">
+        <p style="margin:0;font-size:15px;line-height:1.7;color:#555;">
+          If you're running late, the chariot procession runs until 9:00 PM. The free 5-course Pras&#x101;dam Feast is served throughout. &#127858;
+        </p>
+      </td></tr>
+
+      <!-- CTA -->
+      <tr><td align="center" style="padding:0 32px 24px;" class="p-mobile">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+          <tr><td align="center" style="border-radius:10px;background:#f8a4c0;">
+            <a href="${MAPS_URL}" class="btn-primary" style="display:inline-block;padding:14px 28px;font-family:'Source Sans Pro',Arial,sans-serif;font-size:16px;font-weight:700;color:#1e3a6e;text-decoration:none;border-radius:10px;background:#f8a4c0;">Get directions &#8594;</a>
+          </td></tr>
+        </table>
+      </td></tr>
+
+      <!-- SEE YOU -->
+      <tr><td style="padding:0 32px 16px;" class="p-mobile">
+        <p style="margin:0;font-size:16px;line-height:1.7;color:#444;font-weight:600;">
+          See you tomorrow. &#128591;
+        </p>
+      </td></tr>
+
+${FOOTER}`;
+
+const TEMPLATES: Record<string, { html: string; subject: (name: string) => string; trackPrefix: string; sentColumn: string; label: string }> = {
+  "t-14": {
+    html: T14_HTML,
+    subject: (_name: string) => "Two weeks to Ratha Y\u0101tr\u0101 2026 \uD83D\uDCC5",
+    trackPrefix: "ry-t14-",
+    sentColumn: "t14_reminder_sent",
+    label: "ry-t14",
+  },
+  "t-1": {
+    html: T1_HTML,
+    subject: (_name: string) => "Tomorrow at 5 PM, Ratha Y\u0101tr\u0101 2026 at Clementi Stadium \u23F0",
+    trackPrefix: "ry-t1-",
+    sentColumn: "t1_reminder_sent",
+    label: "ry-t1",
+  },
+};
 
 function renderTemplate(html: string, vars: Record<string, string>): string {
   let result = html;
@@ -145,11 +291,15 @@ function trackUrl(base: string, rid: string, et: string, email: string, linkName
 
 function addClickTracking(html: string, trackBase: string, rid: string, et: string, email: string): string {
   html = html.replace(
-    /href="(https:\/\/calendar\.google\.com\/[^"]+)"/g,
-    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'calendar', url)}"`
+    /href="(https:\/\/events\.srikrishnamandir\.org\/ratha-yatra-2026[^"]*)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'event_page', url)}"`
   );
   html = html.replace(
-    /href="(https:\/\/www\.google\.com\/maps\/place[^"]+)"/g,
+    /href="(https:\/\/srikrishnamandir\.org\/product\/[^"]+)"/g,
+    (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'seva', url)}"`
+  );
+  html = html.replace(
+    /href="(https:\/\/maps\.app\.goo\.gl[^"]+)"/g,
     (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'directions', url)}"`
   );
   return html;
@@ -168,6 +318,24 @@ Deno.serve(async (req) => {
     });
   }
 
+  let stage = "t-1";
+  try {
+    const body = await req.json();
+    if (body?.stage && typeof body.stage === "string") {
+      stage = body.stage;
+    }
+  } catch {
+    // use default
+  }
+
+  const config = TEMPLATES[stage];
+  if (!config) {
+    return new Response(JSON.stringify({ error: "Invalid stage. Use 't-14' or 't-1'." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const supabase = createClient(supabaseUrl, supabaseKey);
@@ -175,7 +343,7 @@ Deno.serve(async (req) => {
   const { data: registrations, error } = await supabase
     .from("ratha_yatra_registrations")
     .select("id, name, email")
-    .eq("reminder_sent", false);
+    .eq(config.sentColumn, false);
 
   if (error) {
     console.error("Failed to fetch RY registrations:", error);
@@ -186,7 +354,7 @@ Deno.serve(async (req) => {
   }
 
   if (!registrations?.length) {
-    return new Response(JSON.stringify({ processed: 0, message: "No pending reminders" }), {
+    return new Response(JSON.stringify({ processed: 0, message: "No pending " + stage + " reminders" }), {
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -205,7 +373,7 @@ Deno.serve(async (req) => {
 
   for (const reg of registrations) {
     if (suppressedSet.has(reg.email) || unsubscribedSet.has(reg.email)) {
-      await supabase.from("ratha_yatra_registrations").update({ reminder_sent: true }).eq("id", reg.id);
+      await supabase.from("ratha_yatra_registrations").update({ [config.sentColumn]: true }).eq("id", reg.id);
       skipped++;
       continue;
     }
@@ -227,29 +395,31 @@ Deno.serve(async (req) => {
 
     const unsubscribeUrl = "https://events.srikrishnamandir.org/unsubscribe?token=" + token;
     const trackBase = supabaseUrl + "/functions/v1/track-email";
-    const pixelUrl = `${trackBase}?t=o&et=ry-reminder&rid=${reg.id}&e=${encodeURIComponent(reg.email)}`;
-    let html = renderTemplate(REMINDER_HTML, {
+    const pixelUrl = `${trackBase}?t=o&et=${config.label}&rid=${reg.id}&e=${encodeURIComponent(reg.email)}`;
+
+    let html = renderTemplate(config.html, {
       first_name: firstName,
       unsubscribe_url: unsubscribeUrl,
       tracking_pixel: `<img src="${pixelUrl}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="" />`,
     });
-    html = addClickTracking(html, trackBase, reg.id, "ry-reminder", reg.email);
-    const text = `Tomorrow, ${firstName} — Ratha Yātrā 2026\n\nSunday, 5 July 2026\n5:00 PM – 9:30 PM\nClementi Stadium, 10 West Coast Walk, Singapore 127156\n\nQuick Checklist:\n✅ Comfortable shoes\n✅ Arrive by 5 PM\n✅ Free 5-course feast\n✅ Bring family & friends\n\nGet Directions: https://maps.app.goo.gl/Clementi\n\nUnsubscribe: ${unsubscribeUrl}`;
-    const messageId = "ry-reminder-" + reg.id;
+    html = addClickTracking(html, trackBase, reg.id, config.label, reg.email);
+
+    const subject = config.subject(firstName);
+    const messageId = config.trackPrefix + reg.id;
 
     await supabase.rpc("enqueue_email", {
       queue_name: "transactional_emails",
       payload: {
         to: reg.email,
-        from: "Sri Krishna Mandir <noreply@notify.events.srikrishnamandir.org>",
+        from: "ISKM Singapore <noreply@notify.events.srikrishnamandir.org>",
         sender_domain: "notify.events.srikrishnamandir.org",
-        subject: "Tomorrow, " + firstName + " 🌺",
+        subject,
         html,
-        text,
+        text: subject + "\n\nView event: " + EVENT_URL + "\n\nUnsubscribe: " + unsubscribeUrl,
         purpose: "transactional",
-        label: "ry-reminder",
+        label: config.label,
         message_id: messageId,
-        idempotency_key: "ry-reminder-" + reg.id,
+        idempotency_key: messageId,
         unsubscribe_token: token,
         queued_at: new Date().toISOString(),
       },
@@ -257,12 +427,12 @@ Deno.serve(async (req) => {
 
     await supabase.from("email_send_log").insert({
       message_id: messageId,
-      template_name: "ry-reminder",
+      template_name: config.label,
       recipient_email: reg.email,
       status: "pending",
     });
 
-    await supabase.from("ratha_yatra_registrations").update({ reminder_sent: true }).eq("id", reg.id);
+    await supabase.from("ratha_yatra_registrations").update({ [config.sentColumn]: true }).eq("id", reg.id);
     processed++;
 
     if (processed < registrations.length) {
@@ -270,9 +440,9 @@ Deno.serve(async (req) => {
     }
   }
 
-  console.log("RY Reminder batch complete: " + processed + " queued, " + skipped + " skipped");
+  console.log(`RY ${stage} batch complete: ${processed} queued, ${skipped} skipped`);
   return new Response(
-    JSON.stringify({ processed, skipped }),
+    JSON.stringify({ processed, skipped, stage }),
     { headers: { "Content-Type": "application/json" } }
   );
 });
