@@ -847,6 +847,51 @@ export default function Admin() {
                 </>
               )}
 
+              {/* ═══ RATHA YATRA ═══ */}
+              {eventTab === "ratha_yatra" && (
+                <>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Registrations</div>
+                      <div className="admin-stat-value">{ryTotal}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Attendees</div>
+                      <div className="admin-stat-value gold">{ryAttendees}</div>
+                      <div className="admin-stat-sub">Avg group: {ryAvgGroup}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Confirmations Sent</div>
+                      <div className="admin-stat-value green">{ryConfirmed}</div>
+                      <div className="admin-stat-sub">{ryTotal > 0 ? `${((ryConfirmed / ryTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Reminders Sent</div>
+                      <div className="admin-stat-value">{ryRemindersSent}</div>
+                    </div>
+                  </div>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Email Open Rate</div>
+                      <div className="admin-stat-value green">{ryEng.openRate}%</div>
+                      <div className="admin-stat-sub">{ryEng.uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Calendar Saves</div>
+                      <div className="admin-stat-value">{ryEng.calendarClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Directions Clicks</div>
+                      <div className="admin-stat-value">{ryEng.directionsClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Share Clicks</div>
+                      <div className="admin-stat-value">{ryEng.shareClicks}</div>
+                    </div>
+                  </div>
+                </>
+              )}
+
               {/* Chart */}
               {chartData.length > 0 && (
                 <div className="admin-chart-card">
