@@ -1,0 +1,1 @@
+DELETE FROM email_send_log WHERE message_id = 'ry-t14-43668f1f-ba67-4d24-b655-4b2fc0f2d309';
