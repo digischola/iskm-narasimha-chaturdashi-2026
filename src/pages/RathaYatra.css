@@ -1,4 +1,9 @@
 
+/* Scroll-margin so anchors clear the sticky header */
+[id] {
+  scroll-margin-top: 80px;
+}
+
 /* ════════════════════════════════════════════════════════════════════
    RATHA YĀTRĀ 2026 — Single-purpose stylesheet
    Brand tokens + clean layout for events.srikrishnamandir.org
