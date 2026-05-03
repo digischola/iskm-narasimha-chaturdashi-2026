@@ -661,6 +661,13 @@ export default function Admin() {
                             <td>—</td>
                             <td>{uniquePeopleCount > 0 ? `${((prasadamEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
                           </tr>
+                          <tr>
+                            <td><span className="admin-name-text">Ratha Yātrā</span></td>
+                            <td>{ryEmails.size}</td>
+                            <td>{ryTotal}</td>
+                            <td>{ryAttendees}</td>
+                            <td>{uniquePeopleCount > 0 ? `${((ryEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
