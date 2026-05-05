@@ -1706,7 +1706,7 @@ function ExitIntentModal() {
     }
     setSubmitting(true);
     try {
-      const { error: fnError } = await supabase.functions.invoke("submit-registration", {
+      const { data, error: fnError } = await supabase.functions.invoke("submit-registration", {
         body: {
           name: name.trim(),
           email: email.trim(),
@@ -1714,9 +1714,23 @@ function ExitIntentModal() {
           attendees: 1,
           is_volunteer: false,
           event_slug: EVENT.slug,
+          phone_optional: true,
         },
       });
       if (fnError) throw fnError;
+      if (data && data.error) throw new Error(data.error);
+
+      // Sync to Wabo (fire-and-forget)
+      supabase.functions.invoke("sync-to-wabo", {
+        body: {
+          event_slug: EVENT.slug,
+          source: "Ratha Yatra 2026 - Exit Intent",
+          name: name.trim(),
+          email: email.trim(),
+          country_code: "+65",
+          phone: "",
+        },
+      }).catch((err) => console.warn("Wabo sync (exit intent) failed:", err));
 
       const eid = genEventId();
       trackPixelEvent("Lead", { content_name: EVENT.pixelContent, source: "exit_intent" }, eid);

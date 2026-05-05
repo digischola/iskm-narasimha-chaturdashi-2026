@@ -56,7 +56,9 @@ Deno.serve(async (req) => {
     const rawPhone = typeof body.phone === "string" ? body.phone.trim().slice(0, 30) : "";
     const phone = rawPhone ? rawPhone.replace(/[\s\-().]/g, "") : "";
 
-    if (config.phoneRequired) {
+    const phoneOptional = body.phone_optional === true;
+
+    if (config.phoneRequired && !phoneOptional) {
       if (!phone || !/^\+\d{8,15}$/.test(phone)) {
         return new Response(JSON.stringify({ error: "Valid phone number is required" }), {
           status: 400,
