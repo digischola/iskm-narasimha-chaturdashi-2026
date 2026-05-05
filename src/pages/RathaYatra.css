@@ -1008,14 +1008,29 @@ button { cursor: pointer; font-family: inherit; }
 }
 .seva-card {
   background: var(--white);
-  border-top: 4px solid var(--gold);
   border-radius: 12px;
-  padding: 28px;
   box-shadow: 0 6px 20px rgba(30, 58, 110, .08);
   display: flex; flex-direction: column;
   transition: transform .25s, box-shadow .25s;
   position: relative;
   overflow: hidden;
+}
+.seva-card-img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+.seva-card-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+.seva-card:hover .seva-card-img img {
+  transform: scale(1.05);
+}
+.seva-card-body {
+  padding: 20px 24px 24px;
+  display: flex; flex-direction: column; flex: 1;
 }
 .seva-card::before, .seva-card::after {
   content: '';
