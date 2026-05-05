@@ -1020,7 +1020,7 @@ export default function WeekendLoveFeast() {
           <div className="gold-divider"><i className="fas fa-spa" /></div>
           <h2>See You This Weekend</h2>
           <div className="next-date">{formatNextEligibleDay()}</div>
-          <p>5:00 PM – 7:30 PM · Free 5-course Prasadam · Free Entry</p>
+          <p>5:00 PM – 7:30 PM · 5-course Prasadam · Free Entry</p>
           <a href="#slf-register" className="btn-final" onClick={e => { e.preventDefault(); scrollTo("slf-register"); }}>
             Register Now <i className="fas fa-arrow-right" />
           </a>
