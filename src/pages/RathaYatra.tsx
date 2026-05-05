@@ -1726,7 +1726,7 @@ function LandingPage() {
       <FinalCTA />
       <Footer />
       <MobileSticky pastHero={pastHero} />
-      <ExitIntentModal />
+      
     </>
   );
 }
