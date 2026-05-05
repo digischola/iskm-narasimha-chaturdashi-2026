@@ -1253,32 +1253,38 @@ const SEVA_CARDS = [
     title: "Chariots Construction",
     desc: "Help complete the construction of Lord Jagannath's three new hand-pulled chariots.",
     link: "https://srikrishnamandir.org/product/chariot-construction-seva-2026/",
+    img: "/images/ratha-yatra/chariot-seva.webp",
   },
   {
     title: "Annadānam Sevā",
     desc: "Sponsor sanctified prasādam (food) for thousands of devotees attending the festival.",
     link: "https://srikrishnamandir.org/product/ratha-yatra-annadanam-sevam-2026/",
+    img: "/images/ratha-yatra/annadanam-seva.webp",
   },
   {
     title: "Sri Jagannātha Sevā",
     desc: "Make a special offering directly to Lord Jagannath, Baladeva, and Subhadra Devi.",
     link: "https://srikrishnamandir.org/product/ratha-yatra-sri-jagannatha-seva-2026/",
+    img: "/images/ratha-yatra/sri-jagannatha-seva.webp",
   },
   {
     title: "Sri Sringāra Sevā",
     desc: "Sponsor handmade ornaments and dresses for the Lordships' festival appearance.",
     link: "https://srikrishnamandir.org/product/ratha-yatra-sri-sringara-seva/",
+    img: "/images/ratha-yatra/sri-sringara-seva.webp",
   },
   {
     title: "Puṣpa-Alaṅkāra Sevā",
     desc: "Sponsor the flowers and decorations that adorn Lord Jagannath's chariots.",
     link: "https://srikrishnamandir.org/product/ratha-yatra-pu%E1%B9%A3pa-ala%E1%B9%85kara-seva-2026/",
+    img: "/images/ratha-yatra/pushpa-alankara-seva.webp",
   },
   {
     title: "Outright Contribution",
     desc: "Offer general support for the festival and receive Lord Jagannath's blessings.",
     link: "https://srikrishnamandir.org/product/ratha-yatra-outright-contribution-2026/",
     cta: "Donate · any amount →",
+    img: "/images/ratha-yatra/outright-contribution.webp",
   },
 ];
 
@@ -1346,6 +1352,9 @@ function Seva() {
       <div className="seva-grid">
         {SEVA_CARDS.map((c) => (
           <div key={c.title} className="seva-card animate-in">
+            <div className="seva-card-img">
+              <img src={c.img} alt={c.title} loading="lazy" decoding="async" width="400" height="250" />
+            </div>
             <div className="seva-card-body">
               <h4>{c.title}</h4>
               <p>{c.desc}</p>
