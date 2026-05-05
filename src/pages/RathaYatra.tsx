@@ -478,7 +478,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
       return;
     }
     setSubmitting(true);
-    const numAtt = attendees === "5" ? 5 : parseInt(attendees);
+    const numAtt = attendees === "9" ? 9 : parseInt(attendees);
 
     try {
       const { data, error: fnError } = await supabase.functions.invoke("submit-registration", {
@@ -518,7 +518,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           email: email.trim(),
           country_code: phoneCode,
           phone: phoneNum,
-          attendees: attendees === "5" ? "5+" : attendees,
+          attendees: attendees === "9" ? "8+" : attendees,
         },
       })
       .then(({ data, error }) => {
@@ -735,7 +735,11 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
               <option value="2">2 People</option>
               <option value="3">3 People</option>
               <option value="4">4 People</option>
-              <option value="5">5+ People</option>
+              <option value="5">5 People</option>
+              <option value="6">6 People</option>
+              <option value="7">7 People</option>
+              <option value="8">8 People</option>
+              <option value="9">8+ People</option>
             </select>
           </div>
           <button
