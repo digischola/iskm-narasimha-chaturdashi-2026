@@ -485,7 +485,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
         body: {
           name: name.trim(),
           email: email.trim(),
-          phone: getFullPhone() || null,
+          phone: getFullPhone(),
           attendees: numAtt,
           is_volunteer: false,
           event_slug: EVENT.slug,
