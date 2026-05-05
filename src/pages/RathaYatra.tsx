@@ -1352,6 +1352,9 @@ function Seva() {
       <div className="seva-grid">
         {SEVA_CARDS.map((c) => (
           <div key={c.title} className="seva-card animate-in">
+            <div className="seva-card-img">
+              <img src={c.img} alt={c.title} loading="lazy" decoding="async" width="400" height="250" />
+            </div>
             <div className="seva-card-body">
               <h4>{c.title}</h4>
               <p>{c.desc}</p>
