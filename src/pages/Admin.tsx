@@ -986,14 +986,14 @@ export default function Admin() {
                                 <td style={{ color: "#1e3a6e", fontWeight: 600, fontSize: "13px", whiteSpace: "nowrap" }}>
                                   {r.attendance_date
                                     ? (() => {
-                                        const d = new Date(r.attendance_date + "T00:00:00+08:00");
-                                        const dow = d.getUTCDay(); // 6 = Sat, 0 = Sun
+                                        const d = new Date(r.attendance_date + "T12:00:00+08:00");
+                                        const dow = d.getDay();
                                         const dayLabel = dow === 6 ? "Sat" : dow === 0 ? "Sun" : "";
                                         const dayColor = dow === 6 ? "#f8a4c0" : "#f4c96b";
                                         return (
                                           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                                             <span style={{ background: dayColor, color: "#1e3a6e", padding: "2px 6px", borderRadius: 4, fontSize: "11px", fontWeight: 700 }}>{dayLabel}</span>
-                                            {d.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" })}
+                                            {d.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" })}
                                           </span>
                                         );
                                       })()
