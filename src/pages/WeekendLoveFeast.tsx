@@ -813,7 +813,6 @@ export default function WeekendLoveFeast() {
             <div className="form-trust">
               <span className="form-trust-item"><i className="fas fa-check-circle" /> No payment required</span>
               <span className="form-trust-item"><i className="fas fa-check-circle" /> Confirmation via email</span>
-              <span className="form-trust-item"><i className="fas fa-check-circle" /> Walk-ins welcome too</span>
             </div>
             <div className="social-proof">
               <i className="fas fa-fire" style={{ color: "var(--gold)", marginRight: 4 }} />
