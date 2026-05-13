@@ -180,22 +180,20 @@ export default function Admin() {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [ncRes, ryRes, slfRes, prasadamRes, emailRows, trackRows] = await Promise.all([
-      supabase.from("registrations").select("*").order("created_at", { ascending: false }),
-      supabase.from("ratha_yatra_registrations").select("*").order("created_at", { ascending: false }),
-      supabase.from("weekend_love_feast_registrations").select("*").order("created_at", { ascending: false }),
-      supabase.from("prasadam_sponsorships").select("*").order("created_at", { ascending: false }),
+    const [ncRows, ryRows, slfRows, prasadamRows, emailRows, trackRows] = await Promise.all([
+      fetchAllRows<Registration>("registrations"),
+      fetchAllRows<RyRegistration>("ratha_yatra_registrations"),
+      fetchAllRows<SlfRegistration>("weekend_love_feast_registrations"),
+      fetchAllRows<PrasadamSponsorship>("prasadam_sponsorships"),
       fetchAllRows<EmailLog>("email_send_log"),
       fetchAllRows<TrackingEvent>("email_tracking_events"),
     ]);
-    const emailRes = { data: emailRows };
-    const trackRes = { data: trackRows };
-    setNcData((ncRes.data as Registration[]) || []);
-    setRyData((ryRes.data as RyRegistration[]) || []);
-    setSlfData((slfRes.data as SlfRegistration[]) || []);
-    setPrasadamData((prasadamRes.data as PrasadamSponsorship[]) || []);
-    setEmailLogs((emailRes.data as EmailLog[]) || []);
-    setTrackingEvents((trackRes.data as TrackingEvent[]) || []);
+    setNcData(ncRows);
+    setRyData(ryRows);
+    setSlfData(slfRows);
+    setPrasadamData(prasadamRows);
+    setEmailLogs(emailRows);
+    setTrackingEvents(trackRows);
     setLoading(false);
   };
 
@@ -385,8 +383,7 @@ export default function Admin() {
   };
 
   // Sent-counts per event are best approximated by template_name on email_send_log
-  const ncSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("nc-")).length
-              || uniqueEmailList.filter(e => e.status === "sent" && !((e.template_name || "").includes("wlf") || (e.template_name || "").includes("prasadam") || (e.template_name || "").includes("ry-"))).length;
+  const ncSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").startsWith("nc-")).length;
   const slfSent = uniqueEmailList.filter(e => e.status === "sent" && ((e.template_name || "").includes("wlf") || (e.template_name || "").includes("slf"))).length;
   const prasadamSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("prasadam")).length;
   const rySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("ry-")).length;
