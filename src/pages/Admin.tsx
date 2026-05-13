@@ -383,8 +383,7 @@ export default function Admin() {
   };
 
   // Sent-counts per event are best approximated by template_name on email_send_log
-  const ncSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("nc-")).length
-              || uniqueEmailList.filter(e => e.status === "sent" && !((e.template_name || "").includes("wlf") || (e.template_name || "").includes("prasadam") || (e.template_name || "").includes("ry-"))).length;
+  const ncSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").startsWith("nc-")).length;
   const slfSent = uniqueEmailList.filter(e => e.status === "sent" && ((e.template_name || "").includes("wlf") || (e.template_name || "").includes("slf"))).length;
   const prasadamSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("prasadam")).length;
   const rySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("ry-")).length;
