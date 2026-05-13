@@ -984,11 +984,78 @@ export default function Admin() {
               </div>
 
               <div className="admin-event-tabs">
-                <button className={`admin-event-tab${regEventTab === "nrsimha" ? " active" : ""}`} onClick={() => { setRegEventTab("nrsimha"); setRegPage(1); }}>Nṛsiṁha Caturdaśī ({ncTotal})</button>
-                <button className={`admin-event-tab${regEventTab === "ratha_yatra" ? " active" : ""}`} onClick={() => { setRegEventTab("ratha_yatra"); setRegPage(1); }}>Ratha Yātrā ({ryTotal})</button>
-                <button className={`admin-event-tab${regEventTab === "slf" ? " active" : ""}`} onClick={() => { setRegEventTab("slf"); setRegPage(1); }}>Weekend Love Feast ({slfTotal})</button>
-                <button className={`admin-event-tab${regEventTab === "prasadam" ? " active" : ""}`} onClick={() => { setRegEventTab("prasadam"); setRegPage(1); }}>Prasadam ({prasadamTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "nrsimha" ? " active" : ""}`} onClick={() => { setRegEventTab("nrsimha"); setRegPage(1); resetRegFilters(); }}>Nṛsiṁha Caturdaśī ({ncTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "ratha_yatra" ? " active" : ""}`} onClick={() => { setRegEventTab("ratha_yatra"); setRegPage(1); resetRegFilters(); }}>Ratha Yātrā ({ryTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "slf" ? " active" : ""}`} onClick={() => { setRegEventTab("slf"); setRegPage(1); resetRegFilters(); }}>Weekend Love Feast ({slfTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "prasadam" ? " active" : ""}`} onClick={() => { setRegEventTab("prasadam"); setRegPage(1); resetRegFilters(); }}>Prasadam ({prasadamTotal})</button>
               </div>
+
+              {regEventTab !== "prasadam" && (
+                <div className="admin-reg-filter-row">
+                  <div className="admin-filter-group">
+                    <span className="admin-filter-label">Submitted</span>
+                    {([["all","All"],["24h","24h"],["7d","7 days"],["30d","30 days"]] as const).map(([v,l]) => (
+                      <button key={v} className={`admin-filter-tab${regDateRange === v ? " active" : ""}`} onClick={() => { setRegDateRange(v); setRegPage(1); }}>{l}</button>
+                    ))}
+                  </div>
+
+                  {regEventTab === "slf" && (
+                    <>
+                      <div className="admin-filter-group">
+                        <span className="admin-filter-label">Day</span>
+                        {([["all","All"],["sat","Sat"],["sun","Sun"]] as const).map(([v,l]) => (
+                          <button key={v} className={`admin-filter-tab${slfDayFilter === v ? " active" : ""}`} onClick={() => { setSlfDayFilter(v); setRegPage(1); }}>{l}</button>
+                        ))}
+                      </div>
+                      <div className="admin-filter-group">
+                        <span className="admin-filter-label">First time</span>
+                        {([["all","All"],["yes","First-timers"],["no","Returning"]] as const).map(([v,l]) => (
+                          <button key={v} className={`admin-filter-tab${slfFirstTimeFilter === v ? " active" : ""}`} onClick={() => { setSlfFirstTimeFilter(v); setRegPage(1); }}>{l}</button>
+                        ))}
+                      </div>
+                      {slfDateOptions.length > 0 && (
+                        <div className="admin-filter-group">
+                          <span className="admin-filter-label">Date</span>
+                          <select
+                            className="admin-filter-select"
+                            value={slfDateFilter}
+                            onChange={(e) => { setSlfDateFilter(e.target.value); setRegPage(1); }}
+                          >
+                            <option value="all">All dates</option>
+                            {slfDateOptions.map((d) => {
+                              const dt = new Date(d + "T12:00:00+08:00");
+                              const dow = dt.getDay();
+                              const dayLabel = dow === 6 ? "Sat" : dow === 0 ? "Sun" : "";
+                              return (
+                                <option key={d} value={d}>
+                                  {dayLabel} · {dt.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" })}
+                                </option>
+                              );
+                            })}
+                          </select>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") && (
+                    <>
+                      <div className="admin-filter-group">
+                        <span className="admin-filter-label">Confirmation</span>
+                        {([["all","All"],["sent","Sent"],["not","Not sent"]] as const).map(([v,l]) => (
+                          <button key={v} className={`admin-filter-tab${regConfFilter === v ? " active" : ""}`} onClick={() => { setRegConfFilter(v); setRegPage(1); }}>{l}</button>
+                        ))}
+                      </div>
+                      <div className="admin-filter-group">
+                        <span className="admin-filter-label">Type</span>
+                        {([["all","All"],["vol","Volunteers"],["att","Attendees"]] as const).map(([v,l]) => (
+                          <button key={v} className={`admin-filter-tab${regVolFilter === v ? " active" : ""}`} onClick={() => { setRegVolFilter(v); setRegPage(1); }}>{l}</button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
 
               <div className="admin-table-card">
                 <div className="admin-table-header">
