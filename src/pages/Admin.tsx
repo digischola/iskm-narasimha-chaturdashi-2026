@@ -159,16 +159,37 @@ export default function Admin() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Paginated fetch — Supabase caps at 1000 rows/request, so loop with .range()
+  // until exhausted or the safety cap is hit. Cap = 60k rows per table.
+  const fetchAllRows = async <T,>(table: string, cap = 60000): Promise<T[]> => {
+    const pageSize = 1000;
+    const out: T[] = [];
+    for (let from = 0; from < cap; from += pageSize) {
+      const to = Math.min(from + pageSize - 1, cap - 1);
+      const { data, error } = await supabase
+        .from(table as any)
+        .select("*")
+        .order("created_at", { ascending: false })
+        .range(from, to);
+      if (error || !data || data.length === 0) break;
+      out.push(...(data as T[]));
+      if (data.length < pageSize) break;
+    }
+    return out;
+  };
+
   const fetchAll = async () => {
     setLoading(true);
-    const [ncRes, ryRes, slfRes, prasadamRes, emailRes, trackRes] = await Promise.all([
+    const [ncRes, ryRes, slfRes, prasadamRes, emailRows, trackRows] = await Promise.all([
       supabase.from("registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("ratha_yatra_registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("weekend_love_feast_registrations").select("*").order("created_at", { ascending: false }),
       supabase.from("prasadam_sponsorships").select("*").order("created_at", { ascending: false }),
-      supabase.from("email_send_log").select("*").order("created_at", { ascending: false }).limit(1000),
-      supabase.from("email_tracking_events").select("*").order("created_at", { ascending: false }).limit(1000),
+      fetchAllRows<EmailLog>("email_send_log"),
+      fetchAllRows<TrackingEvent>("email_tracking_events"),
     ]);
+    const emailRes = { data: emailRows };
+    const trackRes = { data: trackRows };
     setNcData((ncRes.data as Registration[]) || []);
     setRyData((ryRes.data as RyRegistration[]) || []);
     setSlfData((slfRes.data as SlfRegistration[]) || []);
