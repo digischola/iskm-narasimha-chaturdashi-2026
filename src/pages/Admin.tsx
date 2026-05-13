@@ -122,6 +122,23 @@ export default function Admin() {
   const [prasadamFilter, setPrasadamFilter] = useState<"all" | "pending" | "confirmed" | "completed" | "needs_backfill">("all");
   const [selectedSponsor, setSelectedSponsor] = useState<PrasadamSponsorship | null>(null);
 
+  // Registration log filters
+  const [regDateRange, setRegDateRange] = useState<"all" | "24h" | "7d" | "30d">("all");
+  const [slfDayFilter, setSlfDayFilter] = useState<"all" | "sat" | "sun">("all");
+  const [slfFirstTimeFilter, setSlfFirstTimeFilter] = useState<"all" | "yes" | "no">("all");
+  const [slfDateFilter, setSlfDateFilter] = useState<string>("all");
+  const [regConfFilter, setRegConfFilter] = useState<"all" | "sent" | "not">("all");
+  const [regVolFilter, setRegVolFilter] = useState<"all" | "vol" | "att">("all");
+
+  const resetRegFilters = () => {
+    setRegDateRange("all");
+    setSlfDayFilter("all");
+    setSlfFirstTimeFilter("all");
+    setSlfDateFilter("all");
+    setRegConfFilter("all");
+    setRegVolFilter("all");
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
