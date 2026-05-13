@@ -402,15 +402,56 @@ export default function Admin() {
       : regEventTab === "ratha_yatra" ? ryData
       : ncData;
 
+  // Date range cutoff
+  const dateRangeCutoff = (() => {
+    if (regDateRange === "all") return 0;
+    const now = Date.now();
+    if (regDateRange === "24h") return now - 24 * 3600 * 1000;
+    if (regDateRange === "7d") return now - 7 * 24 * 3600 * 1000;
+    if (regDateRange === "30d") return now - 30 * 24 * 3600 * 1000;
+    return 0;
+  })();
+
   const filteredReg = activeRegList.filter((r: any) => {
     const name = r.name || r.full_name || "";
-    return (
+    const matchesSearch =
       name.toLowerCase().includes(search.toLowerCase()) ||
-      (r.email || "").toLowerCase().includes(search.toLowerCase())
-    );
+      (r.email || "").toLowerCase().includes(search.toLowerCase());
+    if (!matchesSearch) return false;
+
+    if (dateRangeCutoff > 0 && new Date(r.created_at).getTime() < dateRangeCutoff) return false;
+
+    if (regEventTab === "slf") {
+      const slfR = r as SlfRegistration & { attendance_date?: string | null };
+      if (slfDayFilter !== "all" || slfDateFilter !== "all") {
+        if (!slfR.attendance_date) return false;
+        if (slfDateFilter !== "all" && slfR.attendance_date !== slfDateFilter) return false;
+        if (slfDayFilter !== "all") {
+          const dow = new Date(slfR.attendance_date + "T12:00:00+08:00").getDay();
+          if (slfDayFilter === "sat" && dow !== 6) return false;
+          if (slfDayFilter === "sun" && dow !== 0) return false;
+        }
+      }
+      if (slfFirstTimeFilter === "yes" && !slfR.first_time) return false;
+      if (slfFirstTimeFilter === "no" && slfR.first_time) return false;
+    }
+
+    if (regEventTab === "nrsimha" || regEventTab === "ratha_yatra") {
+      if (regConfFilter === "sent" && !r.confirmation_sent) return false;
+      if (regConfFilter === "not" && r.confirmation_sent) return false;
+      if (regVolFilter === "vol" && !r.is_volunteer) return false;
+      if (regVolFilter === "att" && r.is_volunteer) return false;
+    }
+
+    return true;
   });
   const regTotalPages = Math.max(1, Math.ceil(filteredReg.length / ROWS_PER_PAGE));
   const regSlice = filteredReg.slice((regPage - 1) * ROWS_PER_PAGE, regPage * ROWS_PER_PAGE);
+
+  // Distinct upcoming attendance dates (for SLF date dropdown)
+  const slfDateOptions = Array.from(
+    new Set(slfData.map((r: any) => r.attendance_date).filter(Boolean))
+  ).sort();
 
   // Filtered emails
   const filteredEmails = uniqueEmailList.filter(
