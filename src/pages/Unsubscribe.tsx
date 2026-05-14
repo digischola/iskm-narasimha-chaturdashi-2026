@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 
 type Status = "loading" | "valid" | "already_unsubscribed" | "invalid" | "success" | "error";
@@ -63,6 +64,14 @@ export default function Unsubscribe() {
   };
 
   return (
+    <>
+      <Helmet>
+        <title>Unsubscribe — ISKM Singapore Events</title>
+        <meta name="description" content="Manage your email preferences and unsubscribe from ISKM Singapore event notifications." />
+        <meta name="robots" content="noindex, nofollow" />
+        <meta property="og:title" content="Unsubscribe — ISKM Singapore Events" />
+        <meta property="og:description" content="Manage your email preferences for ISKM Singapore event notifications." />
+      </Helmet>
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#fdf5ed", fontFamily: "'Source Sans Pro', -apple-system, sans-serif", padding: "24px" }}>
       <div style={{ background: "white", padding: "48px 40px", borderRadius: "16px", boxShadow: "0 8px 40px rgba(30,58,110,0.08)", maxWidth: "460px", width: "100%", textAlign: "center" }}>
         <img src="/images/logo.webp" alt="ISKM Singapore Logo" width="56" height="56" style={{ borderRadius: "50%", border: "2px solid #f4c96b", marginBottom: "20px" }} />
@@ -119,5 +128,6 @@ export default function Unsubscribe() {
         )}
       </div>
     </div>
+    </>
   );
 }

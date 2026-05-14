@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import "./FreePrasadamProgram.css";
 
@@ -344,6 +345,19 @@ export default function FreePrasadamProgram() {
   const currentToast = SPONSORS_TOAST[toastIndex];
 
   return (
+    <>
+      <Helmet>
+        <title>Sponsor Free Prasādam — ISKM Singapore</title>
+        <meta name="description" content="Sponsor a day of free Prasādam at ISKM Singapore. $1.20 per meal feeds 250 devotees with sanctified vegetarian food. Choose your day." />
+        <meta property="og:title" content="Sponsor Free Prasādam — Feed 250 Devotees" />
+        <meta property="og:description" content="Sponsor a full day of free sanctified meals at ISKM Singapore. From just $1.20 per meal — choose a day that's meaningful to you." />
+        <meta property="og:url" content="https://events.srikrishnamandir.org/free-prasadam-program" />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://events.srikrishnamandir.org/free-prasadam-program" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Sponsor Free Prasādam — ISKM Singapore" />
+        <meta name="twitter:description" content="Feed 250 devotees with sanctified vegetarian meals. Sponsor a day from $1.20 per meal." />
+      </Helmet>
     <div className="fpp">
       {/* Skip Nav */}
       <a href="#sponsor" className="skip-nav">Skip to sponsorship form</a>
@@ -859,5 +873,6 @@ export default function FreePrasadamProgram() {
         <button className="toast-close" onClick={() => setToastVisible(false)} aria-label="Dismiss notification">&times;</button>
       </div>
     </div>
+    </>
   );
 }

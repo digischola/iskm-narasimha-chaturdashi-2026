@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell, Legend } from "recharts";
 import "./admin/AdminStyles.css";
@@ -571,6 +572,14 @@ export default function Admin() {
   const TIER_COLORS = ["#1e3a6e", "#d4a012", "#27ae60", "#e67e22"];
 
   return (
+    <>
+      <Helmet>
+        <title>Admin Dashboard — ISKM Singapore Events</title>
+        <meta name="description" content="Internal management console for ISKM Singapore event registrations and sponsorships." />
+        <meta name="robots" content="noindex, nofollow" />
+        <meta property="og:title" content="Admin Dashboard — ISKM Singapore Events" />
+        <meta property="og:description" content="Internal management console for ISKM Singapore." />
+      </Helmet>
     <div className="admin-wrapper">
       {/* SIDEBAR */}
       <aside className="admin-sidebar">
@@ -1474,6 +1483,7 @@ export default function Admin() {
         </div>
       )}
     </div>
+    </>
   );
 }
 
