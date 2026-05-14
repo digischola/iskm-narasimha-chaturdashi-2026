@@ -656,14 +656,15 @@ export default function WeekendLoveFeast() {
               {formError && <p style={{ color: "var(--red, #c0392b)", fontSize: 13, textAlign: "center", marginBottom: 12 }}>{formError}</p>}
               <div className="form-row">
                 <div className="form-group">
-                  <label>Full Name <span className="req">*</span></label>
-                  <input type="text" placeholder="Your full name" required value={formName} onChange={e => setFormName(e.target.value)} />
+                  <label htmlFor="wlf-name">Full Name <span className="req">*</span></label>
+                  <input id="wlf-name" type="text" placeholder="Your full name" required value={formName} onChange={e => setFormName(e.target.value)} />
                 </div>
               </div>
               <div className="form-row two-col">
                 <div className="form-group">
-                  <label>Email <span className="req">*</span></label>
+                  <label htmlFor="wlf-email">Email <span className="req">*</span></label>
                   <input
+                    id="wlf-email"
                     type="email"
                     placeholder="you@email.com"
                     required
@@ -672,9 +673,10 @@ export default function WeekendLoveFeast() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Phone <span className="req">*</span></label>
+                  <label htmlFor="wlf-phone">Phone <span className="req">*</span></label>
                   <div style={{ display: "flex", gap: 8 }}>
                     <select
+                      aria-label="Country code"
                       value={formPhoneCode}
                       onChange={e => setFormPhoneCode(e.target.value)}
                       style={{ width: 90, flexShrink: 0 }}
@@ -693,6 +695,7 @@ export default function WeekendLoveFeast() {
                       <option value="+86">+86</option>
                     </select>
                     <input
+                      id="wlf-phone"
                       type="tel"
                       placeholder="XXXX XXXX"
                       required
@@ -706,7 +709,7 @@ export default function WeekendLoveFeast() {
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Choose Date <span className="req">*</span></label>
+                  <label id="wlf-date-label">Choose Date <span className="req">*</span></label>
                   <div className="slf-cal-wrap" ref={calWrapRef}>
                     <button
                       type="button"
@@ -785,8 +788,8 @@ export default function WeekendLoveFeast() {
               </div>
               <div className="form-row two-col">
                 <div className="form-group">
-                  <label>Number of Attendees</label>
-                  <select value={formAttendees} onChange={e => setFormAttendees(e.target.value)}>
+                  <label htmlFor="wlf-attendees">Number of Attendees</label>
+                  <select id="wlf-attendees" aria-label="Number of attendees" value={formAttendees} onChange={e => setFormAttendees(e.target.value)}>
                     <option value="1">1 Person</option>
                     <option value="2">2 People</option>
                     <option value="3">3 People</option>
@@ -796,8 +799,8 @@ export default function WeekendLoveFeast() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>First time visiting?</label>
-                  <select value={formFirstTime} onChange={e => setFormFirstTime(e.target.value)}>
+                  <label htmlFor="wlf-firsttime">First time visiting?</label>
+                  <select id="wlf-firsttime" aria-label="First time visiting" value={formFirstTime} onChange={e => setFormFirstTime(e.target.value)}>
                     <option value="no">No, I've been before</option>
                     <option value="yes">Yes, first time!</option>
                   </select>
@@ -1043,7 +1046,7 @@ export default function WeekendLoveFeast() {
         <div className="container">
           <div className="footer-inner">
             <div className="footer-brand">
-              <img src={`${IMG}/logo.webp`} alt="ISKM" width="28" height="28" />
+              <img src={`${IMG}/logo.webp`} alt="ISKM Singapore Logo" width="28" height="28" />
               <span>ISKM Singapore</span>
             </div>
             <div className="footer-links">
