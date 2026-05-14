@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
 import "./WeekendLoveFeast.css";
