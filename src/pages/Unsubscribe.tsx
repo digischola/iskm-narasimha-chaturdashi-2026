@@ -65,7 +65,7 @@ export default function Unsubscribe() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#fdf5ed", fontFamily: "'Source Sans Pro', -apple-system, sans-serif", padding: "24px" }}>
       <div style={{ background: "white", padding: "48px 40px", borderRadius: "16px", boxShadow: "0 8px 40px rgba(30,58,110,0.08)", maxWidth: "460px", width: "100%", textAlign: "center" }}>
-        <img src="/images/logo.webp" alt="ISKM" width="56" height="56" style={{ borderRadius: "50%", border: "2px solid #f4c96b", marginBottom: "20px" }} />
+        <img src="/images/logo.webp" alt="ISKM Singapore Logo" width="56" height="56" style={{ borderRadius: "50%", border: "2px solid #f4c96b", marginBottom: "20px" }} />
         <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", color: "#1e3a6e", fontSize: "24px", marginBottom: "16px" }}>
           {status === "loading" && "Checking..."}
           {status === "valid" && "Unsubscribe"}

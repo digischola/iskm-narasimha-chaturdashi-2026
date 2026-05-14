@@ -87,7 +87,7 @@ function Navbar({ scrolled }: { scrolled: boolean }) {
         <a href="#register" className="ribbon-cta">Secure Your Spot &rarr;</a>
       </div>
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`}>
-        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand"><img src="/images/logo.webp" alt="ISKM" width="32" height="32" /><span>ISKM Singapore</span></a>
+        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand"><img src="/images/logo.webp" alt="ISKM Singapore Logo" width="32" height="32" /><span>ISKM Singapore</span></a>
         <div className="nav-links">
           <a href="#expect" className="desk-link">What's On</a>
           <a href="#schedule" className="desk-link">Schedule</a>
@@ -326,23 +326,23 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
       <div className="reg-card">
         <div className="reg-card-header">
           <div className="reg-badge"><i className="fas fa-ticket-alt"></i> &nbsp;Free Entry</div>
-          <h3>Confirm Your Attendance</h3>
+          <h2>Confirm Your Attendance</h2>
           <p>Fill in below to register for the celebration</p>
         </div>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Full Name *</label>
+              <label htmlFor="nc-name">Full Name *</label>
               <div className="input-wrap">
-                <input type="text" placeholder="Your full name" required value={name} onChange={(e) => handleNameChange(e.target.value)} className={nameValid ? "input-valid" : ""} />
+                <input id="nc-name" type="text" placeholder="Your full name" required value={name} onChange={(e) => handleNameChange(e.target.value)} className={nameValid ? "input-valid" : ""} />
                 {nameValid && <i className="fas fa-check check-inline"></i>}
               </div>
             </div>
             <div className="form-row">
               <div className="form-group">
-                <label>Email *</label>
+                <label htmlFor="nc-email">Email *</label>
                 <div className="input-wrap">
-                  <input type="email" placeholder="you@email.com" required value={email} onChange={(e) => handleEmailChange(e.target.value)} onBlur={checkEmailDuplicate} className={emailValid && emailDupStatus !== "duplicate" ? "input-valid" : emailDupStatus === "duplicate" ? "input-error" : ""} />
+                  <input id="nc-email" type="email" placeholder="you@email.com" required value={email} onChange={(e) => handleEmailChange(e.target.value)} onBlur={checkEmailDuplicate} className={emailValid && emailDupStatus !== "duplicate" ? "input-valid" : emailDupStatus === "duplicate" ? "input-error" : ""} />
                   {emailDupStatus === "checking" && <i className="fas fa-spinner fa-spin check-inline" style={{ color: "#999" }}></i>}
                   {emailDupStatus === "ok" && <i className="fas fa-check check-inline" style={{ color: "#27ae60" }}></i>}
                   {emailDupStatus === "duplicate" && <i className="fas fa-times check-inline" style={{ color: "#e74c3c" }}></i>}
@@ -351,9 +351,9 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 {emailDupStatus === "duplicate" && <span style={{ color: "#e74c3c", fontSize: "0.8rem", marginTop: "0.25rem" }}>This email is already registered</span>}
               </div>
               <div className="form-group">
-                <label>Phone *</label>
+                <label htmlFor="nc-phone">Phone *</label>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <select value={phoneCode} onChange={(e) => { setPhoneCode(e.target.value); setPhoneDupStatus("idle"); }} style={{ width: "90px", flexShrink: 0 }}>
+                  <select aria-label="Country code" value={phoneCode} onChange={(e) => { setPhoneCode(e.target.value); setPhoneDupStatus("idle"); }} style={{ width: "90px", flexShrink: 0 }}>
                     <option value="+65">+65</option>
                     <option value="+91">+91</option>
                     <option value="+60">+60</option>
@@ -368,7 +368,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                     <option value="+86">+86</option>
                   </select>
                   <div className="input-wrap" style={{ flex: 1 }}>
-                    <input type="tel" placeholder="XXXX XXXX" value={phoneNum} onChange={(e) => handlePhoneChange(e.target.value)} onBlur={checkPhoneDuplicate} className={phoneNum && !isPhoneValid() ? "input-error" : phoneDupStatus === "duplicate" ? "input-error" : phoneNum && isPhoneValid() && phoneDupStatus === "ok" ? "input-valid" : ""} />
+                    <input id="nc-phone" type="tel" placeholder="XXXX XXXX" value={phoneNum} onChange={(e) => handlePhoneChange(e.target.value)} onBlur={checkPhoneDuplicate} className={phoneNum && !isPhoneValid() ? "input-error" : phoneDupStatus === "duplicate" ? "input-error" : phoneNum && isPhoneValid() && phoneDupStatus === "ok" ? "input-valid" : ""} />
                     {phoneDupStatus === "checking" && <i className="fas fa-spinner fa-spin check-inline" style={{ color: "#999" }}></i>}
                     {phoneDupStatus === "ok" && <i className="fas fa-check check-inline" style={{ color: "#27ae60" }}></i>}
                     {phoneDupStatus === "duplicate" && <i className="fas fa-times check-inline" style={{ color: "#e74c3c" }}></i>}
@@ -379,8 +379,8 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
               </div>
             </div>
             <div className="form-group">
-              <label>Number of Attendees *</label>
-              <select value={attendees} onChange={(e) => setAttendees(e.target.value)} required>
+              <label htmlFor="nc-attendees">Number of Attendees *</label>
+              <select id="nc-attendees" aria-label="Number of attendees" value={attendees} onChange={(e) => setAttendees(e.target.value)} required>
                 <option value="" disabled>Select number of attendees</option>
                 <option value="1">1 Person</option>
                 <option value="2">2 People</option>
@@ -739,7 +739,7 @@ function Location() {
       <div className="location-wrap animate-in">
         <div className="loc-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7843!2d103.8807558!3d1.3146362!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da183c80ceaac5%3A0x458ccd4e57b8697b!2sInternational%20Sri%20Krishna%20Mandir%20(ISKM)!5e0!3m2!1sen!2ssg!4v1" allowFullScreen loading="lazy" title="ISKM Singapore Map"></iframe></div>
         <div className="loc-info">
-          <img src="/images/logo.webp" alt="ISKM" width="45" height="45" />
+          <img src="/images/logo.webp" alt="ISKM Singapore Logo" width="45" height="45" />
           <h3>International Sri Krishna Mandir</h3>
           <div className="loc-detail"><i className="fas fa-map-marker-alt"></i><span>No. 9 Lorong 29 Geylang, #03-02<br />Singapore 388065</span></div>
           <div className="loc-detail"><i className="fas fa-calendar"></i><span>Thursday, 30 April 2026</span></div>
@@ -799,7 +799,7 @@ function FinalCTA() {
 function Footer() {
   return (
     <footer>
-      <img src="/images/logo.webp" alt="ISKM" width="38" height="38" />
+      <img src="/images/logo.webp" alt="ISKM Singapore Logo" width="38" height="38" />
       <p>&copy; 2026 International Sri Krishna Mandir &middot; <a href="https://srikrishnamandir.org">srikrishnamandir.org</a> &middot; <a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a></p>
     </footer>
   );

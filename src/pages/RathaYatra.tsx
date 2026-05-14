@@ -611,14 +611,15 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           <div className="reg-badge">
             <i className="fas fa-ticket-alt"></i> &nbsp;Free Entry
           </div>
-          <h3>Register here</h3>
+          <h2>Register here</h2>
           <p>Free entry · Free 5-course feast · Whole family welcome</p>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Full Name *</label>
+            <label htmlFor="ry-name">Full Name *</label>
             <div className="input-wrap">
               <input
+                id="ry-name"
                 type="text"
                 placeholder="Your full name"
                 required
@@ -631,9 +632,10 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
           </div>
           <div className="form-row">
             <div className="form-group">
-              <label>Email *</label>
+              <label htmlFor="ry-email">Email *</label>
               <div className="input-wrap">
                 <input
+                  id="ry-email"
                   type="email"
                   placeholder="you@email.com"
                   required
@@ -664,9 +666,10 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
               )}
             </div>
             <div className="form-group">
-              <label>Phone *</label>
+              <label htmlFor="ry-phone">Phone *</label>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <select
+                  aria-label="Country code"
                   value={phoneCode}
                   onChange={(e) => {
                     setPhoneCode(e.target.value);
@@ -689,6 +692,7 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
                 </select>
                 <div className="input-wrap" style={{ flex: 1 }}>
                   <input
+                    id="ry-phone"
                     type="tel"
                     placeholder="XXXX XXXX"
                     value={phoneNum}
@@ -726,8 +730,8 @@ function RegistrationForm({ onRegister }: { onRegister: (count: number) => void 
             </div>
           </div>
           <div className="form-group">
-            <label>Number of Attendees *</label>
-            <select value={attendees} onChange={(e) => setAttendees(e.target.value)} required>
+            <label htmlFor="ry-attendees">Number of Attendees *</label>
+            <select id="ry-attendees" aria-label="Number of attendees" value={attendees} onChange={(e) => setAttendees(e.target.value)} required>
               <option value="" disabled>
                 Select number of attendees
               </option>
