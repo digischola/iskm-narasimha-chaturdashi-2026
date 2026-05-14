@@ -531,6 +531,21 @@ export default function WeekendLoveFeast() {
   const shareText = "Join us for Weekend Love Feast at ISKM Singapore — every Saturday & Sunday 5–7:30 PM. Free Prasadam, Kirtan & Bhagavad Gita class.";
 
   return (
+    <>
+      <Helmet>
+        <title>Weekend Love Feast — Bhajan, Gītā Class & Free Prasādam | ISKM Singapore</title>
+        <meta name="description" content="Join ISKM Singapore every Saturday & Sunday for Bhajan, Gītā class, Kīrtana and free vegetarian Prasādam. All are warmly welcome." />
+        <meta property="og:title" content="Weekend Love Feast — Every Sat & Sun at ISKM Singapore" />
+        <meta property="og:description" content="Bhajan, Gītā class, Kīrtana and free Prasādam every weekend. Open to all." />
+        <meta property="og:url" content="https://events.srikrishnamandir.org/weekend-love-feast" />
+        <meta property="og:image" content="https://events.srikrishnamandir.org/images/hero-image.webp" />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://events.srikrishnamandir.org/weekend-love-feast" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Weekend Love Feast — ISKM Singapore" />
+        <meta name="twitter:description" content="Bhajan, Gītā class, Kīrtana and free Prasādam every Saturday & Sunday." />
+        <meta name="twitter:image" content="https://events.srikrishnamandir.org/images/hero-image.webp" />
+      </Helmet>
     <div className="slf">
       {/* Scroll Progress */}
       <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress})` }} />
