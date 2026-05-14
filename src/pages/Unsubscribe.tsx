@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 
 type Status = "loading" | "valid" | "already_unsubscribed" | "invalid" | "success" | "error";
