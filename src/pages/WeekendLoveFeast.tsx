@@ -1080,5 +1080,6 @@ export default function WeekendLoveFeast() {
         <a href="#slf-register" onClick={e => { e.preventDefault(); scrollTo("slf-register"); }}><i className="fas fa-ticket-alt" /> Register Free — This Weekend</a>
       </div>
     </div>
+    </>
   );
 }
