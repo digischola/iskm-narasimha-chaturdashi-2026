@@ -116,7 +116,8 @@ serve(async (req) => {
           continue;
         }
         if (v === undefined || v === null) continue;
-        payload[k] = String(v);
+        const strVal = String(v);
+        payload[k] = DATE_KEYS.has(k) ? toDdMmYyyy(strVal) : strVal;
       }
     }
 
