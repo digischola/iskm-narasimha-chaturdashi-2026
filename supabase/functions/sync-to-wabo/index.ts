@@ -44,6 +44,14 @@ const ALLOWED_EXTRA_KEYS = new Set([
   "wlf_attendees",
 ]);
 
+// Keys whose values are dates and must be sent to Wabo as DD-MM-YYYY.
+const DATE_KEYS = new Set(["preferred_date", "wlf_attendance_date"]);
+
+function toDdMmYyyy(value: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  return m ? `${m[3]}-${m[2]}-${m[1]}` : value;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
