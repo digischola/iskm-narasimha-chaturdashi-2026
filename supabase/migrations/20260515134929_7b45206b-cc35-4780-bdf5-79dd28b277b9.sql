@@ -1,0 +1,1 @@
+ALTER TABLE public.weekend_love_feast_registrations DROP CONSTRAINT IF EXISTS slf_registrations_phone_key;
