@@ -458,6 +458,29 @@ export default function KidsRathaYatra() {
         </div>
       </section>
 
+      <section className="section warm" id="schedule">
+        <div className="section-inner">
+          <div className="section-head">
+            <div className="eyebrow">Programme Schedule</div>
+            <h2>Saturday, 27 June 2026 · <em>6:00 PM – 9:00 PM</em></h2>
+            <div className="gold-divider"></div>
+            <p>All timings are approximate (SGT).</p>
+          </div>
+          <div className="timeline-wrap">
+            <div className="tl" id="kry-timeline">
+              {SCHEDULE.map((s, i) => (
+                <div key={i} className={`tl-it${s.hl ? " hl" : ""}`}>
+                  <div className="tl-dot">{s.icon}</div>
+                  <div className="tl-time">{s.time}</div>
+                  <h4 className="tl-h">{s.h}</h4>
+                  <p className="tl-d">{s.d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section warm" id="attractions">
         <div className="section-inner">
           <div className="section-head">
@@ -523,28 +546,6 @@ export default function KidsRathaYatra() {
         </div>
       </section>
 
-      <section className="section warm" id="schedule">
-        <div className="section-inner">
-          <div className="section-head">
-            <div className="eyebrow">Programme Schedule</div>
-            <h2>Saturday, 27 June 2026 · <em>6:00 PM – 9:00 PM</em></h2>
-            <div className="gold-divider"></div>
-            <p>All timings are approximate (SGT).</p>
-          </div>
-          <div className="timeline-wrap">
-            <div className="tl" id="kry-timeline">
-              {SCHEDULE.map((s, i) => (
-                <div key={i} className={`tl-it${s.hl ? " hl" : ""}`}>
-                  <div className="tl-dot">{s.icon}</div>
-                  <div className="tl-time">{s.time}</div>
-                  <h4 className="tl-h">{s.h}</h4>
-                  <p className="tl-d">{s.d}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className="section" id="faq">
         <div className="section-head">
