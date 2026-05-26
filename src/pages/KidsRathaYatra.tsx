@@ -309,7 +309,7 @@ export default function KidsRathaYatra() {
 
       <section className="hero" id="main-content">
         <div className="hero-bg-media">
-          <video id="kry-hero-video" autoPlay muted loop playsInline preload="metadata" poster={`${VID}/hero-loop-poster.jpg`} aria-hidden="true">
+          <video id="kry-hero-video" autoPlay muted loop playsInline preload="auto" aria-hidden="true">
             <source id="kry-hero-src" src={`${VID}/hero-loop.mp4`} type="video/mp4" />
           </video>
         </div>
