@@ -274,8 +274,11 @@ export default function Admin() {
   const ryEmails = new Set(
     ryData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
   );
+  const kryEmails = new Set(
+    kryData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
+  );
 
-  const allEmailsUnion = new Set<string>([...ncEmails, ...slfEmails, ...prasadamEmails, ...ryEmails]);
+  const allEmailsUnion = new Set<string>([...ncEmails, ...slfEmails, ...prasadamEmails, ...ryEmails, ...kryEmails]);
   const uniquePeopleCount = allEmailsUnion.size;
 
   // Overlap: emails appearing in 2+ tables
