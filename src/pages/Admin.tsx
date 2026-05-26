@@ -1292,7 +1292,7 @@ export default function Admin() {
                         );
                       })}
                       {regSlice.length === 0 && (
-                        <tr><td colSpan={(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") ? 7 : 6} className="admin-empty">No registrations found</td></tr>
+                        <tr><td colSpan={regEventTab === "kry" ? 8 : (regEventTab === "nrsimha" || regEventTab === "ratha_yatra") ? 7 : 6} className="admin-empty">No registrations found</td></tr>
                       )}
                     </tbody>
                   </table>
