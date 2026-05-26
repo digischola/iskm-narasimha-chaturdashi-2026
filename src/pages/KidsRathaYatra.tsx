@@ -290,16 +290,10 @@ export default function KidsRathaYatra() {
 
       <a href="#main-content" className="skip-link">Skip to content</a>
 
-      <div className="ribbon">
-        <span className="ribbon-dot"></span>
-        <span><span className="ribbon-hl">Limited seats</span> — Register free for Kids Ratha Yātrā 2026</span>
-        <a href="#register" className="ribbon-cta">Reserve your family's spot →</a>
-      </div>
-
-      <nav className={`nav${scrolled ? " scrolled" : ""}`}>
-        <a href="#main-content" className="nav-brand">
-          <img src={`${IMG}/logo.webp`} alt="ISKM Singapore logo" width={38} height={38} />
-          <span className="nav-name">ISKM Singapore<span className="nav-sub">Kids Ratha Yātrā 2026</span></span>
+      <nav className={`kry-nav${scrolled ? " scrolled" : ""}`}>
+        <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand">
+          <img src="/images/logo.webp" alt="ISKM Singapore" width={28} height={28} />
+          <span>ISKM Singapore</span>
         </a>
         <div className="nav-links">
           <a href="#about" className="desk-link">About</a>
@@ -311,6 +305,7 @@ export default function KidsRathaYatra() {
       </nav>
 
       <div className="scroll-progress"><div className="bar" style={{ transform: `scaleX(${progress})` }} /></div>
+
 
       <section className="hero" id="main-content">
         <div className="hero-bg-media">
