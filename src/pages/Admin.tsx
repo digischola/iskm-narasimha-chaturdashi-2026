@@ -1117,6 +1117,7 @@ export default function Admin() {
               <div className="admin-event-tabs">
                 <button className={`admin-event-tab${regEventTab === "nrsimha" ? " active" : ""}`} onClick={() => { setRegEventTab("nrsimha"); setRegPage(1); resetRegFilters(); }}>Nṛsiṁha Caturdaśī ({ncTotal})</button>
                 <button className={`admin-event-tab${regEventTab === "ratha_yatra" ? " active" : ""}`} onClick={() => { setRegEventTab("ratha_yatra"); setRegPage(1); resetRegFilters(); }}>Ratha Yātrā ({ryTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "kry" ? " active" : ""}`} onClick={() => { setRegEventTab("kry"); setRegPage(1); resetRegFilters(); }}>Kids Ratha Yātrā ({kryTotal})</button>
                 <button className={`admin-event-tab${regEventTab === "slf" ? " active" : ""}`} onClick={() => { setRegEventTab("slf"); setRegPage(1); resetRegFilters(); }}>Weekend Love Feast ({slfTotal})</button>
                 <button className={`admin-event-tab${regEventTab === "prasadam" ? " active" : ""}`} onClick={() => { setRegEventTab("prasadam"); setRegPage(1); resetRegFilters(); }}>Prasadam ({prasadamTotal})</button>
               </div>
