@@ -317,7 +317,7 @@ export default function KidsRathaYatra() {
           <div className="hero-eyebrow">ISKM Singapore Presents</div>
           <h1>Kids Ratha Yātrā <em>2026</em></h1>
           <p className="hero-tagline">"Little Hands, Big Service for Lord Jagannātha"</p>
-          <p className="hero-sub">A joyful kids-led celebration of the chariot festival — from kīrtana to seva, every offering made with love, every smile a step closer to Kṛṣṇa.</p>
+          
 
           <div className="hero-meta hero-meta-row">
             <div className="hero-meta-item"><span className="hero-meta-icon"><i className="fas fa-calendar"></i></span><span>Saturday, 27 June 2026</span></div>
