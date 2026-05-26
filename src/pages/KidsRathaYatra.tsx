@@ -242,10 +242,10 @@ export default function KidsRathaYatra() {
         userPhone: fullPhone,
         customData: { content_name: EVENT.pixelContent },
       });
-      // Wabo sync (fire-and-forget)
+      // Wabo sync (fire-and-forget) — use the short flag `kids_ratha_yatra: yes`
       supabase.functions.invoke("sync-to-wabo", {
         body: {
-          event_slug: EVENT.slug,
+          event_slug: "kids_ratha_yatra",
           source: `${EVENT.title} - Landing Page`,
           name: name.trim(),
           email: email.trim(),
