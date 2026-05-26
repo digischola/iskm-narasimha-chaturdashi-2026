@@ -132,7 +132,7 @@ const FAQS = [
   { q: "What ages is this suitable for?", a: "All ages — but the festival is especially designed with children aged 3–13 in mind. Toddlers, teens and grandparents are all warmly welcome. The whole family can take part." },
   { q: "Is there a dress code?", a: "No strict dress code — modest, comfortable clothing is perfect. Traditional Indian attire is lovely but not required. Children participating in kīrtana or dance may wish to wear traditional dress. Please remove shoes before entering the temple hall." },
   { q: "Will food be provided?", a: "Yes! A full vegetarian prasādam feast is offered free of charge from 9:15 PM. Throughout the evening you can also enjoy fresh samosas, cupcakes, cool drinks and other treats at the festival stalls." },
-  { q: "Is there parking at the venue?", a: "Limited parking is available at ISKM Capark. We recommend using public transport. We'll send detailed directions in your confirmation email." },
+  { q: "Is there parking at the venue?", a: "Limited parking is available at ISKM Singapore. We recommend using public transport. We'll send detailed directions in your confirmation email." },
 ];
 
 const ATTRACTIONS = [
@@ -148,7 +148,7 @@ const ATTRACTIONS = [
 ];
 
 const SCHEDULE = [
-  { time: "6:00 – 6:10 PM", h: "Assembling kids and parents", d: "Families gather on the 1st floor of ISKM Capark.", icon: <i className="fas fa-users"></i> },
+  { time: "6:00 – 6:10 PM", h: "Assembling kids and parents", d: "Families gather on the 1st floor of ISKM Singapore.", icon: <i className="fas fa-users"></i> },
   { time: "6:10 – 6:20 PM", h: "Welcome speech by HG Visvambhar Prabhu", d: "A short opening address to set the spirit of the evening.", icon: <i className="fas fa-microphone"></i> },
   { time: "6:20 – 6:30 PM", h: <>Deities brought down to the chariot <span className="tl-tag">Conch Call</span></>, d: "Samarth blows the conch shell as Lord Jagannātha, Baladev and Subhadrā are placed on the chariot.", icon: <i className="fas fa-shield-alt"></i>, hl: true },
   { time: "6:30 – 6:35 PM", h: <>Dance by Kṛṣṇa Bhaktins <span className="tl-tag">Performance</span></>, d: "Young Kṛṣṇa Bhaktins offer a devotional dance.", icon: <i className="fas fa-music"></i>, hl: true },
@@ -281,7 +281,7 @@ export default function KidsRathaYatra() {
         <meta name="description" content="Little Hands, Big Service for Lord Jagannātha. A joyful kids-led Ratha Yātrā celebration at ISKM Singapore — Saturday 27 June 2026, 6:00 PM – 9:00 PM. Free entry, free prasādam, all are welcome." />
         <link rel="canonical" href={EVENT.url} />
         <meta property="og:title" content="Kids Ratha Yātrā 2026 — ISKM Singapore" />
-        <meta property="og:description" content="Little Hands, Big Service for Lord Jagannātha. Saturday 27 June 2026 · 6:00–9:00 PM · ISKM Capark." />
+        <meta property="og:description" content="Little Hands, Big Service for Lord Jagannātha. Saturday 27 June 2026 · 6:00–9:00 PM · ISKM Singapore." />
         <meta property="og:image" content={`${IMG}/hero_01_kids_holding_deities.jpg`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={EVENT.url} />
@@ -567,13 +567,13 @@ export default function KidsRathaYatra() {
       <section style={{ padding: "60px 32px" }} id="location">
         <div className="section-head">
           <div className="eyebrow">The venue</div>
-          <h2>ISKM Capark, Singapore</h2>
+          <h2>ISKM Singapore</h2>
           <div className="gold-divider"></div>
         </div>
         <div className="location">
           <div className="loc-info">
             <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--text-dark)", margin: "0 0 26px" }}>International Sri Krishna Mandir's community hall — a warm, welcoming space for families and children. Easy public-transport access from Aljunied and Paya Lebar MRT.</p>
-            <div className="loc-detail"><span className="loc-ic"><i className="fas fa-map-marker-alt"></i></span><span><strong>ISKM Capark</strong>Singapore</span></div>
+            <div className="loc-detail"><span className="loc-ic"><i className="fas fa-map-marker-alt"></i></span><span><strong>ISKM Singapore</strong>Geylang</span></div>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-calendar"></i></span><span><strong>Saturday, 27 June 2026</strong>Doors open 5:45 PM</span></div>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-clock"></i></span><span><strong>6:00 PM – 9:00 PM (SGT)</strong>Prasādam feast from 9:15 PM</span></div>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-phone"></i></span><span><strong>+(65) 6250 2280</strong>Tap to call</span></div>
@@ -604,7 +604,7 @@ export default function KidsRathaYatra() {
 
       <section className="final-cta">
         <h2>Bring the family — encourage <em>the children</em></h2>
-        <p className="final-cta-meta">Saturday, 27 June 2026&nbsp;&nbsp;·&nbsp;&nbsp;6:00 PM SGT&nbsp;&nbsp;·&nbsp;&nbsp;ISKM Capark, Singapore</p>
+        <p className="final-cta-meta">Saturday, 27 June 2026&nbsp;&nbsp;·&nbsp;&nbsp;6:00 PM SGT&nbsp;&nbsp;·&nbsp;&nbsp;ISKM Singapore</p>
         <a href="#register" className="btn-primary">Register now — it's free</a>
       </section>
 
