@@ -1,0 +1,221 @@
+/* ═══════════════════════════════════════════════════════════════
+   ISKM SINGAPORE — Colors & Type
+   Single source of truth. Mirrors the brand guide §3 + §4.
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap");
+
+:root {
+  /* ─── BRAND PRIMARIES ─────────────────────────────────────────── */
+  --navy:        #1e3a6e;  /* Headings, brand wordmark, nav, admin CTAs */
+  --navy-2:      #2d4a7c;  /* Navy hover, secondary headings */
+  --navy-deep:   #162d58;  /* Hero gradients, dark sections */
+  --navy-deepest:#0f1f3a;  /* Hero gradient end-stop */
+
+  --gold:        #f4c96b;  /* Accents, numbers, decorative type, badges */
+  --gold-light:  #f5d78e;  /* Gold hover / soft highlight */
+  --gold-dark:   #c79a3a;  /* Gold pressed / on-cream contrast */
+
+  --pink:        #f8a4c0;  /* PRIMARY CTA — Register, Donate (navy text only) */
+  --pink-light:  #ffb6c1;  /* Pink hover, soft pills */
+  --pink-hover:  #f590b3;  /* CTA pressed state */
+
+  /* ─── SURFACES ────────────────────────────────────────────────── */
+  --cream:       #fdf5ed;  /* Page background — never pure white */
+  --cream-warm:  #f9efe2;  /* Cards, alternating sections */
+  --white:       #ffffff;  /* Form fields, modals, table rows */
+
+  /* ─── TEXT ────────────────────────────────────────────────────── */
+  --text-dark:   #333333;  /* Body copy — never #000 */
+  --text-muted:  #666666;  /* Secondary copy, captions */
+  --text-light:  #999999;  /* Placeholder, table meta */
+
+  /* ─── BORDERS ─────────────────────────────────────────────────── */
+  --border:      #e5ded5;
+  --border-soft: #eee8df;
+  --border-warm: #e8e2d9;
+  --border-light:#f0ebe3;
+
+  /* ─── STATUS ──────────────────────────────────────────────────── */
+  --green:       #4caf50;
+  --red:         #d32f2f;
+  --warn:        #e67e22;
+  --warn-bg:     #fff8e8;
+  --warn-border: #f0d894;
+  --warn-ink:    #6d4a1a;
+  --ok:          #2e7d32;
+  --ok-bg:       #e8f5e9;
+  --err:         #c62828;
+  --err-bg:      #fce4ec;
+  --suppressed:  #6a1b9a;
+  --suppressed-bg:#f3e5f5;
+  --pending-ink: #e65100;
+  --pending-bg:  #fff3e0;
+
+  /* ─── CHANNELS ────────────────────────────────────────────────── */
+  --whatsapp:    #25D366;
+  --telegram:    #0088cc;
+
+  /* ─── SEMANTIC ALIASES ────────────────────────────────────────── */
+  --fg-1:        var(--text-dark);
+  --fg-2:        var(--text-muted);
+  --fg-3:        var(--text-light);
+  --bg-1:        var(--cream);
+  --bg-2:        var(--cream-warm);
+  --bg-3:        var(--white);
+  --accent:      var(--gold);
+  --cta-bg:      var(--pink);
+  --cta-ink:     var(--navy);
+  --link:        var(--navy);
+  --link-hover:  var(--navy-2);
+
+  /* ─── FONTS ───────────────────────────────────────────────────── */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body:    "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+  /* ─── TYPE SCALE (computed) ───────────────────────────────────── */
+  --fs-hero:    clamp(2.4rem, 5vw, 3.6rem);   /* 38–58px Hero H1 */
+  --fs-h1:      clamp(2rem, 4vw, 2.8rem);     /* 32–45px */
+  --fs-h2:      clamp(1.8rem, 3.5vw, 2.4rem); /* 29–38px Section title */
+  --fs-h3:      1.375rem;  /* 22px Card title */
+  --fs-h4:      1.125rem;  /* 18px Sub-title */
+  --fs-stat:    clamp(2rem, 4vw, 2.8rem);
+  --fs-body:    1rem;      /* 16px */
+  --fs-body-sm: 0.875rem;  /* 14px */
+  --fs-meta:    0.8125rem; /* 13px */
+  --fs-small:   0.75rem;   /* 12px */
+  --fs-overline:0.6875rem; /* 11px */
+  --fs-micro:   0.625rem;  /* 10px */
+
+  --lh-tight:   1.25;  /* Headings */
+  --lh-body:    1.6;   /* Body */
+
+  --tracking-overline: 0.15625em; /* 2.5px @ 16px */
+  --tracking-micro:    0.09375em; /* 1.5px */
+  --tracking-cta:      0.0188em;  /* 0.3px @ 16px */
+
+  /* ─── SPACING ─────────────────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 50px;
+  --space-14: 70px;
+
+  /* ─── RADII ───────────────────────────────────────────────────── */
+  --radius-chip:   6px;
+  --radius-input:  8px;
+  --radius-button: 8px;
+  --radius-sm:    10px;
+  --radius-card:  12px;
+  --radius-lg:    16px;
+  --radius-pill:  999px;
+
+  /* ─── SHADOWS ─────────────────────────────────────────────────── */
+  --shadow-card-subtle: 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-card-hover:  0 4px 24px rgba(0,0,0,0.06);
+  --shadow-card-lg:     0 8px 40px rgba(0,0,0,0.08);
+  --shadow-drawer:     -4px 0 24px rgba(0,0,0,0.12);
+  --shadow-cta:         0 4px 20px rgba(248,164,192,0.30);
+
+  /* ─── MOTION ──────────────────────────────────────────────────── */
+  --t-ui:  0.2s ease;
+  --t-cta: 0.3s ease;
+  --t-drawer: 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+
+  /* ─── HERO OVERLAY (verbatim spec) ────────────────────────────── */
+  --hero-overlay: linear-gradient(135deg, #1e3a6e 0%, #162d58 60%, #0f1f3a 100%);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SEMANTIC TYPOGRAPHY (use these classes; never invent new sizes)
+   ═══════════════════════════════════════════════════════════════ */
+
+html { font-size: 16px; }
+
+body, .body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-1);
+  background: var(--bg-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .h1, .display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-hero);
+  line-height: var(--lh-tight);
+  color: var(--navy);
+  letter-spacing: -0.01em;
+}
+
+h2, .h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-tight);
+  color: var(--navy);
+}
+
+h3, .h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-tight);
+  color: var(--navy);
+}
+
+h4, .h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-h4);
+  line-height: var(--lh-tight);
+  color: var(--navy);
+}
+
+.eyebrow, .overline {
+  font-family: var(--font-body);
+  font-size: var(--fs-overline);
+  font-weight: 700;
+  letter-spacing: var(--tracking-overline);
+  text-transform: uppercase;
+  color: var(--navy-2);
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: var(--fs-stat);
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.meta, small {
+  font-family: var(--font-body);
+  font-size: var(--fs-meta);
+  color: var(--fg-2);
+}
+
+.micro {
+  font-family: var(--font-body);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: var(--tracking-micro);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+p { font-family: var(--font-body); line-height: var(--lh-body); color: var(--fg-1); }
+em, .sanskrit { font-style: italic; } /* Sanskrit terms italicised on first mention */
+
+a { color: var(--link); text-decoration: none; transition: color var(--t-ui); }
+a:hover { color: var(--link-hover); }
+
+::selection { background: var(--gold); color: var(--navy); }
