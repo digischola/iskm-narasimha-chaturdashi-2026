@@ -423,12 +423,14 @@ export default function Admin() {
   const ncSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").startsWith("nc-")).length;
   const slfSent = uniqueEmailList.filter(e => e.status === "sent" && ((e.template_name || "").includes("wlf") || (e.template_name || "").includes("slf"))).length;
   const prasadamSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("prasadam")).length;
-  const rySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("ry-")).length;
+  const rySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("ry-") && !(e.template_name || "").includes("kry-")).length;
+  const krySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("kry-")).length;
 
   const ncEng = buildEventEngagement(isNcType, ncSent);
   const slfEng = buildEventEngagement(isSlfType, slfSent);
   const prasadamEng = buildEventEngagement(isPrasadamType, prasadamSent);
   const ryEng = buildEventEngagement(isRyType, rySent);
+  const kryEng = buildEventEngagement(isKryType, krySent);
 
   // ═══ CHART: Registrations over time (combined) ═══
   const buildChartData = (tab: EventTab) => {
