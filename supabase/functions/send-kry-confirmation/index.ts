@@ -2,9 +2,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.101.1/cors";
 
 const EVENT_URL = "https://events.srikrishnamandir.org/kids-ratha-yatra-2026";
-const CALENDAR_URL = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ratha+Y%C4%81tr%C4%81+2026&dates=20260627T100000Z/20260627T130000Z&details=Children-led+k%C4%ABrtana%2C+joyful+stalls%2C+the+chariot+procession+and+free+pras%C4%81dam+for+the+whole+family.%0A%0AVenue%3A+Singapore%0A%0AMore+info%3A+https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026&location=ISKM+Capark%2C+Singapore";
-const WA_SHARE = "https://wa.me/?text=Join%20us%20for%20Kids%20Ratha%20Y%C4%81tr%C4%81%202026%20at%20Clementi%20Stadium%20on%20Saturday%2027%20June%2C%206%20PM.%20Free%20entry%2C%20free%20Pras%C4%81dam%20Feast%2C%20all%20welcome.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026";
-const TG_SHARE = "https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026&text=Join%20us%20for%20Kids%20Ratha%20Y%C4%81tr%C4%81%202026";
+const CALENDAR_URL = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Kids+Ratha+Y%C4%81tr%C4%81+2026&dates=20260627T100000Z/20260627T130000Z&details=Children-led+k%C4%ABrtana%2C+joyful+stalls%2C+the+chariot+procession+and+free+pras%C4%81dam+for+the+whole+family.%0A%0AVenue%3A+Singapore%0A%0AMore+info%3A+https%3A%2F%2Fevents.srikrishnamandir.org%2Fkids-ratha-yatra-2026&location=ISKM+Capark%2C+Singapore";
+const WA_SHARE = "https://wa.me/?text=Join%20us%20for%20Kids%20Ratha%20Y%C4%81tr%C4%81%202026%20at%20Clementi%20Stadium%20on%20Saturday%2027%20June%2C%206%20PM.%20Free%20entry%2C%20free%20Pras%C4%81dam%20Feast%2C%20all%20welcome.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fkids-ratha-yatra-2026";
+const TG_SHARE = "https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org%2Fkids-ratha-yatra-2026&text=Join%20us%20for%20Kids%20Ratha%20Y%C4%81tr%C4%81%202026";
 
 const CONFIRMATION_HTML = `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -38,7 +38,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 <body style="margin:0;padding:0;background:#fdf5ed;font-family:'Source Sans Pro',-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#333333;">
 
 <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#fdf5ed;">
-  Saturday, 27 June at ISKM Capark. Free entry, free 5-course Pras&#x101;dam Feast.
+  Saturday, 27 June at ISKM Capark. Free entry, free pras&#x101;dam for the whole family.
   &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj;
 </div>
 

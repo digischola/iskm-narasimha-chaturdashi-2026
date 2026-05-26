@@ -107,7 +107,7 @@ const T14_HTML = `${EMAIL_HEAD}
 
       <tr><td align="center" style="padding:16px 32px 8px;" class="p-mobile">
         <h1 class="hero-title" style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:600;color:#1e3a6e;line-height:1.15;">
-          Two weeks to Ratha Y&#x101;tr&#x101; &#127802;
+          Two weeks to Kids Ratha Y&#x101;tr&#x101; &#127802;
         </h1>
       </td></tr>
 
@@ -126,7 +126,7 @@ const T14_HTML = `${EMAIL_HEAD}
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9efe2;border-radius:12px;">
           <tr><td style="padding:20px 24px;">
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:00 PM.</strong> Guest of Honour and Temple President's address</p>
-            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">5:30 PM.</strong> Cultural Odissi dance, deities ascend the chariots</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:00 PM.</strong> The children's stalls open and k&#x12B;rtana begins</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:00 PM.</strong> The chariot procession begins. This is the peak moment. &#10024;</p>
             <p style="margin:0;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">9:00 PM.</strong> Final &#x101;rati and deities depart</p>
           </td></tr>
@@ -196,7 +196,7 @@ const T1_HTML = `${EMAIL_HEAD}
 
       <tr><td align="center" style="padding:16px 32px 8px;" class="p-mobile">
         <h1 class="hero-title" style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:600;color:#1e3a6e;line-height:1.15;">
-          Tomorrow at 5 PM &#127802;
+          Tomorrow at 6 PM &#127802;
         </h1>
       </td></tr>
 
@@ -216,7 +216,7 @@ const T1_HTML = `${EMAIL_HEAD}
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9efe2;border-radius:12px;">
           <tr><td style="padding:20px 24px;">
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; Take public transport. 14,000+ expected.</p>
-            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">MRT:</strong> Clementi (EW23), 15-minute walk &#128646;</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">MRT:</strong> ISKM Capark, Singapore — directions on the event page &#128646;</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">Buses</strong> 96, 175, 184, 282, 285 stop nearby &#128652;</p>
             <p style="margin:0;font-size:15px;line-height:1.7;color:#444;">&#183; On-site carpark fills early. Public transport is faster.</p>
           </td></tr>
@@ -238,7 +238,7 @@ const T1_HTML = `${EMAIL_HEAD}
       <!-- LATE NOTE -->
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
         <p style="margin:0;font-size:15px;line-height:1.7;color:#555;">
-          If you're running late, the chariot procession runs until 9:00 PM. The free 5-course Pras&#x101;dam Feast is served throughout. &#127858;
+          If you're running late, the festival runs until 9:00 PM. The free pras&#x101;dam for the whole family is served throughout. &#127858;
         </p>
       </td></tr>
 
@@ -270,7 +270,7 @@ const TEMPLATES: Record<string, { html: string; subject: (name: string) => strin
   },
   "t-1": {
     html: T1_HTML,
-    subject: (_name: string) => "Tomorrow at 5 PM, Kids Ratha Y\u0101tr\u0101 2026 at ISKM Capark \u23F0",
+    subject: (_name: string) => "Tomorrow at 6 PM, Kids Ratha Y\u0101tr\u0101 2026 at ISKM Capark \u23F0",
     trackPrefix: "kry-t1-",
     sentColumn: "t1_reminder_sent",
     label: "kry-t1",

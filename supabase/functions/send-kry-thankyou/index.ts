@@ -91,7 +91,7 @@ const THANKYOU_HTML = `<!DOCTYPE html>
           <tr><td style="padding:20px 24px;">
             <p style="margin:0 0 12px;font-family:'Playfair Display',Georgia,serif;font-size:20px;font-weight:700;color:#1e3a6e;">Weekend Love Feast</p>
             <p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#444;">
-              The temple is open every weekend. Every Saturday and Sunday, 5:00 to 7:30 PM. All are welcome. Free 5-course Pras&#x101;dam Feast, k&#x12B;rtana, and G&#x12B;t&#x101; class. &#127926;
+              The temple is open every weekend. Every Saturday and Sunday, 5:00 to 7:30 PM. All are welcome. Free free pras&#x101;dam for the whole family, k&#x12B;rtana, and G&#x12B;t&#x101; class. &#127926;
             </p>
             <a href="${WLF_URL}" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;text-decoration:none;border:2px solid #1e3a6e;border-radius:10px;">Learn about Weekend Love Feast &#8594;</a>
           </td></tr>
@@ -101,7 +101,7 @@ const THANKYOU_HTML = `<!DOCTYPE html>
       <!-- SEVA SOFT CTA -->
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
         <p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#555;">
-          If Ratha Y&#x101;tr&#x101; moved you, you can support the temple's ongoing work. &#128588;
+          If Kids Ratha Y&#x101;tr&#x101; moved you, you can support the temple's ongoing work. &#128588;
         </p>
         <a href="${SEVA_URL}" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:700;color:#1e3a6e;text-decoration:none;border:2px solid #1e3a6e;border-radius:10px;">Sponsor a sev&#x101; &#8594;</a>
       </td></tr>
