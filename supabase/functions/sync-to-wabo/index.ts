@@ -33,6 +33,7 @@ const ALLOWED_EVENT_SLUGS = new Set([
   "weekend_love_feast",
   "prasadam_sponsor",
   "ratha_yatra_2026",
+  "kids_ratha_yatra_2026",
 ]);
 
 const ALLOWED_EXTRA_KEYS = new Set([
@@ -42,6 +43,8 @@ const ALLOWED_EXTRA_KEYS = new Set([
   "wlf_attendance_date",
   "wlf_attendance_day",
   "wlf_attendees",
+  "kry_adults",
+  "kry_kids",
 ]);
 
 // Keys whose values are dates and must be sent to Wabo as DD-MM-YYYY.

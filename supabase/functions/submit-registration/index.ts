@@ -24,7 +24,15 @@ const EVENT_CONFIGS: Record<string, EventConfig> = {
     confirmationFn: "send-rathayatra-confirmation",
     phoneRequired: true,
   },
+  kids_ratha_yatra_2026: {
+    table: "kids_ratha_yatra_registrations",
+    confirmationFn: "send-kry-confirmation",
+    phoneRequired: true,
+  },
 };
+
+// Tables that use split adults/kids counts instead of a single attendees integer.
+const ADULTS_KIDS_TABLES = new Set(["kids_ratha_yatra_registrations"]);
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -109,8 +117,19 @@ Deno.serve(async (req) => {
       name,
       email,
       phone: phone || null,
-      attendees,
     };
+
+    if (ADULTS_KIDS_TABLES.has(config.table)) {
+      const adults = Math.min(Math.max(parseInt(body.adults) || 1, 0), 20);
+      const kids = Math.min(Math.max(parseInt(body.kids) || 0, 0), 20);
+      insertData.adults = adults;
+      insertData.kids = kids;
+      if (typeof body.source === "string" && body.source.trim()) {
+        insertData.source = body.source.trim().slice(0, 255);
+      }
+    } else {
+      insertData.attendees = attendees;
+    }
 
     // Only include is_volunteer if the table supports it
     if (typeof body.is_volunteer === "boolean") {
