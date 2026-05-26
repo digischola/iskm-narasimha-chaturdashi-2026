@@ -319,11 +319,12 @@ export default function KidsRathaYatra() {
           <p className="hero-tagline">"Little Hands, Big Service for Lord Jagannātha"</p>
           <p className="hero-sub">A joyful kids-led celebration of the chariot festival — from kīrtana to seva, every offering made with love, every smile a step closer to Kṛṣṇa.</p>
 
-          <div className="hero-meta">
+          <div className="hero-meta hero-meta-row">
             <div className="hero-meta-item"><span className="hero-meta-icon"><i className="fas fa-calendar"></i></span><span>Saturday, 27 June 2026</span></div>
             <div className="hero-meta-item"><span className="hero-meta-icon"><i className="fas fa-clock"></i></span><span>6:00 PM – 9:00 PM (SGT)</span></div>
-            <div className="hero-meta-item"><span className="hero-meta-icon"><i className="fas fa-map-marker-alt"></i></span><span>ISKM Capark, Singapore</span></div>
+            <div className="hero-meta-item"><span className="hero-meta-icon"><i className="fas fa-map-marker-alt"></i></span><span>ISKM Singapore</span></div>
           </div>
+
 
           <div className="hero-countdown">
             <span className="hc-label">The chariot rolls in</span>
