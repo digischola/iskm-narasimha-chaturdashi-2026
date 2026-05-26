@@ -1,6 +1,6 @@
 /* Kids Ratha Yatra 2026 — scoped page styles. All selectors are under .kry-page to prevent global leakage. */
 
-.kry-page { margin: 0; overflow-x: hidden; padding-top: 100px; background: var(--cream); --motion-scale: 1; font-family: var(--font-body); color: var(--text-dark); line-height: 1.6; }
+.kry-page { margin: 0; overflow-x: hidden; padding-top: 62px; background: var(--cream); --motion-scale: 1; font-family: var(--font-body); color: var(--text-dark); line-height: 1.6; }
 .kry-page * { box-sizing: border-box; }
 .kry-page img { max-width: 100%; }
 .kry-page a { text-decoration: none; }
@@ -9,21 +9,9 @@
 .kry-page .skip-link { position:absolute; top:-100%; left:50%; transform:translateX(-50%); z-index:10000; padding:8px 16px; background:var(--navy); color:#fff; border-radius:0 0 8px 8px; font-size:13px; font-weight:600; transition:top .2s; }
 .kry-page .skip-link:focus { top:0; }
 
-/* ═══ TOP CHROME: RIBBON + NAV ═══ */
-.kry-page .ribbon {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: linear-gradient(135deg, var(--navy), var(--navy-deep));
-  color: #fff; height: 38px; display: flex; align-items: center;
-  justify-content: center; gap: 10px; padding: 0 24px;
-  font: 600 13px/1 var(--font-body); letter-spacing: .3px;
-}
-.kry-page .ribbon .ribbon-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: kry-dot-pulse calc(1.8s / var(--motion-scale,1)) ease-in-out infinite; }
-.kry-page .ribbon .ribbon-hl { color: var(--gold); font-weight: 700; }
-.kry-page .ribbon .ribbon-cta { color: var(--pink-light); text-decoration: underline; font-weight: 700; cursor: pointer; }
-@keyframes kry-dot-pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.4; transform:scale(1.6); } }
-
-.kry-page .nav {
-  position: fixed; top: 38px; left: 0; right: 0; z-index: 99;
+/* ═══ NAV (matches RathaYatra sticky-nav) ═══ */
+.kry-page .kry-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 99;
   background: rgba(253,245,237,.92);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(30,58,110,.06);
@@ -31,11 +19,9 @@
   display: flex; align-items: center; justify-content: space-between;
   transition: box-shadow .3s, background .3s;
 }
-.kry-page .nav.scrolled { box-shadow: 0 2px 24px rgba(30,58,110,.08); background: rgba(253,245,237,.96); }
-.kry-page .nav-brand { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: 19px; color: var(--navy); text-decoration: none; }
-.kry-page .nav-brand img { width: 38px; height: 38px; border-radius: 50%; }
-.kry-page .nav-brand .nav-name { line-height: 1.1; }
-.kry-page .nav-brand .nav-sub { display: block; font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); margin-top: 2px; }
+.kry-page .kry-nav.scrolled { box-shadow: 0 2px 20px rgba(30,58,110,.08); background: rgba(253,245,237,.96); }
+.kry-page .nav-brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--navy); text-decoration: none; letter-spacing: .2px; }
+.kry-page .nav-brand img { width: 28px; height: 28px; border-radius: 50%; }
 .kry-page .nav-links { display: flex; gap: 28px; align-items: center; }
 .kry-page .nav-links a { font: 600 13.5px var(--font-body); color: var(--text-dark); letter-spacing: .2px; cursor: pointer; position: relative; transition: color var(--t-ui); text-decoration: none; }
 .kry-page .nav-links a.desk-link::after { content:''; position: absolute; left: 0; right: 0; bottom: -22px; height: 2px; background: var(--gold); border-radius: 1px; transform: scaleX(0); transform-origin: right; transition: transform .3s ease; }
@@ -43,7 +29,7 @@
 .kry-page .nav-links a.desk-link:hover::after { transform: scaleX(1); transform-origin: left; }
 .kry-page .nav-cta { background: var(--pink); color: var(--navy)!important; padding: 9px 22px; border-radius: var(--radius-button); font-weight: 700; font-size: 13px; letter-spacing: .3px; cursor: pointer; transition: all var(--t-cta); }
 .kry-page .nav-cta:hover { background: var(--pink-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(248,164,192,.4); }
-.kry-page .scroll-progress { position: fixed; top: calc(38px + 62px); left:0; right:0; height: 3px; background: rgba(248,164,192,.18); z-index: 98; }
+.kry-page .scroll-progress { position: fixed; top: 62px; left:0; right:0; height: 3px; background: rgba(248,164,192,.18); z-index: 98; }
 .kry-page .scroll-progress > .bar { height: 100%; background: var(--pink); transform-origin: left; transform: scaleX(0); transition: transform .1s linear; }
 
 /* ═══ HERO ═══ */
@@ -51,8 +37,8 @@
   position: relative; overflow: hidden;
   background: var(--hero-overlay);
   color: #fff;
-  padding: 70px 32px 90px;
-  min-height: 740px;
+  padding: 56px 32px 90px;
+  min-height: 680px;
 }
 .kry-page .hero-bg-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .kry-page .hero-bg-media img, .kry-page .hero-bg-media video { position: absolute; inset: 0; width: 100%; height: 110%; object-fit: cover; will-change: transform; }
@@ -69,7 +55,8 @@
 .kry-page .hero h1 em { color: var(--gold); font-style: italic; font-weight: 700; }
 .kry-page .hero-tagline { font-family: var(--font-display); font-style: italic; font-size: clamp(1.1rem, 1.8vw, 1.4rem); color: var(--gold-light); margin: 0 0 18px; font-weight: 400; }
 .kry-page .hero-sub { font-size: 17px; line-height: 1.6; color: rgba(255,255,255,.86); max-width: 640px; margin: 0 auto 30px; }
-.kry-page .hero-meta { display: inline-flex; gap: 30px; align-items: center; flex-wrap: wrap; margin-bottom: 32px; justify-content: center; }
+.kry-page .hero-meta { display: inline-flex; gap: 30px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; justify-content: center; }
+.kry-page .hero-meta-row { display: flex; gap: 38px; align-items: center; flex-wrap: nowrap; justify-content: center; margin: 0 auto 28px; max-width: 100%; }
 .kry-page .hero-meta-item { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: rgba(255,255,255,.92); font-weight: 500; }
 .kry-page .hero-meta-icon { width: 34px; height: 34px; border-radius: 50%; background: rgba(244,201,107,.15); display: inline-flex; align-items: center; justify-content: center; color: var(--gold); font-size: 13px; }
 .kry-page .btn-primary {
@@ -319,27 +306,19 @@
 .kry-page .final-cta .btn-primary { background: var(--gold); color: var(--navy); position: relative; z-index: 2; }
 .kry-page .final-cta .btn-primary:hover { background: var(--gold-light); }
 
-/* ═══ FOOTER ═══ */
-.kry-page .footer { background: var(--navy-deep); color: rgba(255,255,255,.65); padding: 60px 32px 24px; position: relative; overflow: hidden; }
-.kry-page .footer::before { content:''; position: absolute; left: 50%; top: 0; width: 700px; height: 700px; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(244,201,107,.07) 0%, transparent 60%); pointer-events: none; }
-.kry-page .footer-inner { max-width: 1200px; margin: 0 auto; position: relative; }
-.kry-page .footer-cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 36px; border-bottom: 1px solid rgba(255,255,255,.08); }
-.kry-page .fc-brand img { width: 50px; height: 50px; border-radius: 50%; margin-bottom: 14px; }
-.kry-page .fc-brand h4 { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: #fff; margin: 0 0 6px; }
-.kry-page .fc-brand p { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.55); margin: 0 0 16px; max-width: 280px; }
-.kry-page .fc-social { display: flex; gap: 10px; }
-.kry-page .fc-social a { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.06); display: inline-flex; align-items: center; justify-content: center; color: rgba(255,255,255,.7); transition: all var(--t-ui); cursor: pointer; text-decoration: none; }
-.kry-page .fc-social a:hover { background: var(--gold); color: var(--navy); }
-.kry-page .footer-col h5 { font: 700 11px/1 var(--font-body); letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin: 0 0 16px; }
-.kry-page .footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-.kry-page .footer-col ul li { font-size: 13.5px; color: rgba(255,255,255,.6); }
-.kry-page .footer-col ul a { font-size: 13.5px; color: rgba(255,255,255,.6); cursor: pointer; transition: color var(--t-ui); text-decoration: none; }
-.kry-page .footer-col ul a:hover { color: var(--gold); }
-.kry-page .footer-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; flex-wrap: wrap; gap: 14px; }
-.kry-page .footer-meta p { font-size: 12px; color: rgba(255,255,255,.4); margin: 0; }
-.kry-page .footer-meta .fm-links { display: flex; gap: 22px; }
-.kry-page .footer-meta .fm-links a { font-size: 12px; color: rgba(255,255,255,.5); text-decoration: none; }
-.kry-page .footer-meta .fm-links a:hover { color: var(--gold); }
+/* ═══ FOOTER (matches RathaYatra site-footer) ═══ */
+.kry-page .kry-site-footer { background: var(--navy-deep); color: rgba(255,255,255,.65); padding: 64px 32px 0; position: relative; overflow: hidden; }
+.kry-page .kry-site-footer::before { content:''; position: absolute; left: 50%; top: 0; width: 700px; height: 700px; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(244,201,107,.07) 0%, transparent 60%); pointer-events: none; }
+.kry-page .kry-site-footer .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.3fr; gap: 56px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,.08); position: relative; }
+.kry-page .kry-site-footer .footer-col { display: flex; flex-direction: column; gap: 10px; }
+.kry-page .kry-site-footer .footer-col img { width: 52px; height: 52px; border-radius: 50%; }
+.kry-page .kry-site-footer .footer-col .footer-brand { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: #fff; margin: 6px 0 4px; }
+.kry-page .kry-site-footer .footer-col h5 { font: 700 11px/1 var(--font-body); letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin: 0 0 14px; }
+.kry-page .kry-site-footer .footer-col p { font-size: 13.5px; color: rgba(255,255,255,.6); margin: 0; line-height: 1.6; }
+.kry-page .kry-site-footer .footer-col a { font-size: 13.5px; color: rgba(255,255,255,.6); text-decoration: none; transition: color var(--t-ui); }
+.kry-page .kry-site-footer .footer-col a:hover { color: var(--gold); }
+.kry-page .kry-site-footer .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 22px 0; text-align: center; }
+.kry-page .kry-site-footer .footer-bottom p { font-size: 12px; color: rgba(255,255,255,.4); margin: 0; }
 
 /* ═══ MOBILE BOTTOM CTA ═══ */
 .kry-page .mobile-cta-bar {
@@ -355,8 +334,9 @@
   .kry-page .nav-links { gap: 18px; }
   .kry-page .nav-links .desk-link { display: none; }
   .kry-page .section, .kry-page .section.navy, .kry-page .section.warm { padding: 64px 22px; }
-  .kry-page .hero { padding: 50px 22px 70px; min-height: 680px; }
+  .kry-page .hero { padding: 40px 22px 70px; min-height: 640px; }
   .kry-page .hero-meta { gap: 18px; }
+  .kry-page .hero-meta-row { flex-wrap: wrap; gap: 18px; }
   .kry-page .hc-cell { min-width: 70px; padding: 10px 12px; }
   .kry-page .hc-num { font-size: 28px; }
   .kry-page .trust-strip { gap: 22px; padding: 14px 22px; }
@@ -367,7 +347,7 @@
   .kry-page .location { grid-template-columns: 1fr; }
   .kry-page .loc-map { min-height: 280px; }
   .kry-page .loc-map iframe { min-height: 280px; }
-  .kry-page .footer-cols { grid-template-columns: 1fr 1fr; gap: 30px; }
+  .kry-page .kry-site-footer .footer-inner { grid-template-columns: 1fr 1fr; gap: 30px; }
   .kry-page .timeline-wrap { padding: 30px 18px 36px; }
   .kry-page .tl { padding-left: 54px; }
   .kry-page .tl-dot { width: 40px; height: 40px; left: -54px; font-size: 14px; }
@@ -376,18 +356,14 @@
   .kry-page .tl-h { font-size: 17px; }
   .kry-page .tl-it.hl .tl-h { font-size: 19px; }
   .kry-page .tl-d { font-size: 14px; }
-  .kry-page .mobile-cta-bar { display: block; }
-  .kry-page { padding-bottom: 80px; }
 }
 @media (max-width: 640px) {
-  .kry-page .ribbon { font-size: 11px; padding: 0 14px; }
-  .kry-page .nav { padding: 0 18px; height: 56px; }
-  .kry-page .nav-brand .nav-sub { display: none; }
-  .kry-page { padding-top: 94px; }
+  .kry-page .kry-nav { padding: 0 18px; height: 56px; }
+  .kry-page { padding-top: 56px; }
   .kry-page .hero h1 { font-size: clamp(2rem, 8vw, 2.6rem); }
   .kry-page .hero-tagline { font-size: 1rem; }
   .kry-page .field-row { grid-template-columns: 1fr; }
-  .kry-page .footer-cols { grid-template-columns: 1fr; }
+  .kry-page .kry-site-footer .footer-inner { grid-template-columns: 1fr; }
   .kry-page .reg-card { padding: 26px 22px; }
   .kry-page .quote-card { padding: 28px 26px; }
   .kry-page .quote-card blockquote { font-size: 18px; }
