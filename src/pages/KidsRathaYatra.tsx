@@ -608,57 +608,34 @@ export default function KidsRathaYatra() {
         <a href="#register" className="btn-primary">Register now — it's free</a>
       </section>
 
-      <footer className="footer">
+      <footer className="kry-site-footer">
         <div className="footer-inner">
-          <div className="footer-cols">
-            <div className="fc-brand">
-              <img src={`${IMG}/logo.webp`} alt="ISKM Singapore logo" />
-              <h4>International Sri Krishna Mandir</h4>
-              <p>A Gauḍīya Vaiṣṇava temple in Singapore. Sacred festivals, kīrtana, cultural programmes, and free prasādam — all are welcome.</p>
-              <div className="fc-social">
-                <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" aria-label="Website"><i className="fas fa-globe"></i></a>
-                <a href="mailto:contact@srikrishnamandir.org" aria-label="Email"><i className="fas fa-envelope"></i></a>
-              </div>
-            </div>
-            <div className="footer-col">
-              <h5>This event</h5>
-              <ul>
-                <li><a href="#register">Register</a></li>
-                <li><a href="#attractions">What's on</a></li>
-                <li><a href="#schedule">Schedule</a></li>
-                <li><a href="#faq">FAQ</a></li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <h5>Visit</h5>
-              <ul>
-                <li><a href="#location">Venue & map</a></li>
-                <li><a href="tel:+6562502280">+(65) 6250 2280</a></li>
-                <li><a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a></li>
-              </ul>
-            </div>
-            <div className="footer-col">
-              <h5>More from ISKM</h5>
-              <ul>
-                <li><a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">Main website</a></li>
-                <li><a href="/weekend-love-feast">Weekend Love Feast</a></li>
-                <li><a href="/ratha-yatra-2026">Grand Ratha Yātrā 2026</a></li>
-              </ul>
-            </div>
+          <div className="footer-col">
+            <img src="/images/logo.webp" alt="ISKM Singapore" width={52} height={52} />
+            <p className="footer-brand">ISKM Singapore</p>
+            <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">srikrishnamandir.org</a>
           </div>
-          <div className="footer-meta">
-            <p>&copy; 2026 International Sri Krishna Mandir · Singapore</p>
-            <div className="fm-links">
-              <a href="https://srikrishnamandir.org">Main site</a>
-              <a href="mailto:contact@srikrishnamandir.org">Contact</a>
-            </div>
+          <div className="footer-col">
+            <h5>Quick Links</h5>
+            <a href="#about">About</a>
+            <a href="#attractions">What's On</a>
+            <a href="#schedule">Schedule</a>
+            <a href="#location">Venue</a>
+            <a href="#faq">FAQ</a>
           </div>
+          <div className="footer-col">
+            <h5>Contact</h5>
+            <p>No.9 Lorong 29 Geylang<br />#03-02, Singapore 388065</p>
+            <p>+65 6250 2280</p>
+            <a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a>
+            <a href="https://wa.me/6562502280" target="_blank" rel="noopener noreferrer">WhatsApp us →</a>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>&copy; 2026 ISKM Singapore. All rights reserved.</p>
         </div>
       </footer>
 
-      <div className="mobile-cta-bar">
-        <a href="#register">Register free — 27 June</a>
-      </div>
     </div>
   );
 }
