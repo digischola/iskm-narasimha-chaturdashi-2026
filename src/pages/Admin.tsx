@@ -198,9 +198,10 @@ export default function Admin() {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [ncRows, ryRows, slfRows, prasadamRows, emailRows, trackRows] = await Promise.all([
+    const [ncRows, ryRows, kryRowsRaw, slfRows, prasadamRows, emailRows, trackRows] = await Promise.all([
       fetchAllRows<Registration>("registrations"),
       fetchAllRows<RyRegistration>("ratha_yatra_registrations"),
+      fetchAllRows<Omit<KryRegistration, "attendees">>("kids_ratha_yatra_registrations"),
       fetchAllRows<SlfRegistration>("weekend_love_feast_registrations"),
       fetchAllRows<PrasadamSponsorship>("prasadam_sponsorships"),
       fetchAllRows<EmailLog>("email_send_log"),
@@ -208,6 +209,7 @@ export default function Admin() {
     ]);
     setNcData(ncRows);
     setRyData(ryRows);
+    setKryData(kryRowsRaw.map(r => ({ ...r, attendees: (r.adults || 0) + (r.kids || 0) })));
     setSlfData(slfRows);
     setPrasadamData(prasadamRows);
     setEmailLogs(emailRows);
