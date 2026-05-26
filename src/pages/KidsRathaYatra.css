@@ -334,8 +334,9 @@
   .kry-page .nav-links { gap: 18px; }
   .kry-page .nav-links .desk-link { display: none; }
   .kry-page .section, .kry-page .section.navy, .kry-page .section.warm { padding: 64px 22px; }
-  .kry-page .hero { padding: 50px 22px 70px; min-height: 680px; }
+  .kry-page .hero { padding: 40px 22px 70px; min-height: 640px; }
   .kry-page .hero-meta { gap: 18px; }
+  .kry-page .hero-meta-row { flex-wrap: wrap; gap: 18px; }
   .kry-page .hc-cell { min-width: 70px; padding: 10px 12px; }
   .kry-page .hc-num { font-size: 28px; }
   .kry-page .trust-strip { gap: 22px; padding: 14px 22px; }
@@ -346,7 +347,7 @@
   .kry-page .location { grid-template-columns: 1fr; }
   .kry-page .loc-map { min-height: 280px; }
   .kry-page .loc-map iframe { min-height: 280px; }
-  .kry-page .footer-cols { grid-template-columns: 1fr 1fr; gap: 30px; }
+  .kry-page .kry-site-footer .footer-inner { grid-template-columns: 1fr 1fr; gap: 30px; }
   .kry-page .timeline-wrap { padding: 30px 18px 36px; }
   .kry-page .tl { padding-left: 54px; }
   .kry-page .tl-dot { width: 40px; height: 40px; left: -54px; font-size: 14px; }
@@ -355,18 +356,14 @@
   .kry-page .tl-h { font-size: 17px; }
   .kry-page .tl-it.hl .tl-h { font-size: 19px; }
   .kry-page .tl-d { font-size: 14px; }
-  .kry-page .mobile-cta-bar { display: block; }
-  .kry-page { padding-bottom: 80px; }
 }
 @media (max-width: 640px) {
-  .kry-page .ribbon { font-size: 11px; padding: 0 14px; }
-  .kry-page .nav { padding: 0 18px; height: 56px; }
-  .kry-page .nav-brand .nav-sub { display: none; }
-  .kry-page { padding-top: 94px; }
+  .kry-page .kry-nav { padding: 0 18px; height: 56px; }
+  .kry-page { padding-top: 56px; }
   .kry-page .hero h1 { font-size: clamp(2rem, 8vw, 2.6rem); }
   .kry-page .hero-tagline { font-size: 1rem; }
   .kry-page .field-row { grid-template-columns: 1fr; }
-  .kry-page .footer-cols { grid-template-columns: 1fr; }
+  .kry-page .kry-site-footer .footer-inner { grid-template-columns: 1fr; }
   .kry-page .reg-card { padding: 26px 22px; }
   .kry-page .quote-card { padding: 28px 26px; }
   .kry-page .quote-card blockquote { font-size: 18px; }
