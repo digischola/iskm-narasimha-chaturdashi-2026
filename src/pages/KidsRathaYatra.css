@@ -362,11 +362,16 @@
 @media (max-width: 640px) {
   .kry-page .kry-nav { padding: 0 18px; height: 56px; }
   .kry-page { padding-top: 56px; }
+  .kry-page .scroll-progress { top: 56px; }
   .kry-page .hero h1 { font-size: clamp(2rem, 8vw, 2.6rem); }
   .kry-page .hero-tagline { font-size: 1rem; }
   .kry-page .field-row { grid-template-columns: 1fr; }
+  .kry-page .kry-site-footer { padding-bottom: 96px; }
   .kry-page .kry-site-footer .footer-inner { grid-template-columns: 1fr; }
   .kry-page .reg-card { padding: 26px 22px; }
   .kry-page .quote-card { padding: 28px 26px; }
   .kry-page .quote-card blockquote { font-size: 18px; }
+  .kry-page .hero-countdown { display: flex; width: 100%; max-width: 100%; box-sizing: border-box; padding: 22px 18px; }
+  .kry-page .hc-cells { width: 100%; justify-content: center; flex-wrap: wrap; }
+  .kry-page .mobile-cta-bar { display: block; }
 }

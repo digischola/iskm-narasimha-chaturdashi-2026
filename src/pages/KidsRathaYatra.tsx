@@ -637,6 +637,10 @@ export default function KidsRathaYatra() {
         </div>
       </footer>
 
+      <div className="mobile-cta-bar">
+        <a href="#register">Register Free</a>
+      </div>
+
     </div>
   );
 }
