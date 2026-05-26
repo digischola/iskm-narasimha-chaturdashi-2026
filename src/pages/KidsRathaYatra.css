@@ -1,6 +1,6 @@
 /* Kids Ratha Yatra 2026 — scoped page styles. All selectors are under .kry-page to prevent global leakage. */
 
-.kry-page { margin: 0; overflow-x: hidden; padding-top: 100px; background: var(--cream); --motion-scale: 1; font-family: var(--font-body); color: var(--text-dark); line-height: 1.6; }
+.kry-page { margin: 0; overflow-x: hidden; padding-top: 62px; background: var(--cream); --motion-scale: 1; font-family: var(--font-body); color: var(--text-dark); line-height: 1.6; }
 .kry-page * { box-sizing: border-box; }
 .kry-page img { max-width: 100%; }
 .kry-page a { text-decoration: none; }
