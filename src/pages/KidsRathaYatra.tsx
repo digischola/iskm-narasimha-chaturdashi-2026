@@ -9,7 +9,7 @@ const EVENT = {
   slug: "kids_ratha_yatra_2026",
   title: "Kids Ratha Yātrā 2026",
   date: "Saturday, 27 June 2026",
-  time: "6:00 PM – 9:00 PM (SGT)",
+  time: "6:00 PM – 9:00 PM",
   venue: "ISKM Singapore",
   venueAddress: "ISKM Singapore",
   countdownIso: "2026-06-27T18:00:00+08:00",
