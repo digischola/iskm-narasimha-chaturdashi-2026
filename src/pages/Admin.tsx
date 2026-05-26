@@ -1186,6 +1186,15 @@ export default function Admin() {
                       </div>
                     </>
                   )}
+
+                  {regEventTab === "kry" && (
+                    <div className="admin-filter-group">
+                      <span className="admin-filter-label">Confirmation</span>
+                      {([["all","All"],["sent","Sent"],["not","Not sent"]] as const).map(([v,l]) => (
+                        <button key={v} className={`admin-filter-tab${regConfFilter === v ? " active" : ""}`} onClick={() => { setRegConfFilter(v); setRegPage(1); }}>{l}</button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
