@@ -1247,6 +1247,14 @@ export default function Admin() {
                                 <td><span className={`admin-badge-icon ${r.reminder_sent ? "yes" : "no"}`}>{r.reminder_sent ? "🔔" : "—"}</span></td>
                               </>
                             )}
+                            {regEventTab === "kry" && (
+                              <>
+                                <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.adults || 0).padStart(2, "0")}</span></td>
+                                <td><span style={{ fontWeight: 700, color: "#f590b3" }}>{String(r.kids || 0).padStart(2, "0")}</span></td>
+                                <td><span className={`admin-badge-icon ${r.confirmation_sent ? "yes" : "no"}`}>{r.confirmation_sent ? "✅" : "—"}</span></td>
+                                <td><span className={`admin-badge-icon ${r.reminder_sent ? "yes" : "no"}`}>{r.reminder_sent ? "🔔" : "—"}</span></td>
+                              </>
+                            )}
                             {regEventTab === "slf" && (
                               <>
                                 <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
