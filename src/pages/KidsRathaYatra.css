@@ -57,8 +57,8 @@
 .kry-page .hero h1 em { color: var(--gold); font-style: italic; font-weight: 700; }
 .kry-page .hero-tagline { font-family: var(--font-display); font-style: italic; font-size: clamp(1.1rem, 1.8vw, 1.4rem); color: var(--gold-light); margin: 0 0 18px; font-weight: 400; }
 .kry-page .hero-sub { font-size: 17px; line-height: 1.6; color: rgba(255,255,255,.86); max-width: 640px; margin: 0 auto 30px; }
-.kry-page .hero-meta { display: inline-flex; gap: 30px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; justify-content: center; }
-.kry-page .hero-meta-row { display: flex; gap: 38px; align-items: center; flex-wrap: nowrap; justify-content: center; margin: 0 auto 28px; max-width: 100%; }
+.kry-page .hero-meta { display: inline-flex; flex-direction: row; gap: 30px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; justify-content: center; }
+.kry-page .hero-meta-row { display: flex; flex-direction: row; gap: 38px; align-items: center; flex-wrap: nowrap; justify-content: center; margin: 0 auto 28px; max-width: 100%; }
 .kry-page .hero-meta-item { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: rgba(255,255,255,.92); font-weight: 500; }
 .kry-page .hero-meta-icon { width: 34px; height: 34px; border-radius: 50%; background: rgba(244,201,107,.15); display: inline-flex; align-items: center; justify-content: center; color: var(--gold); font-size: 13px; }
 .kry-page .btn-primary {
