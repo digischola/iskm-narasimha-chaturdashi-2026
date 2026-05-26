@@ -198,7 +198,6 @@ export default function KidsRathaYatra() {
     if (!v || !s) return;
     if (window.matchMedia("(min-width: 768px)").matches) {
       s.src = `${VID}/hero-loop-desktop.mp4`;
-      v.setAttribute("poster", `${VID}/hero-loop-desktop-poster.jpg`);
       v.load();
     }
   }, []);
