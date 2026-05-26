@@ -1043,6 +1043,51 @@ export default function Admin() {
                 </>
               )}
 
+              {/* ═══ KIDS RATHA YATRA ═══ */}
+              {eventTab === "kry" && (
+                <>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Registrations</div>
+                      <div className="admin-stat-value">{kryTotal}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Attendees</div>
+                      <div className="admin-stat-value gold">{kryAttendees}</div>
+                      <div className="admin-stat-sub">Adults: {kryAdults} · Kids: {kryKids} · Avg: {kryAvgGroup}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Confirmations Sent</div>
+                      <div className="admin-stat-value green">{kryConfirmed}</div>
+                      <div className="admin-stat-sub">{kryTotal > 0 ? `${((kryConfirmed / kryTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Reminders Sent</div>
+                      <div className="admin-stat-value">{kryRemindersSent}</div>
+                    </div>
+                  </div>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Email Open Rate</div>
+                      <div className="admin-stat-value green">{kryEng.openRate}%</div>
+                      <div className="admin-stat-sub">{kryEng.uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Calendar Saves</div>
+                      <div className="admin-stat-value">{kryEng.calendarClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Directions Clicks</div>
+                      <div className="admin-stat-value">{kryEng.directionsClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Share Clicks</div>
+                      <div className="admin-stat-value">{kryEng.shareClicks}</div>
+                    </div>
+                  </div>
+                </>
+              )}
+
               {/* Chart */}
               {chartData.length > 0 && (
                 <div className="admin-chart-card">
