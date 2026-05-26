@@ -306,27 +306,19 @@
 .kry-page .final-cta .btn-primary { background: var(--gold); color: var(--navy); position: relative; z-index: 2; }
 .kry-page .final-cta .btn-primary:hover { background: var(--gold-light); }
 
-/* ═══ FOOTER ═══ */
-.kry-page .footer { background: var(--navy-deep); color: rgba(255,255,255,.65); padding: 60px 32px 24px; position: relative; overflow: hidden; }
-.kry-page .footer::before { content:''; position: absolute; left: 50%; top: 0; width: 700px; height: 700px; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(244,201,107,.07) 0%, transparent 60%); pointer-events: none; }
-.kry-page .footer-inner { max-width: 1200px; margin: 0 auto; position: relative; }
-.kry-page .footer-cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 36px; border-bottom: 1px solid rgba(255,255,255,.08); }
-.kry-page .fc-brand img { width: 50px; height: 50px; border-radius: 50%; margin-bottom: 14px; }
-.kry-page .fc-brand h4 { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: #fff; margin: 0 0 6px; }
-.kry-page .fc-brand p { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.55); margin: 0 0 16px; max-width: 280px; }
-.kry-page .fc-social { display: flex; gap: 10px; }
-.kry-page .fc-social a { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.06); display: inline-flex; align-items: center; justify-content: center; color: rgba(255,255,255,.7); transition: all var(--t-ui); cursor: pointer; text-decoration: none; }
-.kry-page .fc-social a:hover { background: var(--gold); color: var(--navy); }
-.kry-page .footer-col h5 { font: 700 11px/1 var(--font-body); letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin: 0 0 16px; }
-.kry-page .footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-.kry-page .footer-col ul li { font-size: 13.5px; color: rgba(255,255,255,.6); }
-.kry-page .footer-col ul a { font-size: 13.5px; color: rgba(255,255,255,.6); cursor: pointer; transition: color var(--t-ui); text-decoration: none; }
-.kry-page .footer-col ul a:hover { color: var(--gold); }
-.kry-page .footer-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; flex-wrap: wrap; gap: 14px; }
-.kry-page .footer-meta p { font-size: 12px; color: rgba(255,255,255,.4); margin: 0; }
-.kry-page .footer-meta .fm-links { display: flex; gap: 22px; }
-.kry-page .footer-meta .fm-links a { font-size: 12px; color: rgba(255,255,255,.5); text-decoration: none; }
-.kry-page .footer-meta .fm-links a:hover { color: var(--gold); }
+/* ═══ FOOTER (matches RathaYatra site-footer) ═══ */
+.kry-page .kry-site-footer { background: var(--navy-deep); color: rgba(255,255,255,.65); padding: 64px 32px 0; position: relative; overflow: hidden; }
+.kry-page .kry-site-footer::before { content:''; position: absolute; left: 50%; top: 0; width: 700px; height: 700px; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(244,201,107,.07) 0%, transparent 60%); pointer-events: none; }
+.kry-page .kry-site-footer .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.3fr; gap: 56px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,.08); position: relative; }
+.kry-page .kry-site-footer .footer-col { display: flex; flex-direction: column; gap: 10px; }
+.kry-page .kry-site-footer .footer-col img { width: 52px; height: 52px; border-radius: 50%; }
+.kry-page .kry-site-footer .footer-col .footer-brand { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: #fff; margin: 6px 0 4px; }
+.kry-page .kry-site-footer .footer-col h5 { font: 700 11px/1 var(--font-body); letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin: 0 0 14px; }
+.kry-page .kry-site-footer .footer-col p { font-size: 13.5px; color: rgba(255,255,255,.6); margin: 0; line-height: 1.6; }
+.kry-page .kry-site-footer .footer-col a { font-size: 13.5px; color: rgba(255,255,255,.6); text-decoration: none; transition: color var(--t-ui); }
+.kry-page .kry-site-footer .footer-col a:hover { color: var(--gold); }
+.kry-page .kry-site-footer .footer-bottom { max-width: 1200px; margin: 0 auto; padding: 22px 0; text-align: center; }
+.kry-page .kry-site-footer .footer-bottom p { font-size: 12px; color: rgba(255,255,255,.4); margin: 0; }
 
 /* ═══ MOBILE BOTTOM CTA ═══ */
 .kry-page .mobile-cta-bar {
