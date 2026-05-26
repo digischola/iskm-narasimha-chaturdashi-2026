@@ -288,6 +288,7 @@ export default function Admin() {
     if (slfEmails.has(e)) count++;
     if (prasadamEmails.has(e)) count++;
     if (ryEmails.has(e)) count++;
+    if (kryEmails.has(e)) count++;
     return count >= 2;
   });
   const overlapCount = overlapEmails.length;
@@ -299,14 +300,16 @@ export default function Admin() {
     if (slfEmails.has(e)) count++;
     if (prasadamEmails.has(e)) count++;
     if (ryEmails.has(e)) count++;
+    if (kryEmails.has(e)) count++;
     return count >= 3;
   }).length;
 
-  const totalRegistrationsAcross = ncData.length + slfData.length + prasadamData.length + ryData.length;
+  const totalRegistrationsAcross = ncData.length + slfData.length + prasadamData.length + ryData.length + kryData.length;
   const totalAttendeesAcross =
     ncData.reduce((s, r) => s + r.attendees, 0) +
     slfData.reduce((s, r) => s + r.attendees, 0) +
-    ryData.reduce((s, r) => s + r.attendees, 0);
+    ryData.reduce((s, r) => s + r.attendees, 0) +
+    kryData.reduce((s, r) => s + r.attendees, 0);
 
   const totalSponsorshipValue = prasadamData
     .filter(r => r.status === "confirmed" || r.status === "completed")
@@ -327,6 +330,16 @@ export default function Admin() {
   const ryAvgGroup = ryTotal > 0 ? (ryAttendees / ryTotal).toFixed(1) : "0";
   const ryConfirmed = ryData.filter(r => r.confirmation_sent).length;
   const ryRemindersSent = ryData.filter(r => r.reminder_sent).length;
+
+  // KRY (Kids Ratha Yatra)
+  const kryTotal = kryData.length;
+  const kryAdults = kryData.reduce((s, r) => s + (r.adults || 0), 0);
+  const kryKids = kryData.reduce((s, r) => s + (r.kids || 0), 0);
+  const kryAttendees = kryAdults + kryKids;
+  const kryAvgGroup = kryTotal > 0 ? (kryAttendees / kryTotal).toFixed(1) : "0";
+  const kryConfirmed = kryData.filter(r => r.confirmation_sent).length;
+  const kryRemindersSent = kryData.filter(r => r.reminder_sent).length;
+
 
   const slfTotal = slfData.length;
   const slfAttendees = slfData.reduce((s, r) => s + r.attendees, 0);
