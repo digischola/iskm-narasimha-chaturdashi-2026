@@ -121,6 +121,7 @@ export default function Admin() {
   const [page, setPage] = useState<Page>("overview");
   const [ncData, setNcData] = useState<Registration[]>([]);
   const [ryData, setRyData] = useState<RyRegistration[]>([]);
+  const [kryData, setKryData] = useState<KryRegistration[]>([]);
   const [slfData, setSlfData] = useState<SlfRegistration[]>([]);
   const [prasadamData, setPrasadamData] = useState<PrasadamSponsorship[]>([]);
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
@@ -132,7 +133,7 @@ export default function Admin() {
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [eventTab, setEventTab] = useState<EventTab>("all");
-  const [regEventTab, setRegEventTab] = useState<"nrsimha" | "slf" | "prasadam" | "ratha_yatra">("nrsimha");
+  const [regEventTab, setRegEventTab] = useState<RegEventTab>("nrsimha");
   const [regPage, setRegPage] = useState(1);
   const [emailPage, setEmailPage] = useState(1);
   const [prasadamPage, setPrasadamPage] = useState(1);
