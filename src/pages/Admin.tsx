@@ -82,7 +82,23 @@ interface TrackingEvent {
 }
 
 type Page = "overview" | "registrations" | "prasadam" | "emails";
-type EventTab = "all" | "nrsimha" | "slf" | "prasadam" | "ratha_yatra";
+type EventTab = "all" | "nrsimha" | "slf" | "prasadam" | "ratha_yatra" | "kry";
+type RegEventTab = "nrsimha" | "slf" | "prasadam" | "ratha_yatra" | "kry";
+
+interface KryRegistration {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  adults: number;
+  kids: number;
+  attendees: number; // synthetic = adults + kids
+  source: string | null;
+  confirmation_sent: boolean;
+  reminder_sent: boolean;
+  thankyou_sent: boolean;
+  created_at: string;
+}
 
 const ROWS_PER_PAGE = 10;
 
