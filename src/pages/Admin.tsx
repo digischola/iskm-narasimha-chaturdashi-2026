@@ -503,6 +503,11 @@ export default function Admin() {
       if (regVolFilter === "att" && r.is_volunteer) return false;
     }
 
+    if (regEventTab === "kry") {
+      if (regConfFilter === "sent" && !r.confirmation_sent) return false;
+      if (regConfFilter === "not" && r.confirmation_sent) return false;
+    }
+
     return true;
   });
   const regTotalPages = Math.max(1, Math.ceil(filteredReg.length / ROWS_PER_PAGE));
