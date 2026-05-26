@@ -1200,7 +1200,7 @@ export default function Admin() {
 
               <div className="admin-table-card">
                 <div className="admin-table-header">
-                  <h3>{regEventTab === "nrsimha" ? "Nṛsiṁha Registrations" : regEventTab === "ratha_yatra" ? "Ratha Yātrā Registrations" : regEventTab === "slf" ? "Weekend Love Feast Registrations" : "Prasadam Sponsorships"}</h3>
+                  <h3>{regEventTab === "nrsimha" ? "Nṛsiṁha Registrations" : regEventTab === "ratha_yatra" ? "Ratha Yātrā Registrations" : regEventTab === "kry" ? "Kids Ratha Yātrā Registrations" : regEventTab === "slf" ? "Weekend Love Feast Registrations" : "Prasadam Sponsorships"}</h3>
                   <span style={{ fontSize: "13px", color: "#888" }}>
                     Showing {Math.min((regPage - 1) * ROWS_PER_PAGE + 1, filteredReg.length)}-{Math.min(regPage * ROWS_PER_PAGE, filteredReg.length)} of {filteredReg.length} entries
                   </span>
@@ -1213,6 +1213,7 @@ export default function Admin() {
                         <th>Email</th>
                         <th>Phone</th>
                         {(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") && <><th>Pax</th><th>Conf</th><th>Reminder</th></>}
+                        {regEventTab === "kry" && <><th>Adults</th><th>Kids</th><th>Conf</th><th>Reminder</th></>}
                         {regEventTab === "slf" && <><th>Pax</th><th>Day</th><th>First Time</th></>}
                         {regEventTab === "prasadam" && <><th>Tier</th><th>Date</th><th>Status</th></>}
                         <th>Submitted</th>
