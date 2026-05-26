@@ -2,9 +2,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.101.1/cors";
 
 const EVENT_URL = "https://events.srikrishnamandir.org/kids-ratha-yatra-2026";
-const CALENDAR_URL = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ratha+Y%C4%81tr%C4%81+2026&dates=20260705T090000Z/20260705T133000Z&details=Three+chariots%2C+ecstatic+k%C4%ABrtana%2C+classical+Odissi+dance%2C+free+5-course+Pras%C4%81dam+Feast.%0A%0AVenue%3A+10+West+Coast+Walk%2C+Singapore+127156%0A%0AMore+info%3A+https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026&location=Clementi+Stadium%2C+10+West+Coast+Walk%2C+Singapore+127156";
-const WA_SHARE = "https://wa.me/?text=Join%20us%20for%20Ratha%20Y%C4%81tr%C4%81%202026%20at%20Clementi%20Stadium%20on%20Sunday%205%20July%2C%205%20PM.%20Free%20entry%2C%20free%20Pras%C4%81dam%20Feast%2C%20all%20welcome.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026";
-const TG_SHARE = "https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026&text=Join%20us%20for%20Ratha%20Y%C4%81tr%C4%81%202026";
+const CALENDAR_URL = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ratha+Y%C4%81tr%C4%81+2026&dates=20260627T100000Z/20260627T130000Z&details=Children-led+k%C4%ABrtana%2C+joyful+stalls%2C+the+chariot+procession+and+free+pras%C4%81dam+for+the+whole+family.%0A%0AVenue%3A+Singapore%0A%0AMore+info%3A+https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026&location=ISKM+Capark%2C+Singapore";
+const WA_SHARE = "https://wa.me/?text=Join%20us%20for%20Kids%20Ratha%20Y%C4%81tr%C4%81%202026%20at%20Clementi%20Stadium%20on%20Saturday%2027%20June%2C%206%20PM.%20Free%20entry%2C%20free%20Pras%C4%81dam%20Feast%2C%20all%20welcome.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026";
+const TG_SHARE = "https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026&text=Join%20us%20for%20Kids%20Ratha%20Y%C4%81tr%C4%81%202026";
 
 const CONFIRMATION_HTML = `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -15,7 +15,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 <meta name="x-apple-disable-message-reformatting">
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
-<title>You're in, Ratha Y&#x101;tr&#x101; 2026</title>
+<title>You're in, Kids Ratha Y&#x101;tr&#x101; 2026</title>
 <!--[if mso]>
 <xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
 <style>* { font-family: Georgia, serif !important; }</style>
@@ -38,7 +38,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 <body style="margin:0;padding:0;background:#fdf5ed;font-family:'Source Sans Pro',-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#333333;">
 
 <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#fdf5ed;">
-  Sunday, 5 July at Clementi Stadium. Free entry, free 5-course Pras&#x101;dam Feast.
+  Saturday, 27 June at ISKM Capark. Free entry, free 5-course Pras&#x101;dam Feast.
   &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj;
 </div>
 
@@ -67,7 +67,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 
       <tr><td align="center" style="padding:8px 32px 24px;" class="p-mobile">
         <p style="margin:0;font-size:17px;line-height:1.6;color:#555555;max-width:460px;">
-          Your seat is reserved for Ratha Y&#x101;tr&#x101; 2026.
+          Your seat is reserved for Kids Ratha Y&#x101;tr&#x101; 2026.
         </p>
       </td></tr>
 
@@ -76,11 +76,11 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1e3a6e;border-radius:14px;">
           <tr><td align="center" style="padding:28px 24px;color:#ffffff;">
             <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Save the Date</div>
-            <div style="font-family:'Playfair Display',Georgia,serif;font-size:32px;font-weight:700;color:#ffffff;line-height:1.2;margin-bottom:6px;">Sunday, 5 July 2026</div>
-            <div style="font-size:16px;color:#f8a4c0;font-weight:600;margin-bottom:20px;">5:00 PM to 9:30 PM</div>
+            <div style="font-family:'Playfair Display',Georgia,serif;font-size:32px;font-weight:700;color:#ffffff;line-height:1.2;margin-bottom:6px;">Saturday, 27 June 2026</div>
+            <div style="font-size:16px;color:#f8a4c0;font-weight:600;margin-bottom:20px;">6:00 PM to 9:00 PM</div>
             <div style="font-size:14px;color:#ffffff;opacity:0.85;line-height:1.5;">
-              Clementi Stadium<br>
-              10 West Coast Walk, Singapore 127156
+              ISKM Capark<br>
+              Singapore
             </div>
           </td></tr>
         </table>
@@ -89,7 +89,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
       <!-- BODY -->
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
         <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#444444;">
-          Three hand-pulled chariots, classical Odissi dance, ecstatic k&#x12B;rtana, and a free 5-course Pras&#x101;dam Feast.
+          Children-led k&#x12B;rtana, joyful stalls, the chariot procession, and free pras&#x101;dam for the whole family.
         </p>
       </td></tr>
 
@@ -158,7 +158,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
               &#169; 2026 International Sri Krishna Mandir
             </div>
             <div style="font-size:11px;color:#ffffff;opacity:0.4;margin-top:16px;">
-              You received this because you registered for Ratha Y&#x101;tr&#x101; 2026.<br>
+              You received this because you registered for Kids Ratha Y&#x101;tr&#x101; 2026.<br>
               <a href="{{unsubscribe_url}}" style="color:#ffffff;opacity:0.7;">Unsubscribe</a>
             </div>
           </td></tr>
@@ -265,7 +265,7 @@ Deno.serve(async (req) => {
 
     html = addClickTracking(html, trackBase, registration_id, "kry-confirm", email);
 
-    const text = `Thank you, ${firstName}. Your seat is reserved for Ratha Yatra 2026.\n\nSunday, 5 July 2026\n5:00 PM to 9:30 PM\nClementi Stadium, 10 West Coast Walk, Singapore 127156\n\nThree hand-pulled chariots, classical Odissi dance, ecstatic kirtana, and a free 5-course Prasadam Feast.\n\nWe'll send you two short reminders as the date gets closer.\n\nTell your family and friends. Entry is free, all are welcome.\n\nView event page: ${EVENT_URL}\n\nUnsubscribe: ${unsubscribeUrl}`;
+    const text = `Thank you, ${firstName}. Your seat is reserved for Kids Ratha Yatra 2026.\n\nSaturday, 27 June 2026\n6:00 PM to 9:00 PM\nISKM Capark, Singapore\n\nChildren-led kirtana, joyful stalls, the chariot procession, and free prasadam for the whole family.\n\nWe'll send you two short reminders as the date gets closer.\n\nTell your family and friends. Entry is free, all are welcome.\n\nView event page: ${EVENT_URL}\n\nUnsubscribe: ${unsubscribeUrl}`;
 
     const messageId = "kry-confirm-" + registration_id;
 
@@ -275,7 +275,7 @@ Deno.serve(async (req) => {
         to: email,
         from: "ISKM Singapore <noreply@notify.events.srikrishnamandir.org>",
         sender_domain: "notify.events.srikrishnamandir.org",
-        subject: "You're in, " + firstName + ". Ratha Y\u0101tr\u0101 2026 is locked in. \uD83C\uDF3A",
+        subject: "You're in, " + firstName + ". Kids Ratha Y\u0101tr\u0101 2026 is locked in. \uD83C\uDF3A",
         html,
         text,
         purpose: "transactional",

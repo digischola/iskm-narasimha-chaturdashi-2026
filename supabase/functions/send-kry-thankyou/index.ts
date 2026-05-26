@@ -13,7 +13,7 @@ const THANKYOU_HTML = `<!DOCTYPE html>
 <meta name="x-apple-disable-message-reformatting">
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
-<title>Thank you, Ratha Y&#x101;tr&#x101; 2026</title>
+<title>Thank you, Kids Ratha Y&#x101;tr&#x101; 2026</title>
 <!--[if mso]>
 <xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
 <style>* { font-family: Georgia, serif !important; }</style>
@@ -135,7 +135,7 @@ const THANKYOU_HTML = `<!DOCTYPE html>
               &#169; 2026 International Sri Krishna Mandir
             </div>
             <div style="font-size:11px;color:#ffffff;opacity:0.4;margin-top:16px;">
-              You received this because you registered for Ratha Y&#x101;tr&#x101; 2026.<br>
+              You received this because you registered for Kids Ratha Y&#x101;tr&#x101; 2026.<br>
               <a href="{{unsubscribe_url}}" style="color:#ffffff;opacity:0.7;">Unsubscribe</a>
             </div>
           </td></tr>
@@ -269,7 +269,7 @@ Deno.serve(async (req) => {
         to: reg.email,
         from: "ISKM Singapore <noreply@notify.events.srikrishnamandir.org>",
         sender_domain: "notify.events.srikrishnamandir.org",
-        subject: "Thank you for joining us at Ratha Y\u0101tr\u0101 2026 \uD83D\uDE4F",
+        subject: "Thank you for joining us at Kids Ratha Y\u0101tr\u0101 2026 \uD83D\uDE4F",
         html,
         text: `Thank you, ${firstName}. Whether you pulled the rope, sang the kirtana, or simply received a plate of Prasadam, you were part of something a thousand years in the making.\n\nWeekend Love Feast: ${WLF_URL}\nSponsor a seva: ${SEVA_URL}\n\nUnsubscribe: ${unsubscribeUrl}`,
         purpose: "transactional",

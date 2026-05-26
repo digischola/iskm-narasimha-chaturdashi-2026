@@ -17,7 +17,7 @@ const EMAIL_HEAD = `<!DOCTYPE html>
 <meta name="x-apple-disable-message-reformatting">
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
-<title>Ratha Y&#x101;tr&#x101; 2026</title>
+<title>Kids Ratha Y&#x101;tr&#x101; 2026</title>
 <!--[if mso]>
 <xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
 <style>* { font-family: Georgia, serif !important; }</style>
@@ -61,7 +61,7 @@ const FOOTER = `
               &#169; 2026 International Sri Krishna Mandir
             </div>
             <div style="font-size:11px;color:#ffffff;opacity:0.4;margin-top:16px;">
-              You received this because you registered for Ratha Y&#x101;tr&#x101; 2026.<br>
+              You received this because you registered for Kids Ratha Y&#x101;tr&#x101; 2026.<br>
               <a href="{{unsubscribe_url}}" style="color:#ffffff;opacity:0.7;">Unsubscribe</a>
             </div>
           </td></tr>
@@ -113,7 +113,7 @@ const T14_HTML = `${EMAIL_HEAD}
 
       <tr><td style="padding:16px 32px 24px;" class="p-mobile">
         <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#444444;">
-          {{first_name}}, two weeks until Sunday, 5 July at Clementi Stadium.
+          {{first_name}}, two weeks until Saturday, 27 June at ISKM Capark.
         </p>
       </td></tr>
 
@@ -125,7 +125,7 @@ const T14_HTML = `${EMAIL_HEAD}
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9efe2;border-radius:12px;">
           <tr><td style="padding:20px 24px;">
-            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">5:00 PM.</strong> Guest of Honour and Temple President's address</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:00 PM.</strong> Guest of Honour and Temple President's address</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">5:30 PM.</strong> Cultural Odissi dance, deities ascend the chariots</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:00 PM.</strong> The chariot procession begins. This is the peak moment. &#10024;</p>
             <p style="margin:0;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">9:00 PM.</strong> Final &#x101;rati and deities depart</p>
@@ -205,8 +205,8 @@ const T1_HTML = `${EMAIL_HEAD}
           {{first_name}}, tomorrow is the day.
         </p>
         <p style="margin:0;font-size:16px;line-height:1.7;color:#444444;">
-          Sunday, 5 July, doors 5:00 PM. Chariots roll at 6:00 PM.<br>
-          Clementi Stadium, 10 West Coast Walk, Singapore 127156
+          Saturday, 27 June, doors 6:00 PM. Chariots roll at 6:00 PM.<br>
+          ISKM Capark, Singapore
         </p>
       </td></tr>
 
@@ -263,14 +263,14 @@ ${FOOTER}`;
 const TEMPLATES: Record<string, { html: string; subject: (name: string) => string; trackPrefix: string; sentColumn: string; label: string }> = {
   "t-14": {
     html: T14_HTML,
-    subject: (_name: string) => "Two weeks to Ratha Y\u0101tr\u0101 2026 \uD83D\uDCC5",
+    subject: (_name: string) => "Two weeks to Kids Ratha Y\u0101tr\u0101 2026 \uD83D\uDCC5",
     trackPrefix: "kkry-t14-",
     sentColumn: "t14_reminder_sent",
     label: "kkry-t14",
   },
   "t-1": {
     html: T1_HTML,
-    subject: (_name: string) => "Tomorrow at 5 PM, Ratha Y\u0101tr\u0101 2026 at Clementi Stadium \u23F0",
+    subject: (_name: string) => "Tomorrow at 5 PM, Kids Ratha Y\u0101tr\u0101 2026 at ISKM Capark \u23F0",
     trackPrefix: "kry-t1-",
     sentColumn: "t1_reminder_sent",
     label: "kry-t1",
