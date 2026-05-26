@@ -371,7 +371,10 @@
   .kry-page .reg-card { padding: 26px 22px; }
   .kry-page .quote-card { padding: 28px 26px; }
   .kry-page .quote-card blockquote { font-size: 18px; }
-  .kry-page .hero-countdown { display: flex; width: 100%; max-width: 100%; box-sizing: border-box; padding: 22px 18px; }
-  .kry-page .hc-cells { width: 100%; justify-content: center; flex-wrap: wrap; }
+  .kry-page .hero-countdown { display: flex; width: 100%; max-width: 100%; box-sizing: border-box; padding: 18px 10px; }
+  .kry-page .hc-cells { width: 100%; justify-content: center; flex-wrap: nowrap; gap: 6px; }
+  .kry-page .hc-cell { min-width: 0; flex: 1 1 0; padding: 8px 4px; }
+  .kry-page .hc-num { font-size: 22px; }
+  .kry-page .hc-lbl { font-size: 10px; letter-spacing: 0.08em; }
   .kry-page .mobile-cta-bar { display: block; }
 }
