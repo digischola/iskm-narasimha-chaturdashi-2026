@@ -402,6 +402,7 @@ export default function Admin() {
   const isSlfType = (et: string) => et.startsWith("slf-") || et.startsWith("wlf-") || et.startsWith("slf_") || et.startsWith("wlf_");
   const isPrasadamType = (et: string) => et.startsWith("prasadam-") || et.startsWith("prasadam_");
   const isRyType = (et: string) => et.startsWith("ry-") || et.startsWith("ry_");
+  const isKryType = (et: string) => et.startsWith("kry-") || et.startsWith("kry_");
 
   const buildEventEngagement = (predicate: (et: string) => boolean, sentCount: number) => {
     const opens = trackingEvents.filter(t => t.event_type === "open" && predicate(t.email_type || ""));
