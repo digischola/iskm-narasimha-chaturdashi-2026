@@ -82,7 +82,23 @@ interface TrackingEvent {
 }
 
 type Page = "overview" | "registrations" | "prasadam" | "emails";
-type EventTab = "all" | "nrsimha" | "slf" | "prasadam" | "ratha_yatra";
+type EventTab = "all" | "nrsimha" | "slf" | "prasadam" | "ratha_yatra" | "kry";
+type RegEventTab = "nrsimha" | "slf" | "prasadam" | "ratha_yatra" | "kry";
+
+interface KryRegistration {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  adults: number;
+  kids: number;
+  attendees: number; // synthetic = adults + kids
+  source: string | null;
+  confirmation_sent: boolean;
+  reminder_sent: boolean;
+  thankyou_sent: boolean;
+  created_at: string;
+}
 
 const ROWS_PER_PAGE = 10;
 
@@ -105,6 +121,7 @@ export default function Admin() {
   const [page, setPage] = useState<Page>("overview");
   const [ncData, setNcData] = useState<Registration[]>([]);
   const [ryData, setRyData] = useState<RyRegistration[]>([]);
+  const [kryData, setKryData] = useState<KryRegistration[]>([]);
   const [slfData, setSlfData] = useState<SlfRegistration[]>([]);
   const [prasadamData, setPrasadamData] = useState<PrasadamSponsorship[]>([]);
   const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
@@ -116,7 +133,7 @@ export default function Admin() {
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [eventTab, setEventTab] = useState<EventTab>("all");
-  const [regEventTab, setRegEventTab] = useState<"nrsimha" | "slf" | "prasadam" | "ratha_yatra">("nrsimha");
+  const [regEventTab, setRegEventTab] = useState<RegEventTab>("nrsimha");
   const [regPage, setRegPage] = useState(1);
   const [emailPage, setEmailPage] = useState(1);
   const [prasadamPage, setPrasadamPage] = useState(1);
@@ -181,9 +198,10 @@ export default function Admin() {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [ncRows, ryRows, slfRows, prasadamRows, emailRows, trackRows] = await Promise.all([
+    const [ncRows, ryRows, kryRowsRaw, slfRows, prasadamRows, emailRows, trackRows] = await Promise.all([
       fetchAllRows<Registration>("registrations"),
       fetchAllRows<RyRegistration>("ratha_yatra_registrations"),
+      fetchAllRows<Omit<KryRegistration, "attendees">>("kids_ratha_yatra_registrations"),
       fetchAllRows<SlfRegistration>("weekend_love_feast_registrations"),
       fetchAllRows<PrasadamSponsorship>("prasadam_sponsorships"),
       fetchAllRows<EmailLog>("email_send_log"),
@@ -191,6 +209,7 @@ export default function Admin() {
     ]);
     setNcData(ncRows);
     setRyData(ryRows);
+    setKryData(kryRowsRaw.map(r => ({ ...r, attendees: (r.adults || 0) + (r.kids || 0) })));
     setSlfData(slfRows);
     setPrasadamData(prasadamRows);
     setEmailLogs(emailRows);
@@ -255,8 +274,11 @@ export default function Admin() {
   const ryEmails = new Set(
     ryData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
   );
+  const kryEmails = new Set(
+    kryData.map(r => normEmail(r.email)).filter(e => e && !isPlaceholder(e))
+  );
 
-  const allEmailsUnion = new Set<string>([...ncEmails, ...slfEmails, ...prasadamEmails, ...ryEmails]);
+  const allEmailsUnion = new Set<string>([...ncEmails, ...slfEmails, ...prasadamEmails, ...ryEmails, ...kryEmails]);
   const uniquePeopleCount = allEmailsUnion.size;
 
   // Overlap: emails appearing in 2+ tables
@@ -266,6 +288,7 @@ export default function Admin() {
     if (slfEmails.has(e)) count++;
     if (prasadamEmails.has(e)) count++;
     if (ryEmails.has(e)) count++;
+    if (kryEmails.has(e)) count++;
     return count >= 2;
   });
   const overlapCount = overlapEmails.length;
@@ -277,14 +300,16 @@ export default function Admin() {
     if (slfEmails.has(e)) count++;
     if (prasadamEmails.has(e)) count++;
     if (ryEmails.has(e)) count++;
+    if (kryEmails.has(e)) count++;
     return count >= 3;
   }).length;
 
-  const totalRegistrationsAcross = ncData.length + slfData.length + prasadamData.length + ryData.length;
+  const totalRegistrationsAcross = ncData.length + slfData.length + prasadamData.length + ryData.length + kryData.length;
   const totalAttendeesAcross =
     ncData.reduce((s, r) => s + r.attendees, 0) +
     slfData.reduce((s, r) => s + r.attendees, 0) +
-    ryData.reduce((s, r) => s + r.attendees, 0);
+    ryData.reduce((s, r) => s + r.attendees, 0) +
+    kryData.reduce((s, r) => s + r.attendees, 0);
 
   const totalSponsorshipValue = prasadamData
     .filter(r => r.status === "confirmed" || r.status === "completed")
@@ -305,6 +330,16 @@ export default function Admin() {
   const ryAvgGroup = ryTotal > 0 ? (ryAttendees / ryTotal).toFixed(1) : "0";
   const ryConfirmed = ryData.filter(r => r.confirmation_sent).length;
   const ryRemindersSent = ryData.filter(r => r.reminder_sent).length;
+
+  // KRY (Kids Ratha Yatra)
+  const kryTotal = kryData.length;
+  const kryAdults = kryData.reduce((s, r) => s + (r.adults || 0), 0);
+  const kryKids = kryData.reduce((s, r) => s + (r.kids || 0), 0);
+  const kryAttendees = kryAdults + kryKids;
+  const kryAvgGroup = kryTotal > 0 ? (kryAttendees / kryTotal).toFixed(1) : "0";
+  const kryConfirmed = kryData.filter(r => r.confirmation_sent).length;
+  const kryRemindersSent = kryData.filter(r => r.reminder_sent).length;
+
 
   const slfTotal = slfData.length;
   const slfAttendees = slfData.reduce((s, r) => s + r.attendees, 0);
@@ -367,6 +402,7 @@ export default function Admin() {
   const isSlfType = (et: string) => et.startsWith("slf-") || et.startsWith("wlf-") || et.startsWith("slf_") || et.startsWith("wlf_");
   const isPrasadamType = (et: string) => et.startsWith("prasadam-") || et.startsWith("prasadam_");
   const isRyType = (et: string) => et.startsWith("ry-") || et.startsWith("ry_");
+  const isKryType = (et: string) => et.startsWith("kry-") || et.startsWith("kry_");
 
   const buildEventEngagement = (predicate: (et: string) => boolean, sentCount: number) => {
     const opens = trackingEvents.filter(t => t.event_type === "open" && predicate(t.email_type || ""));
@@ -387,12 +423,14 @@ export default function Admin() {
   const ncSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").startsWith("nc-")).length;
   const slfSent = uniqueEmailList.filter(e => e.status === "sent" && ((e.template_name || "").includes("wlf") || (e.template_name || "").includes("slf"))).length;
   const prasadamSent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("prasadam")).length;
-  const rySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("ry-")).length;
+  const rySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("ry-") && !(e.template_name || "").includes("kry-")).length;
+  const krySent = uniqueEmailList.filter(e => e.status === "sent" && (e.template_name || "").includes("kry-")).length;
 
   const ncEng = buildEventEngagement(isNcType, ncSent);
   const slfEng = buildEventEngagement(isSlfType, slfSent);
   const prasadamEng = buildEventEngagement(isPrasadamType, prasadamSent);
   const ryEng = buildEventEngagement(isRyType, rySent);
+  const kryEng = buildEventEngagement(isKryType, krySent);
 
   // ═══ CHART: Registrations over time (combined) ═══
   const buildChartData = (tab: EventTab) => {
@@ -402,6 +440,8 @@ export default function Admin() {
       ncData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
     if (tab === "all" || tab === "ratha_yatra")
       ryData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
+    if (tab === "all" || tab === "kry")
+      kryData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
     if (tab === "all" || tab === "slf")
       slfData.forEach(r => sources.push({ created_at: r.created_at, count: 1 }));
     if (tab === "all" || tab === "prasadam")
@@ -415,10 +455,11 @@ export default function Admin() {
   const chartData = buildChartData(eventTab);
 
   // ═══ FILTERED VIEWS ═══
-  const activeRegList: (Registration | SlfRegistration | PrasadamSponsorship | RyRegistration)[] =
+  const activeRegList: (Registration | SlfRegistration | PrasadamSponsorship | RyRegistration | KryRegistration)[] =
     regEventTab === "slf" ? slfData
       : regEventTab === "prasadam" ? prasadamData
       : regEventTab === "ratha_yatra" ? ryData
+      : regEventTab === "kry" ? kryData
       : ncData;
 
   // Date range cutoff
@@ -460,6 +501,11 @@ export default function Admin() {
       if (regConfFilter === "not" && r.confirmation_sent) return false;
       if (regVolFilter === "vol" && !r.is_volunteer) return false;
       if (regVolFilter === "att" && r.is_volunteer) return false;
+    }
+
+    if (regEventTab === "kry") {
+      if (regConfFilter === "sent" && !r.confirmation_sent) return false;
+      if (regConfFilter === "not" && r.confirmation_sent) return false;
     }
 
     return true;
@@ -547,6 +593,11 @@ export default function Admin() {
       const rows = ryData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "ratha_yatra_registrations";
+    } else if (page === "registrations" && regEventTab === "kry") {
+      const headers = ["Name", "Email", "Phone", "Adults", "Kids", "Total", "Source", "Confirmation", "Reminder", "Thank You", "Registered At"];
+      const rows = kryData.map(r => [r.name, r.email, r.phone || "", r.adults, r.kids, r.adults + r.kids, r.source || "", r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", r.thankyou_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "kids_ratha_yatra_registrations";
     } else {
       const headers = ["Name", "Email", "Phone", "Attendees", "Volunteer", "Confirmation", "Reminder", "Registered At"];
       const rows = ncData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.is_volunteer ? "Yes" : "No", r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
@@ -658,6 +709,7 @@ export default function Admin() {
                 <button className={`admin-event-tab${eventTab === "slf" ? " active" : ""}`} onClick={() => setEventTab("slf")}>Weekend Love Feast</button>
                 <button className={`admin-event-tab${eventTab === "prasadam" ? " active" : ""}`} onClick={() => setEventTab("prasadam")}>Prasadam Program</button>
                 <button className={`admin-event-tab${eventTab === "ratha_yatra" ? " active" : ""}`} onClick={() => setEventTab("ratha_yatra")}>Ratha Yatra</button>
+                <button className={`admin-event-tab${eventTab === "kry" ? " active" : ""}`} onClick={() => setEventTab("kry")}>Kids Ratha Yātrā</button>
               </div>
 
               {/* ═══ ALL EVENTS ═══ */}
@@ -752,6 +804,13 @@ export default function Admin() {
                             <td>{ryTotal}</td>
                             <td>{ryAttendees}</td>
                             <td>{uniquePeopleCount > 0 ? `${((ryEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
+                          </tr>
+                          <tr>
+                            <td><span className="admin-name-text">Kids Ratha Yātrā</span></td>
+                            <td>{kryEmails.size}</td>
+                            <td>{kryTotal}</td>
+                            <td>{kryAttendees}</td>
+                            <td>{uniquePeopleCount > 0 ? `${((kryEmails.size / uniquePeopleCount) * 100).toFixed(0)}%` : "—"}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -984,6 +1043,51 @@ export default function Admin() {
                 </>
               )}
 
+              {/* ═══ KIDS RATHA YATRA ═══ */}
+              {eventTab === "kry" && (
+                <>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Registrations</div>
+                      <div className="admin-stat-value">{kryTotal}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Total Attendees</div>
+                      <div className="admin-stat-value gold">{kryAttendees}</div>
+                      <div className="admin-stat-sub">Adults: {kryAdults} · Kids: {kryKids} · Avg: {kryAvgGroup}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Confirmations Sent</div>
+                      <div className="admin-stat-value green">{kryConfirmed}</div>
+                      <div className="admin-stat-sub">{kryTotal > 0 ? `${((kryConfirmed / kryTotal) * 100).toFixed(0)}%` : "0%"} of registrants</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Reminders Sent</div>
+                      <div className="admin-stat-value">{kryRemindersSent}</div>
+                    </div>
+                  </div>
+                  <div className="admin-stats-row">
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Email Open Rate</div>
+                      <div className="admin-stat-value green">{kryEng.openRate}%</div>
+                      <div className="admin-stat-sub">{kryEng.uniqueOpens} unique opens</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Calendar Saves</div>
+                      <div className="admin-stat-value">{kryEng.calendarClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Directions Clicks</div>
+                      <div className="admin-stat-value">{kryEng.directionsClicks}</div>
+                    </div>
+                    <div className="admin-stat-card">
+                      <div className="admin-stat-label">Share Clicks</div>
+                      <div className="admin-stat-value">{kryEng.shareClicks}</div>
+                    </div>
+                  </div>
+                </>
+              )}
+
               {/* Chart */}
               {chartData.length > 0 && (
                 <div className="admin-chart-card">
@@ -1013,6 +1117,7 @@ export default function Admin() {
               <div className="admin-event-tabs">
                 <button className={`admin-event-tab${regEventTab === "nrsimha" ? " active" : ""}`} onClick={() => { setRegEventTab("nrsimha"); setRegPage(1); resetRegFilters(); }}>Nṛsiṁha Caturdaśī ({ncTotal})</button>
                 <button className={`admin-event-tab${regEventTab === "ratha_yatra" ? " active" : ""}`} onClick={() => { setRegEventTab("ratha_yatra"); setRegPage(1); resetRegFilters(); }}>Ratha Yātrā ({ryTotal})</button>
+                <button className={`admin-event-tab${regEventTab === "kry" ? " active" : ""}`} onClick={() => { setRegEventTab("kry"); setRegPage(1); resetRegFilters(); }}>Kids Ratha Yātrā ({kryTotal})</button>
                 <button className={`admin-event-tab${regEventTab === "slf" ? " active" : ""}`} onClick={() => { setRegEventTab("slf"); setRegPage(1); resetRegFilters(); }}>Weekend Love Feast ({slfTotal})</button>
                 <button className={`admin-event-tab${regEventTab === "prasadam" ? " active" : ""}`} onClick={() => { setRegEventTab("prasadam"); setRegPage(1); resetRegFilters(); }}>Prasadam ({prasadamTotal})</button>
               </div>
@@ -1081,12 +1186,21 @@ export default function Admin() {
                       </div>
                     </>
                   )}
+
+                  {regEventTab === "kry" && (
+                    <div className="admin-filter-group">
+                      <span className="admin-filter-label">Confirmation</span>
+                      {([["all","All"],["sent","Sent"],["not","Not sent"]] as const).map(([v,l]) => (
+                        <button key={v} className={`admin-filter-tab${regConfFilter === v ? " active" : ""}`} onClick={() => { setRegConfFilter(v); setRegPage(1); }}>{l}</button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
               <div className="admin-table-card">
                 <div className="admin-table-header">
-                  <h3>{regEventTab === "nrsimha" ? "Nṛsiṁha Registrations" : regEventTab === "ratha_yatra" ? "Ratha Yātrā Registrations" : regEventTab === "slf" ? "Weekend Love Feast Registrations" : "Prasadam Sponsorships"}</h3>
+                  <h3>{regEventTab === "nrsimha" ? "Nṛsiṁha Registrations" : regEventTab === "ratha_yatra" ? "Ratha Yātrā Registrations" : regEventTab === "kry" ? "Kids Ratha Yātrā Registrations" : regEventTab === "slf" ? "Weekend Love Feast Registrations" : "Prasadam Sponsorships"}</h3>
                   <span style={{ fontSize: "13px", color: "#888" }}>
                     Showing {Math.min((regPage - 1) * ROWS_PER_PAGE + 1, filteredReg.length)}-{Math.min(regPage * ROWS_PER_PAGE, filteredReg.length)} of {filteredReg.length} entries
                   </span>
@@ -1099,6 +1213,7 @@ export default function Admin() {
                         <th>Email</th>
                         <th>Phone</th>
                         {(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") && <><th>Pax</th><th>Conf</th><th>Reminder</th></>}
+                        {regEventTab === "kry" && <><th>Adults</th><th>Kids</th><th>Conf</th><th>Reminder</th></>}
                         {regEventTab === "slf" && <><th>Pax</th><th>Day</th><th>First Time</th></>}
                         {regEventTab === "prasadam" && <><th>Tier</th><th>Date</th><th>Status</th></>}
                         <th>Submitted</th>
@@ -1128,6 +1243,14 @@ export default function Admin() {
                             {(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") && (
                               <>
                                 <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.attendees).padStart(2, "0")}</span></td>
+                                <td><span className={`admin-badge-icon ${r.confirmation_sent ? "yes" : "no"}`}>{r.confirmation_sent ? "✅" : "—"}</span></td>
+                                <td><span className={`admin-badge-icon ${r.reminder_sent ? "yes" : "no"}`}>{r.reminder_sent ? "🔔" : "—"}</span></td>
+                              </>
+                            )}
+                            {regEventTab === "kry" && (
+                              <>
+                                <td><span style={{ fontWeight: 700, color: "#1e3a6e" }}>{String(r.adults || 0).padStart(2, "0")}</span></td>
+                                <td><span style={{ fontWeight: 700, color: "#f590b3" }}>{String(r.kids || 0).padStart(2, "0")}</span></td>
                                 <td><span className={`admin-badge-icon ${r.confirmation_sent ? "yes" : "no"}`}>{r.confirmation_sent ? "✅" : "—"}</span></td>
                                 <td><span className={`admin-badge-icon ${r.reminder_sent ? "yes" : "no"}`}>{r.reminder_sent ? "🔔" : "—"}</span></td>
                               </>
@@ -1169,7 +1292,7 @@ export default function Admin() {
                         );
                       })}
                       {regSlice.length === 0 && (
-                        <tr><td colSpan={(regEventTab === "nrsimha" || regEventTab === "ratha_yatra") ? 7 : 6} className="admin-empty">No registrations found</td></tr>
+                        <tr><td colSpan={regEventTab === "kry" ? 8 : (regEventTab === "nrsimha" || regEventTab === "ratha_yatra") ? 7 : 6} className="admin-empty">No registrations found</td></tr>
                       )}
                     </tbody>
                   </table>
