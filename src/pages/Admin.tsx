@@ -455,10 +455,11 @@ export default function Admin() {
   const chartData = buildChartData(eventTab);
 
   // ═══ FILTERED VIEWS ═══
-  const activeRegList: (Registration | SlfRegistration | PrasadamSponsorship | RyRegistration)[] =
+  const activeRegList: (Registration | SlfRegistration | PrasadamSponsorship | RyRegistration | KryRegistration)[] =
     regEventTab === "slf" ? slfData
       : regEventTab === "prasadam" ? prasadamData
       : regEventTab === "ratha_yatra" ? ryData
+      : regEventTab === "kry" ? kryData
       : ncData;
 
   // Date range cutoff
