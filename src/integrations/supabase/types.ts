@@ -137,6 +137,48 @@ export type Database = {
         }
         Relationships: []
       }
+      kids_ratha_yatra_registrations: {
+        Row: {
+          adults: number
+          confirmation_sent: boolean
+          created_at: string
+          email: string
+          id: string
+          kids: number
+          name: string
+          phone: string
+          reminder_sent: boolean
+          source: string | null
+          thankyou_sent: boolean
+        }
+        Insert: {
+          adults?: number
+          confirmation_sent?: boolean
+          created_at?: string
+          email: string
+          id?: string
+          kids?: number
+          name: string
+          phone: string
+          reminder_sent?: boolean
+          source?: string | null
+          thankyou_sent?: boolean
+        }
+        Update: {
+          adults?: number
+          confirmation_sent?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          kids?: number
+          name?: string
+          phone?: string
+          reminder_sent?: boolean
+          source?: string | null
+          thankyou_sent?: boolean
+        }
+        Relationships: []
+      }
       prasadam_sponsorships: {
         Row: {
           country_code: string

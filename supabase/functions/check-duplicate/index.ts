@@ -16,6 +16,7 @@ const TABLE_MAP: Record<string, string> = {
 
 const SLUG_TABLE_MAP: Record<string, string> = {
   ratha_yatra_2026: "ratha_yatra_registrations",
+  kids_ratha_yatra_2026: "kids_ratha_yatra_registrations",
 };
 
 Deno.serve(async (req) => {

@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 const WeekendLoveFeast = lazy(() => import("@/pages/WeekendLoveFeast"));
 const FreePrasadamProgram = lazy(() => import("@/pages/FreePrasadamProgram"));
 const RathaYatra = lazy(() => import("@/pages/RathaYatra"));
+const KidsRathaYatra = lazy(() => import("@/pages/KidsRathaYatra"));
 
 
 /* ═══ HOOKS ═══ */
@@ -886,6 +887,7 @@ export default function App() {
           <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="/free-prasadam-program" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><FreePrasadamProgram /></Suspense>} />
           <Route path="/ratha-yatra-2026" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><RathaYatra /></Suspense>} />
+          <Route path="/kids-ratha-yatra-2026" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><KidsRathaYatra /></Suspense>} />
         </Routes>
       </BrowserRouter>
     </HelmetProvider>
