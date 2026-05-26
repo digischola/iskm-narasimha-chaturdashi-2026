@@ -9,21 +9,9 @@
 .kry-page .skip-link { position:absolute; top:-100%; left:50%; transform:translateX(-50%); z-index:10000; padding:8px 16px; background:var(--navy); color:#fff; border-radius:0 0 8px 8px; font-size:13px; font-weight:600; transition:top .2s; }
 .kry-page .skip-link:focus { top:0; }
 
-/* ═══ TOP CHROME: RIBBON + NAV ═══ */
-.kry-page .ribbon {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: linear-gradient(135deg, var(--navy), var(--navy-deep));
-  color: #fff; height: 38px; display: flex; align-items: center;
-  justify-content: center; gap: 10px; padding: 0 24px;
-  font: 600 13px/1 var(--font-body); letter-spacing: .3px;
-}
-.kry-page .ribbon .ribbon-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: kry-dot-pulse calc(1.8s / var(--motion-scale,1)) ease-in-out infinite; }
-.kry-page .ribbon .ribbon-hl { color: var(--gold); font-weight: 700; }
-.kry-page .ribbon .ribbon-cta { color: var(--pink-light); text-decoration: underline; font-weight: 700; cursor: pointer; }
-@keyframes kry-dot-pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.4; transform:scale(1.6); } }
-
-.kry-page .nav {
-  position: fixed; top: 38px; left: 0; right: 0; z-index: 99;
+/* ═══ NAV (matches RathaYatra sticky-nav) ═══ */
+.kry-page .kry-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 99;
   background: rgba(253,245,237,.92);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(30,58,110,.06);
@@ -31,11 +19,9 @@
   display: flex; align-items: center; justify-content: space-between;
   transition: box-shadow .3s, background .3s;
 }
-.kry-page .nav.scrolled { box-shadow: 0 2px 24px rgba(30,58,110,.08); background: rgba(253,245,237,.96); }
-.kry-page .nav-brand { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: 19px; color: var(--navy); text-decoration: none; }
-.kry-page .nav-brand img { width: 38px; height: 38px; border-radius: 50%; }
-.kry-page .nav-brand .nav-name { line-height: 1.1; }
-.kry-page .nav-brand .nav-sub { display: block; font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-dark); margin-top: 2px; }
+.kry-page .kry-nav.scrolled { box-shadow: 0 2px 20px rgba(30,58,110,.08); background: rgba(253,245,237,.96); }
+.kry-page .nav-brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--navy); text-decoration: none; letter-spacing: .2px; }
+.kry-page .nav-brand img { width: 28px; height: 28px; border-radius: 50%; }
 .kry-page .nav-links { display: flex; gap: 28px; align-items: center; }
 .kry-page .nav-links a { font: 600 13.5px var(--font-body); color: var(--text-dark); letter-spacing: .2px; cursor: pointer; position: relative; transition: color var(--t-ui); text-decoration: none; }
 .kry-page .nav-links a.desk-link::after { content:''; position: absolute; left: 0; right: 0; bottom: -22px; height: 2px; background: var(--gold); border-radius: 1px; transform: scaleX(0); transform-origin: right; transition: transform .3s ease; }
@@ -43,7 +29,7 @@
 .kry-page .nav-links a.desk-link:hover::after { transform: scaleX(1); transform-origin: left; }
 .kry-page .nav-cta { background: var(--pink); color: var(--navy)!important; padding: 9px 22px; border-radius: var(--radius-button); font-weight: 700; font-size: 13px; letter-spacing: .3px; cursor: pointer; transition: all var(--t-cta); }
 .kry-page .nav-cta:hover { background: var(--pink-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(248,164,192,.4); }
-.kry-page .scroll-progress { position: fixed; top: calc(38px + 62px); left:0; right:0; height: 3px; background: rgba(248,164,192,.18); z-index: 98; }
+.kry-page .scroll-progress { position: fixed; top: 62px; left:0; right:0; height: 3px; background: rgba(248,164,192,.18); z-index: 98; }
 .kry-page .scroll-progress > .bar { height: 100%; background: var(--pink); transform-origin: left; transform: scaleX(0); transition: transform .1s linear; }
 
 /* ═══ HERO ═══ */
