@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.101.1/cors";
 
-const EVENT_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026";
+const EVENT_URL = "https://events.srikrishnamandir.org/kids-ratha-yatra-2026";
 const CALENDAR_URL = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ratha+Y%C4%81tr%C4%81+2026&dates=20260705T090000Z/20260705T133000Z&details=Three+chariots%2C+ecstatic+k%C4%ABrtana%2C+classical+Odissi+dance%2C+free+5-course+Pras%C4%81dam+Feast.%0A%0AVenue%3A+10+West+Coast+Walk%2C+Singapore+127156%0A%0AMore+info%3A+https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026&location=Clementi+Stadium%2C+10+West+Coast+Walk%2C+Singapore+127156";
 const WA_SHARE = "https://wa.me/?text=Join%20us%20for%20Ratha%20Y%C4%81tr%C4%81%202026%20at%20Clementi%20Stadium%20on%20Sunday%205%20July%2C%205%20PM.%20Free%20entry%2C%20free%20Pras%C4%81dam%20Feast%2C%20all%20welcome.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026";
 const TG_SHARE = "https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org%2Fratha-yatra-2026&text=Join%20us%20for%20Ratha%20Y%C4%81tr%C4%81%202026";
@@ -193,7 +193,7 @@ function addClickTracking(html: string, trackBase: string, rid: string, et: stri
     (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'calendar', url)}"`
   );
   html = html.replace(
-    /href="(https:\/\/events\.srikrishnamandir\.org\/ratha-yatra-2026[^"]*)"/g,
+    /href="(https:\/\/events\.srikrishnamandir\.org\/kids-ratha-yatra-2026[^"]*)"/g,
     (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'event_page', url)}"`
   );
   html = html.replace(
@@ -227,7 +227,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const { data: reg } = await supabase
-      .from("ratha_yatra_registrations")
+      .from("kids_ratha_yatra_registrations")
       .select("confirmation_sent")
       .eq("id", registration_id)
       .single();
@@ -255,7 +255,7 @@ Deno.serve(async (req) => {
 
     const unsubscribeUrl = "https://events.srikrishnamandir.org/unsubscribe?token=" + token;
     const trackBase = supabaseUrl + "/functions/v1/track-email";
-    const pixelUrl = `${trackBase}?t=o&et=ry-confirm&rid=${registration_id}&e=${encodeURIComponent(email)}`;
+    const pixelUrl = `${trackBase}?t=o&et=kry-confirm&rid=${registration_id}&e=${encodeURIComponent(email)}`;
 
     let html = renderTemplate(CONFIRMATION_HTML, {
       first_name: firstName,
@@ -263,11 +263,11 @@ Deno.serve(async (req) => {
       tracking_pixel: `<img src="${pixelUrl}" width="1" height="1" style="display:none;width:1px;height:1px;" alt="" />`,
     });
 
-    html = addClickTracking(html, trackBase, registration_id, "ry-confirm", email);
+    html = addClickTracking(html, trackBase, registration_id, "kry-confirm", email);
 
     const text = `Thank you, ${firstName}. Your seat is reserved for Ratha Yatra 2026.\n\nSunday, 5 July 2026\n5:00 PM to 9:30 PM\nClementi Stadium, 10 West Coast Walk, Singapore 127156\n\nThree hand-pulled chariots, classical Odissi dance, ecstatic kirtana, and a free 5-course Prasadam Feast.\n\nWe'll send you two short reminders as the date gets closer.\n\nTell your family and friends. Entry is free, all are welcome.\n\nView event page: ${EVENT_URL}\n\nUnsubscribe: ${unsubscribeUrl}`;
 
-    const messageId = "ry-confirm-" + registration_id;
+    const messageId = "kry-confirm-" + registration_id;
 
     await supabase.rpc("enqueue_email", {
       queue_name: "transactional_emails",
@@ -279,9 +279,9 @@ Deno.serve(async (req) => {
         html,
         text,
         purpose: "transactional",
-        label: "ry-confirmation",
+        label: "kkry-confirmation",
         message_id: messageId,
-        idempotency_key: "ry-confirm-" + registration_id,
+        idempotency_key: "kry-confirm-" + registration_id,
         unsubscribe_token: token,
         queued_at: new Date().toISOString(),
       },
@@ -289,13 +289,13 @@ Deno.serve(async (req) => {
 
     await supabase.from("email_send_log").insert({
       message_id: messageId,
-      template_name: "ry-confirmation",
+      template_name: "kkry-confirmation",
       recipient_email: email,
       status: "pending",
     });
 
     await supabase
-      .from("ratha_yatra_registrations")
+      .from("kids_ratha_yatra_registrations")
       .update({ confirmation_sent: true })
       .eq("id", registration_id);
 

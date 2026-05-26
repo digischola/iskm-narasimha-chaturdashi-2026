@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 
-const EVENT_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026";
-const SEVA_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026#seva";
+const EVENT_URL = "https://events.srikrishnamandir.org/kids-ratha-yatra-2026";
+const SEVA_URL = "https://events.srikrishnamandir.org/kids-ratha-yatra-2026#seva";
 const MAPS_URL = "https://maps.app.goo.gl/nN1MNCH681zEcqdT6";
 
 /* ═══════════════════════════════════════════════════════
@@ -264,16 +264,16 @@ const TEMPLATES: Record<string, { html: string; subject: (name: string) => strin
   "t-14": {
     html: T14_HTML,
     subject: (_name: string) => "Two weeks to Ratha Y\u0101tr\u0101 2026 \uD83D\uDCC5",
-    trackPrefix: "ry-t14-",
+    trackPrefix: "kkry-t14-",
     sentColumn: "t14_reminder_sent",
-    label: "ry-t14",
+    label: "kkry-t14",
   },
   "t-1": {
     html: T1_HTML,
     subject: (_name: string) => "Tomorrow at 5 PM, Ratha Y\u0101tr\u0101 2026 at Clementi Stadium \u23F0",
-    trackPrefix: "ry-t1-",
+    trackPrefix: "kry-t1-",
     sentColumn: "t1_reminder_sent",
-    label: "ry-t1",
+    label: "kry-t1",
   },
 };
 
@@ -291,7 +291,7 @@ function trackUrl(base: string, rid: string, et: string, email: string, linkName
 
 function addClickTracking(html: string, trackBase: string, rid: string, et: string, email: string): string {
   html = html.replace(
-    /href="(https:\/\/events\.srikrishnamandir\.org\/ratha-yatra-2026[^"]*)"/g,
+    /href="(https:\/\/events\.srikrishnamandir\.org\/kids-ratha-yatra-2026[^"]*)"/g,
     (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'event_page', url)}"`
   );
   html = html.replace(
@@ -341,7 +341,7 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const { data: registrations, error } = await supabase
-    .from("ratha_yatra_registrations")
+    .from("kids_ratha_yatra_registrations")
     .select("id, name, email")
     .eq(config.sentColumn, false);
 
@@ -373,7 +373,7 @@ Deno.serve(async (req) => {
 
   for (const reg of registrations) {
     if (suppressedSet.has(reg.email) || unsubscribedSet.has(reg.email)) {
-      await supabase.from("ratha_yatra_registrations").update({ [config.sentColumn]: true }).eq("id", reg.id);
+      await supabase.from("kids_ratha_yatra_registrations").update({ [config.sentColumn]: true }).eq("id", reg.id);
       skipped++;
       continue;
     }
@@ -432,7 +432,7 @@ Deno.serve(async (req) => {
       status: "pending",
     });
 
-    await supabase.from("ratha_yatra_registrations").update({ [config.sentColumn]: true }).eq("id", reg.id);
+    await supabase.from("kids_ratha_yatra_registrations").update({ [config.sentColumn]: true }).eq("id", reg.id);
     processed++;
 
     if (processed < registrations.length) {

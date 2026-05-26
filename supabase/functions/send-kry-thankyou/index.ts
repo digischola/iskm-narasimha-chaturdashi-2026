@@ -1,8 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 
-const EVENT_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026";
+const EVENT_URL = "https://events.srikrishnamandir.org/kids-ratha-yatra-2026";
 const WLF_URL = "https://events.srikrishnamandir.org/weekend-love-feast";
-const SEVA_URL = "https://events.srikrishnamandir.org/ratha-yatra-2026#seva";
+const SEVA_URL = "https://events.srikrishnamandir.org/kids-ratha-yatra-2026#seva";
 
 const THANKYOU_HTML = `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -166,7 +166,7 @@ function trackUrl(base: string, rid: string, et: string, email: string, linkName
 
 function addClickTracking(html: string, trackBase: string, rid: string, et: string, email: string): string {
   html = html.replace(
-    /href="(https:\/\/events\.srikrishnamandir\.org\/ratha-yatra-2026[^"]*)"/g,
+    /href="(https:\/\/events\.srikrishnamandir\.org\/kids-ratha-yatra-2026[^"]*)"/g,
     (_, url) => `href="${trackUrl(trackBase, rid, et, email, 'photos', url)}"`
   );
   html = html.replace(
@@ -198,7 +198,7 @@ Deno.serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const { data: registrations, error } = await supabase
-    .from("ratha_yatra_registrations")
+    .from("kids_ratha_yatra_registrations")
     .select("id, name, email")
     .eq("thankyou_sent", false);
 
@@ -230,7 +230,7 @@ Deno.serve(async (req) => {
 
   for (const reg of registrations) {
     if (suppressedSet.has(reg.email) || unsubscribedSet.has(reg.email)) {
-      await supabase.from("ratha_yatra_registrations").update({ thankyou_sent: true }).eq("id", reg.id);
+      await supabase.from("kids_ratha_yatra_registrations").update({ thankyou_sent: true }).eq("id", reg.id);
       skipped++;
       continue;
     }
@@ -288,7 +288,7 @@ Deno.serve(async (req) => {
       status: "pending",
     });
 
-    await supabase.from("ratha_yatra_registrations").update({ thankyou_sent: true }).eq("id", reg.id);
+    await supabase.from("kids_ratha_yatra_registrations").update({ thankyou_sent: true }).eq("id", reg.id);
     processed++;
 
     if (processed < registrations.length) {
