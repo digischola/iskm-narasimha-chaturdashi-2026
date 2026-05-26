@@ -571,21 +571,22 @@ export default function KidsRathaYatra() {
           <div className="gold-divider"></div>
         </div>
         <div className="location">
+          <div className="loc-map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7843!2d103.8807558!3d1.3146362!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da183c80ceaac5%3A0x458ccd4e57b8697b!2sInternational%20Sri%20Krishna%20Mandir%20(ISKM)!5e0!3m2!1sen!2ssg!4v1" loading="lazy" title="ISKM Singapore location map"></iframe>
+          </div>
           <div className="loc-info">
             <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--text-dark)", margin: "0 0 26px" }}>International Sri Krishna Mandir's community hall — a warm, welcoming space for families and children. Easy public-transport access from Aljunied and Paya Lebar MRT.</p>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-map-marker-alt"></i></span><span><strong>ISKM Singapore</strong>Geylang</span></div>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-calendar"></i></span><span><strong>Saturday, 27 June 2026</strong>Doors open 5:45 PM</span></div>
-            <div className="loc-detail"><span className="loc-ic"><i className="fas fa-clock"></i></span><span><strong>6:00 PM – 9:00 PM (SGT)</strong>Prasādam feast from 9:15 PM</span></div>
+            <div className="loc-detail"><span className="loc-ic"><i className="fas fa-clock"></i></span><span><strong>6:00 PM – 9:00 PM</strong>Prasādam feast from 9:15 PM</span></div>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-phone"></i></span><span><strong>+(65) 6250 2280</strong>Tap to call</span></div>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-train"></i></span><span><strong>Nearest MRT</strong>Aljunied (EW9) · Paya Lebar (CC9/EW9)</span></div>
             <div className="loc-actions">
               <a href="https://www.google.com/maps/place/International+Sri+Krishna+Mandir+(ISKM)/" target="_blank" rel="noopener noreferrer" className="btn-secondary"><i className="fas fa-directions"></i> Get directions</a>
             </div>
           </div>
-          <div className="loc-map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7843!2d103.8807558!3d1.3146362!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da183c80ceaac5%3A0x458ccd4e57b8697b!2sInternational%20Sri%20Krishna%20Mandir%20(ISKM)!5e0!3m2!1sen!2ssg!4v1" loading="lazy" title="ISKM Singapore location map"></iframe>
-          </div>
         </div>
+
       </section>
 
       <section className="section tight">
