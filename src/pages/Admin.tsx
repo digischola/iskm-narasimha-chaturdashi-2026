@@ -593,6 +593,11 @@ export default function Admin() {
       const rows = ryData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
       csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
       prefix = "ratha_yatra_registrations";
+    } else if (page === "registrations" && regEventTab === "kry") {
+      const headers = ["Name", "Email", "Phone", "Adults", "Kids", "Total", "Source", "Confirmation", "Reminder", "Thank You", "Registered At"];
+      const rows = kryData.map(r => [r.name, r.email, r.phone || "", r.adults, r.kids, r.adults + r.kids, r.source || "", r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", r.thankyou_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
+      csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      prefix = "kids_ratha_yatra_registrations";
     } else {
       const headers = ["Name", "Email", "Phone", "Attendees", "Volunteer", "Confirmation", "Reminder", "Registered At"];
       const rows = ncData.map(r => [r.name, r.email, r.phone || "", r.attendees, r.is_volunteer ? "Yes" : "No", r.confirmation_sent ? "Yes" : "No", r.reminder_sent ? "Yes" : "No", new Date(r.created_at).toLocaleString("en-SG")]);
