@@ -101,24 +101,24 @@ function useTimelineProgress() {
 }
 
 const FILMSTRIP_A = [
-  ["pulling_03_kids_pulling.jpg", "Children pulling the chariot together"],
-  ["moment_01_conch_shell.jpg", "A young devotee blowing the conch shell"],
-  ["dance_01_bhaktin.jpg", "A young Kṛṣṇa Bhaktin in classical dance attire"],
-  ["kirtan_04_devotee.jpg", "Children singing kīrtana with mridanga and karatāls"],
-  ["flowers_01_group.jpg", "A row of flower girls with petal baskets"],
-  ["arati_01_lamp.jpg", "Ārati lamp offering"],
-  ["pulling_01_rope.jpg", "Hands on the chariot rope"],
-  ["chariot_01_balloons.jpg", "The decorated mini chariot with festive balloons"],
+  ["pulling_03_kids_pulling.webp", "Children pulling the chariot together"],
+  ["moment_01_conch_shell.webp", "A young devotee blowing the conch shell"],
+  ["dance_01_bhaktin.webp", "A young Kṛṣṇa Bhaktin in classical dance attire"],
+  ["kirtan_04_devotee.webp", "Children singing kīrtana with mridanga and karatāls"],
+  ["flowers_01_group.webp", "A row of flower girls with petal baskets"],
+  ["arati_01_lamp.webp", "Ārati lamp offering"],
+  ["pulling_01_rope.webp", "Hands on the chariot rope"],
+  ["chariot_01_balloons.webp", "The decorated mini chariot with festive balloons"],
 ];
 const FILMSTRIP_B = [
-  ["deity_02_altar_front.jpg", "Decorated deities of Lord Jagannātha, Baladev and Subhadrā"],
-  ["kirtan_02_group.jpg", "Kīrtana in full flow with the assembled devotees"],
-  ["baskets_filled.jpg", "Hand-prepared flower baskets ready for the procession"],
-  ["hero_02_mom_boy_chariot.jpg", "A mother holding her young child with the chariot deity"],
-  ["flowers_02_group.jpg", "Flower girls preparing for the procession"],
-  ["prep_chariot_kids.jpg", "Children gathered around the small chariot during preparation"],
-  ["closing_01_arati.jpg", "The closing ārati of the festival"],
-  ["baskets_two.jpg", "Two woven flower baskets, hand-prepared"],
+  ["deity_02_altar_front.webp", "Decorated deities of Lord Jagannātha, Baladev and Subhadrā"],
+  ["kirtan_02_group.webp", "Kīrtana in full flow with the assembled devotees"],
+  ["baskets_filled.webp", "Hand-prepared flower baskets ready for the procession"],
+  ["hero_02_mom_boy_chariot.webp", "A mother holding her young child with the chariot deity"],
+  ["flowers_02_group.webp", "Flower girls preparing for the procession"],
+  ["prep_chariot_kids.webp", "Children gathered around the small chariot during preparation"],
+  ["closing_01_arati.webp", "The closing ārati of the festival"],
+  ["baskets_two.webp", "Two woven flower baskets, hand-prepared"],
 ];
 
 const TESTIMONIALS = [
@@ -136,15 +136,15 @@ const FAQS = [
 ];
 
 const ATTRACTIONS = [
-  { img: "kirtan_04_devotee.jpg", alt: "Children singing kīrtana together — drum, karatāls and voices", tag: "Bhakti Beats Corner", h: <>Vibrant <em>kīrtana</em> led by little voices</>, p: "Experience the sweetness of the Holy Name as the children lead joyful kīrtana throughout the festival." },
-  { img: "dance_01_bhaktin.jpg", alt: "A young Kṛṣṇa Bhaktin in classical Odissi dance attire with crown headdress", tag: "Little Souls Bhakti Hub", h: <>Where families step into <em>Kṛṣṇa consciousness</em></>, p: "Explore devotional books, meet our children's KC class teachers, and find out how your little soul can grow in bhakti.", cls: "img-top" },
-  { img: "fruit_fiesta.jpg", alt: "A child placing fresh fruits as an offering for Lord Jagannātha", tag: "Jagannātha's Fruit Fiesta", h: "Offer fresh fruits to the Lord", p: "Every offering made with devotion brings us closer to Kṛṣṇa. Place a fruit on the altar with your child." },
-  { img: "govindas_cool_corner.jpg", alt: "Cold drinks stall at Govinda's Cool Corner", tag: "Govinda's Cool Corner", h: <>The kids' <em>drinks corner</em></>, p: "Refreshing rose-milk, lemonade and devotional treats at the festival's cool corner — perfect for a Singapore evening." },
-  { img: "souvenir_crafting.jpg", alt: "Handcrafted cardboard chariots and Lord Jagannātha faces on lotus and flower backdrops, made by the children", tag: "Handmade Souvenir Stall", h: "Crafted by little hands, for Kṛṣṇa", p: "Take home a handmade gift, garland or keepsake created by the children — every purchase supports their creativity." },
-  { img: "prasadam_01_thali.jpg", alt: "Sanctified vegetarian prasādam thali with multiple offerings", tag: "Mahāprasādam Mercy Corner", h: "Sweet mercy for the whole family", p: "Cupcakes, sweet treats, snacks and more — taste the Lord's mercy through specially prepared prasādam." },
-  { img: "samosa_seva_stop.jpg", alt: "Fresh samosas at the Samosa Seva Stop stall", tag: "Samosa Seva Stop", h: "Crispy, hot, prepared with love", p: "Fresh samosas at the festival's samosa stall — golden brown triangles, prepared with devotion." },
-  { img: "pizza_stall.jpg", alt: "Freshly baked vegetarian pizza on a steel tray at the festival pizza stall", tag: "Pizza Stall", h: "Hot slices for the whole family", p: "A festival favourite — freshly baked vegetarian pizza for the little ones (and the grown-ups too)." },
-  { img: "pulling_01_rope.jpg", alt: "Children holding the white rope as the chariot rolls", tag: "Pull the Chariot", h: "Every family takes a turn on the rope", p: "From 7:40 PM the chariot of Lord Jagannātha rolls — every child and grown-up is welcome to take the rope." },
+  { img: "kirtan_04_devotee.webp", alt: "Children singing kīrtana together — drum, karatāls and voices", tag: "Bhakti Beats Corner", h: <>Vibrant <em>kīrtana</em> led by little voices</>, p: "Experience the sweetness of the Holy Name as the children lead joyful kīrtana throughout the festival." },
+  { img: "bhakti_hub.webp", alt: "Children with flower baskets gathered for the procession", tag: "Little Souls Bhakti Hub", h: <>Where families step into <em>Kṛṣṇa consciousness</em></>, p: "Explore devotional books, meet our children's KC class teachers, and find out how your little soul can grow in bhakti.", cls: "img-top" },
+  { img: "fruit_fiesta.webp", alt: "A child placing fresh fruits as an offering for Lord Jagannātha", tag: "Jagannātha's Fruit Fiesta", h: "Offer fresh fruits to the Lord", p: "Every offering made with devotion brings us closer to Kṛṣṇa. Place a fruit on the altar with your child." },
+  { img: "govindas_cool_corner.webp", alt: "Cold drinks stall at Govinda's Cool Corner", tag: "Govinda's Cool Corner", h: <>The kids' <em>drinks corner</em></>, p: "Refreshing rose-milk, lemonade and devotional treats at the festival's cool corner — perfect for a Singapore evening." },
+  { img: "souvenir_crafting.webp", alt: "Handcrafted cardboard chariots and Lord Jagannātha faces on lotus and flower backdrops, made by the children", tag: "Handmade Souvenir Stall", h: "Crafted by little hands, for Kṛṣṇa", p: "Take home a handmade gift, garland or keepsake created by the children — every purchase supports their creativity." },
+  { img: "prasadam_01_thali.webp", alt: "Sanctified vegetarian prasādam thali with multiple offerings", tag: "Mahāprasādam Mercy Corner", h: "Sweet mercy for the whole family", p: "Cupcakes, sweet treats, snacks and more — taste the Lord's mercy through specially prepared prasādam." },
+  { img: "samosa_seva_stop.webp", alt: "Fresh samosas at the Samosa Seva Stop stall", tag: "Samosa Seva Stop", h: "Crispy, hot, prepared with love", p: "Fresh samosas at the festival's samosa stall — golden brown triangles, prepared with devotion." },
+  { img: "pizza_stall.webp", alt: "Freshly baked vegetarian pizza on a steel tray at the festival pizza stall", tag: "Pizza Stall", h: "Hot slices for the whole family", p: "A festival favourite — freshly baked vegetarian pizza for the little ones (and the grown-ups too)." },
+  { img: "pulling_01_rope.webp", alt: "Children holding the white rope as the chariot rolls", tag: "Pull the Chariot", h: "Every family takes a turn on the rope", p: "From 7:40 PM the chariot of Lord Jagannātha rolls — every child and grown-up is welcome to take the rope." },
 ];
 
 const SCHEDULE = [
@@ -281,7 +281,7 @@ export default function KidsRathaYatra() {
         <link rel="canonical" href={EVENT.url} />
         <meta property="og:title" content="Kids Ratha Yātrā 2026 — ISKM Singapore" />
         <meta property="og:description" content="Little Hands, Big Service for Lord Jagannātha. Saturday 27 June 2026 · 6:30–9:15 PM · ISKM Singapore." />
-        <meta property="og:image" content={`${IMG}/hero_01_kids_holding_deities.jpg`} />
+        <meta property="og:image" content={`${IMG}/hero_01_kids_holding_deities.webp`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={EVENT.url} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -450,7 +450,7 @@ export default function KidsRathaYatra() {
             <div className="av-frame-2"></div>
             <div className="av-frame"></div>
             <div className="av-photo">
-              <img src={`${IMG}/hero_02_mom_boy_chariot.jpg`} alt="A mother holding her young child with the small chariot of Lord Jagannātha" loading="lazy" />
+              <img src={`${IMG}/hero_02_mom_boy_chariot.webp`} alt="A mother holding her young child with the small chariot of Lord Jagannātha" loading="lazy" />
             </div>
             <div className="av-caption">Little Hands, Big Service for Lord Jagannātha<br /><span className="av-caption-sub">KIDS RATHA YĀTRĀ 2025</span></div>
           </div>
