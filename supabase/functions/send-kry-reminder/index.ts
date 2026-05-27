@@ -125,6 +125,7 @@ const T14_HTML = `${EMAIL_HEAD}
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9efe2;border-radius:12px;">
           <tr><td style="padding:20px 24px;">
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:30 PM.</strong> &#256;rati in the temple hall</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:00 PM.</strong> Deities brought down to the chariot</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:10 PM.</strong> Speech, dance and welcome by the children</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:25 PM.</strong> &#256;rati, k&#x12B;rtana &amp; coconut breaking</p>
@@ -198,7 +199,7 @@ const T1_HTML = `${EMAIL_HEAD}
 
       <tr><td align="center" style="padding:16px 32px 8px;" class="p-mobile">
         <h1 class="hero-title" style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:600;color:#1e3a6e;line-height:1.15;">
-          Tomorrow at 7 PM &#127802;
+          Tomorrow at 6:30 PM &#127802;
         </h1>
       </td></tr>
 
@@ -207,7 +208,7 @@ const T1_HTML = `${EMAIL_HEAD}
           {{first_name}}, tomorrow is the day.
         </p>
         <p style="margin:0;font-size:16px;line-height:1.7;color:#444444;">
-          Saturday, 27 June, doors 6:45 PM. Chariots roll at 7:40 PM.<br>
+          Saturday, 27 June, doors 6:15 PM. &#256;rati at 6:30 PM, chariots roll at 7:40 PM.<br>
           ISKM Singapore, 9 Lorong 29 Geylang, Singapore 388062
         </p>
       </td></tr>
@@ -272,7 +273,7 @@ const TEMPLATES: Record<string, { html: string; subject: (name: string) => strin
   },
   "t-1": {
     html: T1_HTML,
-    subject: (_name: string) => "Tomorrow at 7 PM, Kids Ratha Y\u0101tr\u0101 2026 at ISKM Singapore \u23F0",
+    subject: (_name: string) => "Tomorrow at 6:30 PM, Kids Ratha Y\u0101tr\u0101 2026 at ISKM Singapore \u23F0",
     trackPrefix: "kry-t1-",
     sentColumn: "t1_reminder_sent",
     label: "kry-t1",
