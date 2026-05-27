@@ -144,7 +144,7 @@ const ATTRACTIONS = [
   { img: "prasadam_01_thali.jpg", alt: "Sanctified vegetarian prasādam thali with multiple offerings", tag: "Mahāprasādam Mercy Corner", h: "Sweet mercy for the whole family", p: "Cupcakes, sweet treats, snacks and more — taste the Lord's mercy through specially prepared prasādam." },
   { img: "samosa_seva_stop.jpg", alt: "Fresh samosas at the Samosa Seva Stop stall", tag: "Samosa Seva Stop", h: "Crispy, hot, prepared with love", p: "Fresh samosas at the festival's samosa stall — golden brown triangles, prepared with devotion." },
   { img: "pizza_stall.jpg", alt: "Freshly baked vegetarian pizza on a steel tray at the festival pizza stall", tag: "Pizza Stall", h: "Hot slices for the whole family", p: "A festival favourite — freshly baked vegetarian pizza for the little ones (and the grown-ups too)." },
-  { img: "pulling_01_rope.jpg", alt: "Children holding the white rope as the chariot rolls", tag: "Pull the Chariot", h: "Every family takes a turn on the rope", p: "From 6:50 PM the chariot of Lord Jagannātha rolls — every child and grown-up is welcome to take the rope." },
+  { img: "pulling_01_rope.jpg", alt: "Children holding the white rope as the chariot rolls", tag: "Pull the Chariot", h: "Every family takes a turn on the rope", p: "From 7:40 PM the chariot of Lord Jagannātha rolls — every child and grown-up is welcome to take the rope." },
 ];
 
 const SCHEDULE = [
