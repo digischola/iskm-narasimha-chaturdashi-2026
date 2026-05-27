@@ -5,6 +5,7 @@ import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
 import { supabase } from "@/integrations/supabase/client";
 import RathaYatraWheel from "@/components/RathaYatraWheel";
 import "./RathaYatra.css";
+import SiteFooter from "@/components/SiteFooter";
 
 const EVENT = {
   slug: "ratha_yatra_2026",
