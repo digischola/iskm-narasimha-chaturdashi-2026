@@ -2,8 +2,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.101.1";
 import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.101.1/cors";
 
 const EVENT_URL = "https://events.srikrishnamandir.org/kids-ratha-yatra-2026";
-const CALENDAR_URL = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Kids+Ratha+Y%C4%81tr%C4%81+2026&dates=20260627T100000Z/20260627T130000Z&details=Children-led+k%C4%ABrtana%2C+joyful+stalls%2C+the+chariot+procession+and+free+pras%C4%81dam+for+the+whole+family.%0A%0AVenue%3A+Singapore%0A%0AMore+info%3A+https%3A%2F%2Fevents.srikrishnamandir.org%2Fkids-ratha-yatra-2026&location=ISKM+Capark%2C+Singapore";
-const WA_SHARE = "https://wa.me/?text=Join%20us%20for%20Kids%20Ratha%20Y%C4%81tr%C4%81%202026%20at%20ISKM%20Capark%20on%20Saturday%2027%20June%2C%206%20PM.%20Free%20entry%2C%20free%20Pras%C4%81dam%20Feast%2C%20all%20welcome.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fkids-ratha-yatra-2026";
+const CALENDAR_URL = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Kids+Ratha+Y%C4%81tr%C4%81+2026&dates=20260627T110000Z/20260627T131500Z&details=Children-led+k%C4%ABrtana%2C+joyful+stalls%2C+the+chariot+procession+and+free+pras%C4%81dam+for+the+whole+family.%0A%0AVenue%3A+ISKM+Singapore%2C+9+Lorong+29+Geylang%2C+Singapore+388062%0A%0AMore+info%3A+https%3A%2F%2Fevents.srikrishnamandir.org%2Fkids-ratha-yatra-2026&location=ISKM+Singapore%2C+9+Lorong+29+Geylang%2C+Singapore+388062";
+const WA_SHARE = "https://wa.me/?text=Join%20us%20for%20Kids%20Ratha%20Y%C4%81tr%C4%81%202026%20at%20ISKM%20Singapore%20on%20Saturday%2027%20June%2C%207%20PM.%20Free%20entry%2C%20free%20Pras%C4%81dam%20Feast%2C%20all%20welcome.%20Register%3A%20https%3A%2F%2Fevents.srikrishnamandir.org%2Fkids-ratha-yatra-2026";
 const TG_SHARE = "https://t.me/share/url?url=https%3A%2F%2Fevents.srikrishnamandir.org%2Fkids-ratha-yatra-2026&text=Join%20us%20for%20Kids%20Ratha%20Y%C4%81tr%C4%81%202026";
 
 const CONFIRMATION_HTML = `<!DOCTYPE html>
@@ -38,7 +38,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 <body style="margin:0;padding:0;background:#fdf5ed;font-family:'Source Sans Pro',-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:#333333;">
 
 <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#fdf5ed;">
-  Saturday, 27 June at ISKM Capark. Free entry, free pras&#x101;dam for the whole family.
+  Saturday, 27 June at ISKM Singapore. Free entry, free pras&#x101;dam for the whole family.
   &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj; &nbsp;&#847; &zwnj;
 </div>
 
@@ -77,10 +77,10 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
           <tr><td align="center" style="padding:28px 24px;color:#ffffff;">
             <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Save the Date</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:32px;font-weight:700;color:#ffffff;line-height:1.2;margin-bottom:6px;">Saturday, 27 June 2026</div>
-            <div style="font-size:16px;color:#f8a4c0;font-weight:600;margin-bottom:20px;">6:00 PM to 9:00 PM</div>
+            <div style="font-size:16px;color:#f8a4c0;font-weight:600;margin-bottom:20px;">7:00 PM &ndash; 9:15 PM</div>
             <div style="font-size:14px;color:#ffffff;opacity:0.85;line-height:1.5;">
-              ISKM Capark<br>
-              Singapore
+              ISKM Singapore<br>
+              9 Lorong 29 Geylang, Singapore 388062
             </div>
           </td></tr>
         </table>
@@ -265,7 +265,7 @@ Deno.serve(async (req) => {
 
     html = addClickTracking(html, trackBase, registration_id, "kry-confirm", email);
 
-    const text = `Thank you, ${firstName}. Your seat is reserved for Kids Ratha Yatra 2026.\n\nSaturday, 27 June 2026\n6:00 PM to 9:00 PM\nISKM Capark, Singapore\n\nChildren-led kirtana, joyful stalls, the chariot procession, and free prasadam for the whole family.\n\nWe'll send you two short reminders as the date gets closer.\n\nTell your family and friends. Entry is free, all are welcome.\n\nView event page: ${EVENT_URL}\n\nUnsubscribe: ${unsubscribeUrl}`;
+    const text = `Thank you, ${firstName}. Your seat is reserved for Kids Ratha Yatra 2026.\n\nSaturday, 27 June 2026\n7:00 PM - 9:15 PM\nISKM Singapore, 9 Lorong 29 Geylang, Singapore 388062\n\nChildren-led kirtana, joyful stalls, the chariot procession, and free prasadam for the whole family.\n\nWe'll send you two short reminders as the date gets closer.\n\nTell your family and friends. Entry is free, all are welcome.\n\nView event page: ${EVENT_URL}\n\nUnsubscribe: ${unsubscribeUrl}`;
 
     const messageId = "kry-confirm-" + registration_id;
 

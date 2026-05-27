@@ -113,7 +113,7 @@ const T14_HTML = `${EMAIL_HEAD}
 
       <tr><td style="padding:16px 32px 24px;" class="p-mobile">
         <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#444444;">
-          {{first_name}}, two weeks until Saturday, 27 June at ISKM Capark.
+          {{first_name}}, two weeks until Saturday, 27 June at ISKM Singapore.
         </p>
       </td></tr>
 
@@ -125,10 +125,12 @@ const T14_HTML = `${EMAIL_HEAD}
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9efe2;border-radius:12px;">
           <tr><td style="padding:20px 24px;">
-            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:00 PM.</strong> Guest of Honour and Temple President's address</p>
-            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:00 PM.</strong> The children's stalls open and k&#x12B;rtana begins</p>
-            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:00 PM.</strong> The chariot procession begins. This is the peak moment. &#10024;</p>
-            <p style="margin:0;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">9:00 PM.</strong> Final &#x101;rati and deities depart</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:00 PM.</strong> Deities brought down to the chariot</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:10 PM.</strong> Speech, dance and welcome by the children</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:25 PM.</strong> &#256;rati, k&#x12B;rtana &amp; coconut breaking</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:40 PM.</strong> The chariot procession begins. This is the peak moment. &#10024;</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">8:45 PM.</strong> Final &#x101;rati and group photos</p>
+            <p style="margin:0;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">9:15 PM.</strong> Pras&#x101;dam feast begins &#127858;</p>
           </td></tr>
         </table>
       </td></tr>
@@ -196,7 +198,7 @@ const T1_HTML = `${EMAIL_HEAD}
 
       <tr><td align="center" style="padding:16px 32px 8px;" class="p-mobile">
         <h1 class="hero-title" style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:600;color:#1e3a6e;line-height:1.15;">
-          Tomorrow at 6 PM &#127802;
+          Tomorrow at 7 PM &#127802;
         </h1>
       </td></tr>
 
@@ -205,8 +207,8 @@ const T1_HTML = `${EMAIL_HEAD}
           {{first_name}}, tomorrow is the day.
         </p>
         <p style="margin:0;font-size:16px;line-height:1.7;color:#444444;">
-          Saturday, 27 June, doors 6:00 PM. Chariots roll at 6:00 PM.<br>
-          ISKM Capark, Singapore
+          Saturday, 27 June, doors 6:45 PM. Chariots roll at 7:40 PM.<br>
+          ISKM Singapore, 9 Lorong 29 Geylang, Singapore 388062
         </p>
       </td></tr>
 
@@ -216,7 +218,7 @@ const T1_HTML = `${EMAIL_HEAD}
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9efe2;border-radius:12px;">
           <tr><td style="padding:20px 24px;">
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; Take public transport. 14,000+ expected.</p>
-            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">MRT:</strong> ISKM Capark, Singapore — directions on the event page &#128646;</p>
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">Venue:</strong> ISKM Singapore, 9 Lorong 29 Geylang &mdash; directions on the event page &#128646;</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">Buses</strong> 96, 175, 184, 282, 285 stop nearby &#128652;</p>
             <p style="margin:0;font-size:15px;line-height:1.7;color:#444;">&#183; On-site carpark fills early. Public transport is faster.</p>
           </td></tr>
@@ -238,7 +240,7 @@ const T1_HTML = `${EMAIL_HEAD}
       <!-- LATE NOTE -->
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
         <p style="margin:0;font-size:15px;line-height:1.7;color:#555;">
-          If you're running late, the festival runs until 9:00 PM. The free pras&#x101;dam for the whole family is served throughout. &#127858;
+          If you're running late, the festival runs until 9:15 PM and pras&#x101;dam is served from 9:15 PM onwards. The free pras&#x101;dam feast is for the whole family. &#127858;
         </p>
       </td></tr>
 
@@ -270,7 +272,7 @@ const TEMPLATES: Record<string, { html: string; subject: (name: string) => strin
   },
   "t-1": {
     html: T1_HTML,
-    subject: (_name: string) => "Tomorrow at 6 PM, Kids Ratha Y\u0101tr\u0101 2026 at ISKM Capark \u23F0",
+    subject: (_name: string) => "Tomorrow at 7 PM, Kids Ratha Y\u0101tr\u0101 2026 at ISKM Singapore \u23F0",
     trackPrefix: "kry-t1-",
     sentColumn: "t1_reminder_sent",
     label: "kry-t1",
