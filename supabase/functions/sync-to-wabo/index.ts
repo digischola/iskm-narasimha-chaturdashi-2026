@@ -112,6 +112,11 @@ serve(async (req) => {
       [event_slug]: "yes",
     };
 
+    // Wabo expects `attendees` as a top-level field, not nested in extras.
+    if (attendees !== undefined && attendees !== null && String(attendees).trim() !== "") {
+      payload.attendees = String(attendees);
+    }
+
     // Spread extras using only whitelisted keys
     if (extras && typeof extras === "object") {
       for (const [k, v] of Object.entries(extras)) {

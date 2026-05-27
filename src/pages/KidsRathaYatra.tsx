@@ -270,7 +270,7 @@ export default function KidsRathaYatra() {
   };
 
   const calUrl =
-    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Kids+Ratha+Y%C4%81tr%C4%81+2026+at+ISKM+Singapore&dates=20260627T100000Z/20260627T130000Z&details=Kids+Ratha+Y%C4%81tr%C4%81+2026+at+ISKM+Capark.+Free+entry%2C+pras%C4%81dam+and+more.&location=ISKM+Capark%2C+Singapore";
+    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Kids+Ratha+Y%C4%81tr%C4%81+2026+at+ISKM+Singapore&dates=20260627T110000Z/20260627T131500Z&details=Kids+Ratha+Y%C4%81tr%C4%81+2026+at+ISKM+Singapore.+Free+entry%2C+pras%C4%81dam+and+more.&location=ISKM+Singapore%2C+9+Lorong+29+Geylang%2C+Singapore+388062";
 
   return (
     <div className="kry-page">
