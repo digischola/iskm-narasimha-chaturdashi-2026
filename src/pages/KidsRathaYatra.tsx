@@ -148,12 +148,11 @@ const ATTRACTIONS = [
 ];
 
 const SCHEDULE = [
-  { time: "6:00 – 6:10 PM", h: "Assembling kids and parents", d: "Families gather on the 1st floor of ISKM Singapore.", icon: <i className="fas fa-users"></i> },
-  { time: "6:10 – 6:20 PM", h: "Welcome speech by HG Visvambhar Prabhu", d: "A short opening address to set the spirit of the evening.", icon: <i className="fas fa-microphone"></i> },
-  { time: "6:20 – 6:30 PM", h: <>Deities brought down to the chariot <span className="tl-tag">Conch Call</span></>, d: "Samarth blows the conch shell as Lord Jagannātha, Baladev and Subhadrā are placed on the chariot.", icon: <i className="fas fa-shield-alt"></i>, hl: true },
-  { time: "6:30 – 6:35 PM", h: <>Dance by Kṛṣṇa Bhaktins <span className="tl-tag">Performance</span></>, d: "Young Kṛṣṇa Bhaktins offer a devotional dance.", icon: <i className="fas fa-music"></i>, hl: true },
-  { time: "6:35 – 6:50 PM", h: <>Ārati, kīrtana, coconut breaking &amp; sweeping by HG Mahāprabhu</>, d: "Lamp offering, congregational chanting, breaking of the coconut and ceremonial sweeping of the chariot path.", icon: <i className="fas fa-fire"></i> },
-  { time: "6:50 – 8:45 PM", h: <>Pulling of the chariot <span className="tl-tag">Peak Moment</span></>, d: "Nearly two hours of joyful chariot-pulling, kīrtana and stalls. Every family takes a turn on the rope.", icon: <i className="fas fa-truck"></i>, hl: true },
+  { time: "7:00 – 7:10 PM", h: <>Deities brought down to the chariot <span className="tl-tag">Conch Call</span></>, d: "Lord Jagannātha, Baladev and Subhadrā are placed on the chariot.", icon: <i className="fas fa-shield-alt"></i>, hl: true },
+  { time: "7:10 – 7:20 PM", h: "Speech by HG Visvambhar Prabhu", d: "A short opening address to set the spirit of the evening.", icon: <i className="fas fa-microphone"></i> },
+  { time: "7:20 – 7:25 PM", h: <>Dance by Kṛṣṇa Class Bhaktins <span className="tl-tag">Performance</span></>, d: "Young Kṛṣṇa Class Bhaktins offer a devotional dance.", icon: <i className="fas fa-music"></i>, hl: true },
+  { time: "7:25 – 7:40 PM", h: <>Ārati, kīrtana, coconut breaking &amp; sweeping by HG Mahāprabhu</>, d: "Lamp offering, congregational chanting, breaking of the coconut and ceremonial sweeping of the chariot path.", icon: <i className="fas fa-fire"></i> },
+  { time: "7:40 – 8:45 PM", h: <>Pulling of the chariot <span className="tl-tag">Peak Moment</span></>, d: "Over an hour of joyful chariot-pulling, kīrtana and stalls. Every family takes a turn on the rope.", icon: <i className="fas fa-truck"></i>, hl: true },
   { time: "8:45 – 8:50 PM", h: "Final ārati & group photos", d: "Closing ārati and family photographs with the chariot.", icon: <i className="fas fa-camera"></i> },
   { time: "8:50 – 9:00 PM", h: "Deities brought back up", d: "The deities return to the altar with kīrtana accompaniment.", icon: <i className="fas fa-place-of-worship"></i> },
   { time: "9:00 – 9:15 PM", h: "Cleaning & prepping for prasādam", d: "A short pause as the prasādam line is set up.", icon: <i className="fas fa-broom"></i> },
