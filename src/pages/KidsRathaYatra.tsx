@@ -610,24 +610,20 @@ export default function KidsRathaYatra() {
       </section>
 
       <footer className="kry-site-footer">
-        <div className="footer-inner">
+        <div className="footer-inner footer-inner-2col">
           <div className="footer-col">
             <img src="/images/logo.webp" alt="ISKM Singapore" width={52} height={52} />
             <p className="footer-brand">ISKM Singapore</p>
             <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">srikrishnamandir.org</a>
-          </div>
-          <div className="footer-col">
-            <h5>Quick Links</h5>
-            <a href="#about">About</a>
-            <a href="#attractions">What's On</a>
-            <a href="#schedule">Schedule</a>
-            <a href="#location">Venue</a>
-            <a href="#faq">FAQ</a>
+            <div className="footer-social" style={{ marginTop: "1rem", display: "flex", gap: "1rem" }}>
+              <a href="https://www.facebook.com/iskm.sg" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i className="fab fa-facebook" /></a>
+              <a href="https://www.youtube.com/@iskmtv" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i className="fab fa-youtube" /></a>
+              <a href="https://www.instagram.com/iskm.sg/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i className="fab fa-instagram" /></a>
+            </div>
           </div>
           <div className="footer-col">
             <h5>Contact</h5>
             <p>No.9 Lorong 29 Geylang<br />#03-02, Singapore 388065</p>
-            <p>+65 6250 2280</p>
             <a href="mailto:contact@srikrishnamandir.org">contact@srikrishnamandir.org</a>
             <a href="https://wa.me/6562502280" target="_blank" rel="noopener noreferrer">WhatsApp us →</a>
           </div>
