@@ -77,7 +77,7 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
           <tr><td align="center" style="padding:28px 24px;color:#ffffff;">
             <div style="font-size:12px;font-weight:700;color:#f4c96b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Save the Date</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:32px;font-weight:700;color:#ffffff;line-height:1.2;margin-bottom:6px;">Saturday, 27 June 2026</div>
-            <div style="font-size:16px;color:#f8a4c0;font-weight:600;margin-bottom:20px;">6:30 PM 7:00 PM &ndash; 9:15 PMndash; 9:15 PM</div>
+            <div style="font-size:16px;color:#f8a4c0;font-weight:600;margin-bottom:20px;">6:30 PM &ndash; 9:15 PM</div>
             <div style="font-size:14px;color:#ffffff;opacity:0.85;line-height:1.5;">
               ISKM Singapore<br>
               9 Lorong 29 Geylang, Singapore 388062
