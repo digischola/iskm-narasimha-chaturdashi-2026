@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { trackPixelEvent, genEventId, trackCapiEvent } from "@/lib/meta-pixel";
 import { supabase } from "@/integrations/supabase/client";
 import "./KidsRathaYatra.css";
+import SiteFooter from "@/components/SiteFooter";
 
 const EVENT = {
   slug: "kids_ratha_yatra_2026",
