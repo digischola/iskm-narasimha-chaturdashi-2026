@@ -199,7 +199,7 @@ const T1_HTML = `${EMAIL_HEAD}
 
       <tr><td align="center" style="padding:16px 32px 8px;" class="p-mobile">
         <h1 class="hero-title" style="margin:0;font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:600;color:#1e3a6e;line-height:1.15;">
-          Tomorrow at 7 PM &#127802;
+          Tomorrow at 6:30 PM &#127802;
         </h1>
       </td></tr>
 
@@ -208,7 +208,7 @@ const T1_HTML = `${EMAIL_HEAD}
           {{first_name}}, tomorrow is the day.
         </p>
         <p style="margin:0;font-size:16px;line-height:1.7;color:#444444;">
-          Saturday, 27 June, doors 6:45 PM. Chariots roll at 7:40 PM.<br>
+          Saturday, 27 June, doors 6:15 PM. &#256;rati at 6:30 PM, chariots roll at 7:40 PM.<br>
           ISKM Singapore, 9 Lorong 29 Geylang, Singapore 388062
         </p>
       </td></tr>
