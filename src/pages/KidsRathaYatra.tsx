@@ -315,7 +315,7 @@ export default function KidsRathaYatra() {
         <div className="hero-inner">
           <div className="hero-eyebrow">ISKM Singapore Presents</div>
           <h1>Kids Ratha Yātrā <em>2026</em></h1>
-          <p className="hero-tagline">"Little Hands, Big Service for Lord Jagannātha"</p>
+          <p className="hero-tagline">Little Hands, Big Service for Lord Jagannātha</p>
           
 
           <div className="hero-meta hero-meta-row">
@@ -452,7 +452,7 @@ export default function KidsRathaYatra() {
             <div className="av-photo">
               <img src={`${IMG}/hero_02_mom_boy_chariot.jpg`} alt="A mother holding her young child with the small chariot of Lord Jagannātha" loading="lazy" />
             </div>
-            <div className="av-caption">"Little Hands, Big Service for Lord Jagannātha"<span className="av-caption-sub">Kids Ratha Yātrā 2025</span></div>
+            <div className="av-caption">Little Hands, Big Service for Lord Jagannātha<span className="av-caption-sub">Kids Ratha Yātrā 2025</span></div>
           </div>
         </div>
       </section>
