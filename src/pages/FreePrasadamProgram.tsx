@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import "./FreePrasadamProgram.css";
+import SiteFooter from "@/components/SiteFooter";
 
 const IMG = "/images/Free-Prasadam-Program";
 const WA_NUMBER = "6562502280";
@@ -853,27 +854,8 @@ export default function FreePrasadamProgram() {
       </section>
 
       {/* Footer */}
-      <footer>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", maxWidth: 1100, margin: "0 auto", padding: "2rem 1rem", textAlign: "left" }}>
-          <div>
-            <img src="/images/logo.webp" alt="ISKM" width={52} height={52} />
-            <p style={{ fontWeight: 600, margin: "0.5rem 0" }}>ISKM Singapore</p>
-            <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">srikrishnamandir.org</a>
-            <div style={{ marginTop: "1rem", display: "flex", gap: "1rem", fontSize: "1.25rem" }}>
-              <a href="https://www.facebook.com/iskm.sg" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i className="fab fa-facebook" /></a>
-              <a href="https://www.youtube.com/@iskmtv" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i className="fab fa-youtube" /></a>
-              <a href="https://www.instagram.com/iskm.sg/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i className="fab fa-instagram" /></a>
-            </div>
-          </div>
-          <div>
-            <h5 style={{ margin: "0 0 0.5rem", fontWeight: 600 }}>Contact</h5>
-            <p style={{ margin: "0 0 0.5rem" }}>No.9 Lorong 29 Geylang<br />#03-02, Singapore 388065</p>
-            <a href="mailto:contact@srikrishnamandir.org" style={{ display: "block" }}>contact@srikrishnamandir.org</a>
-            <a href="https://wa.me/6562502280" target="_blank" rel="noopener noreferrer" style={{ display: "block" }}>WhatsApp us →</a>
-          </div>
-        </div>
-        <p style={{ textAlign: "center", padding: "1rem", opacity: 0.7 }}>&copy; 2026 International Sri Krishna Mandir</p>
-      </footer>
+      <SiteFooter />
+
 
       {/* Mobile Sticky */}
       <div className="mobile-sticky">
