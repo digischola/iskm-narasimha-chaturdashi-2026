@@ -148,6 +148,7 @@ const ATTRACTIONS = [
 ];
 
 const SCHEDULE = [
+  { time: "6:30 – 7:00 PM", h: <>Ārati in the temple hall <span className="tl-tag">Opening</span></>, d: "Evening ārati and darśana of Their Lordships before the procession begins.", icon: <i className="fas fa-fire"></i>, hl: true },
   { time: "7:00 – 7:10 PM", h: <>Deities brought down to the chariot <span className="tl-tag">Conch Call</span></>, d: "Lord Jagannātha, Baladev and Subhadrā are placed on the chariot.", icon: <i className="fas fa-shield-alt"></i>, hl: true },
   { time: "7:10 – 7:20 PM", h: "Speech by HG Visvambhar Prabhu", d: "A short opening address to set the spirit of the evening.", icon: <i className="fas fa-microphone"></i> },
   { time: "7:20 – 7:25 PM", h: <>Dance by Kṛṣṇa Class Bhaktins <span className="tl-tag">Performance</span></>, d: "Young Kṛṣṇa Class Bhaktins offer a devotional dance.", icon: <i className="fas fa-music"></i>, hl: true },
