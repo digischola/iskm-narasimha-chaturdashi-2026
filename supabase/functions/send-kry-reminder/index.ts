@@ -273,7 +273,7 @@ const TEMPLATES: Record<string, { html: string; subject: (name: string) => strin
   },
   "t-1": {
     html: T1_HTML,
-    subject: (_name: string) => "Tomorrow at 7 PM, Kids Ratha Y\u0101tr\u0101 2026 at ISKM Singapore \u23F0",
+    subject: (_name: string) => "Tomorrow at 6:30 PM, Kids Ratha Y\u0101tr\u0101 2026 at ISKM Singapore \u23F0",
     trackPrefix: "kry-t1-",
     sentColumn: "t1_reminder_sent",
     label: "kry-t1",
