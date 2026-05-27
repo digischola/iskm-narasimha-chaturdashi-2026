@@ -271,16 +271,16 @@ export default function KidsRathaYatra() {
   };
 
   const calUrl =
-    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Kids+Ratha+Y%C4%81tr%C4%81+2026+at+ISKM+Singapore&dates=20260627T110000Z/20260627T131500Z&details=Kids+Ratha+Y%C4%81tr%C4%81+2026+at+ISKM+Singapore.+Free+entry%2C+pras%C4%81dam+and+more.&location=ISKM+Singapore%2C+9+Lorong+29+Geylang%2C+Singapore+388062";
+    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Kids+Ratha+Y%C4%81tr%C4%81+2026+at+ISKM+Singapore&dates=20260627T103000Z/20260627T131500Z&details=Kids+Ratha+Y%C4%81tr%C4%81+2026+at+ISKM+Singapore.+Free+entry%2C+pras%C4%81dam+and+more.&location=ISKM+Singapore%2C+9+Lorong+29+Geylang%2C+Singapore+388062";
 
   return (
     <div className="kry-page">
       <Helmet>
         <title>Kids Ratha Yātrā 2026 — ISKM Singapore</title>
-        <meta name="description" content="Little Hands, Big Service for Lord Jagannātha. A joyful kids-led Ratha Yātrā celebration at ISKM Singapore — Saturday 27 June 2026, 7:00 PM – 9:15 PM. Free entry, free prasādam, all are welcome." />
+        <meta name="description" content="Little Hands, Big Service for Lord Jagannātha. A joyful kids-led Ratha Yātrā celebration at ISKM Singapore — Saturday 27 June 2026, 6:30 PM – 9:15 PM. Free entry, free prasādam, all are welcome." />
         <link rel="canonical" href={EVENT.url} />
         <meta property="og:title" content="Kids Ratha Yātrā 2026 — ISKM Singapore" />
-        <meta property="og:description" content="Little Hands, Big Service for Lord Jagannātha. Saturday 27 June 2026 · 7:00–9:15 PM · ISKM Singapore." />
+        <meta property="og:description" content="Little Hands, Big Service for Lord Jagannātha. Saturday 27 June 2026 · 6:30–9:15 PM · ISKM Singapore." />
         <meta property="og:image" content={`${IMG}/hero_01_kids_holding_deities.jpg`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={EVENT.url} />
@@ -320,14 +320,14 @@ export default function KidsRathaYatra() {
 
           <div className="hero-meta hero-meta-row">
             <div className="hero-meta-item"><span className="hero-meta-icon"><i className="fas fa-calendar"></i></span><span>Saturday, 27 June 2026</span></div>
-            <div className="hero-meta-item"><span className="hero-meta-icon"><i className="fas fa-clock"></i></span><span>7:00 PM – 9:15 PM</span></div>
+            <div className="hero-meta-item"><span className="hero-meta-icon"><i className="fas fa-clock"></i></span><span>6:30 PM – 9:15 PM</span></div>
             <div className="hero-meta-item"><span className="hero-meta-icon"><i className="fas fa-map-marker-alt"></i></span><span>ISKM Singapore</span></div>
           </div>
 
 
           <div className="hero-countdown">
             <span className="hc-label">The chariot rolls in</span>
-            <span className="hc-event">Saturday · 27 June 2026 · 7:00 PM SGT</span>
+            <span className="hc-event">Saturday · 27 June 2026 · 6:30 PM SGT</span>
             {cd.done ? (
               <div style={{ color: "var(--gold)", fontSize: 18, fontWeight: 600, padding: "18px 0", fontFamily: "var(--font-display)", fontStyle: "italic" }}>The celebration is happening now! 🎉</div>
             ) : (
@@ -421,7 +421,7 @@ export default function KidsRathaYatra() {
               <h3>You're registered!</h3>
               <p>We've saved your family's spots for Kids Ratha Yātrā 2026. A confirmation email is on the way.</p>
               <div className="confirm-detail"><i className="fas fa-calendar"></i> Saturday, 27 June 2026</div>
-              <div className="confirm-detail"><i className="fas fa-clock"></i> 7:00 PM – 9:15 PM</div>
+              <div className="confirm-detail"><i className="fas fa-clock"></i> 6:30 PM – 9:15 PM</div>
             </div>
           )}
         </div>
@@ -461,7 +461,7 @@ export default function KidsRathaYatra() {
         <div className="section-inner">
           <div className="section-head">
             <div className="eyebrow">Programme Schedule</div>
-            <h2>Saturday, 27 June 2026 · <em>7:00 PM – 9:15 PM</em></h2>
+            <h2>Saturday, 27 June 2026 · <em>6:30 PM – 9:15 PM</em></h2>
             <div className="gold-divider"></div>
             <p>All timings are approximate (SGT).</p>
           </div>
@@ -577,8 +577,8 @@ export default function KidsRathaYatra() {
           <div className="loc-info">
             <p style={{ fontSize: 15, lineHeight: 1.7, color: "var(--text-dark)", margin: "0 0 26px" }}>International Sri Krishna Mandir's community hall — a warm, welcoming space for families and children. Easy public-transport access from Aljunied and Paya Lebar MRT.</p>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-map-marker-alt"></i></span><span><strong>ISKM Singapore</strong>Geylang</span></div>
-            <div className="loc-detail"><span className="loc-ic"><i className="fas fa-calendar"></i></span><span><strong>Saturday, 27 June 2026</strong>Doors open 6:45 PM</span></div>
-            <div className="loc-detail"><span className="loc-ic"><i className="fas fa-clock"></i></span><span><strong>7:00 PM – 9:15 PM</strong>Prasādam feast from 9:15 PM</span></div>
+            <div className="loc-detail"><span className="loc-ic"><i className="fas fa-calendar"></i></span><span><strong>Saturday, 27 June 2026</strong>Doors open 6:15 PM</span></div>
+            <div className="loc-detail"><span className="loc-ic"><i className="fas fa-clock"></i></span><span><strong>6:30 PM – 9:15 PM</strong>Prasādam feast from 9:15 PM</span></div>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-phone"></i></span><span><strong>+(65) 6250 2280</strong>Tap to call</span></div>
             <div className="loc-detail"><span className="loc-ic"><i className="fas fa-train"></i></span><span><strong>Nearest MRT</strong>Aljunied (EW9) · Paya Lebar (CC9/EW9)</span></div>
             <div className="loc-actions">
@@ -605,7 +605,7 @@ export default function KidsRathaYatra() {
 
       <section className="final-cta">
         <h2>Bring the family — encourage <em>the children</em></h2>
-        <p className="final-cta-meta">Saturday, 27 June 2026&nbsp;&nbsp;·&nbsp;&nbsp;7:00 PM SGT&nbsp;&nbsp;·&nbsp;&nbsp;ISKM Singapore</p>
+        <p className="final-cta-meta">Saturday, 27 June 2026&nbsp;&nbsp;·&nbsp;&nbsp;6:30 PM SGT&nbsp;&nbsp;·&nbsp;&nbsp;ISKM Singapore</p>
         <a href="#register" className="btn-primary">Register now — it's free</a>
       </section>
 
