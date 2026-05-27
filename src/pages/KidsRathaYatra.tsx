@@ -9,10 +9,10 @@ const EVENT = {
   slug: "kids_ratha_yatra_2026",
   title: "Kids Ratha Yātrā 2026",
   date: "Saturday, 27 June 2026",
-  time: "7:00 PM – 9:15 PM",
+  time: "6:30 PM – 9:15 PM",
   venue: "ISKM Singapore",
   venueAddress: "ISKM Singapore",
-  countdownIso: "2026-06-27T19:00:00+08:00",
+  countdownIso: "2026-06-27T18:30:00+08:00",
   url: "https://events.srikrishnamandir.org/kids-ratha-yatra-2026",
   pixelContent: "Kids Ratha Yatra 2026",
 };
