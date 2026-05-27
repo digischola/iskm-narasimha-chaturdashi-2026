@@ -463,7 +463,7 @@ export default function KidsRathaYatra() {
             <div className="eyebrow">Programme Schedule</div>
             <h2>Saturday, 27 June 2026 · <em>6:30 PM – 9:15 PM</em></h2>
             <div className="gold-divider"></div>
-            <p>All timings are approximate (SGT).</p>
+            <p>​</p>
           </div>
           <div className="timeline-wrap">
             <div className="tl" id="kry-timeline">
