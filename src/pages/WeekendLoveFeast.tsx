@@ -1059,29 +1059,8 @@ export default function WeekendLoveFeast() {
       </div>
 
       {/* ═══ FOOTER ═══ */}
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-inner" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", textAlign: "left", padding: "2rem 0" }}>
-            <div>
-              <img src={`${IMG}/logo.webp`} alt="ISKM Singapore Logo" width="52" height="52" />
-              <p style={{ fontWeight: 600, margin: "0.5rem 0" }}>ISKM Singapore</p>
-              <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer">srikrishnamandir.org</a>
-              <div style={{ marginTop: "1rem", display: "flex", gap: "1rem", fontSize: "1.25rem" }}>
-                <a href="https://www.facebook.com/iskm.sg" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i className="fab fa-facebook" /></a>
-                <a href="https://www.youtube.com/@iskmtv" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i className="fab fa-youtube" /></a>
-                <a href="https://www.instagram.com/iskm.sg/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i className="fab fa-instagram" /></a>
-              </div>
-            </div>
-            <div>
-              <h5 style={{ margin: "0 0 0.5rem", fontWeight: 600 }}>Contact</h5>
-              <p style={{ margin: "0 0 0.5rem" }}>No.9 Lorong 29 Geylang<br />#03-02, Singapore 388065</p>
-              <a href="mailto:contact@srikrishnamandir.org" style={{ display: "block" }}>contact@srikrishnamandir.org</a>
-              <a href="https://wa.me/6562502280" target="_blank" rel="noopener noreferrer" style={{ display: "block" }}>WhatsApp us →</a>
-            </div>
-          </div>
-          <div className="footer-copy">© 2026 International Sri Krishna Mandir</div>
-        </div>
-      </footer>
+      <SiteFooter />
+
 
       {/* Mobile Sticky CTA */}
       <div className="mobile-sticky-cta" style={{ transform: mobileCtaVisible ? "translateY(0)" : "translateY(100%)", transition: "transform .3s ease" }}>
