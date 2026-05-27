@@ -125,6 +125,7 @@ const T14_HTML = `${EMAIL_HEAD}
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f9efe2;border-radius:12px;">
           <tr><td style="padding:20px 24px;">
+            <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">6:30 PM.</strong> &#256;rati in the temple hall</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:00 PM.</strong> Deities brought down to the chariot</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:10 PM.</strong> Speech, dance and welcome by the children</p>
             <p style="margin:0 0 10px;font-size:15px;line-height:1.7;color:#444;">&#183; <strong style="color:#1e3a6e;">7:25 PM.</strong> &#256;rati, k&#x12B;rtana &amp; coconut breaking</p>
