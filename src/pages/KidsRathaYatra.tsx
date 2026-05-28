@@ -135,7 +135,7 @@ const FAQS = [
   { q: "Will food be provided?", a: "Yes! A full vegetarian prasādam feast is offered free of charge from 9:15 PM. Throughout the evening you can also enjoy fresh samosas, cupcakes, cool drinks and other treats at the festival stalls." },
 ];
 
-const STALLS: Array<{ img: string; alt: string; tag: string; h: React.ReactNode; p: string; cls?: string; cost: "free" | "contribution" }> = [
+const STALLS: Array<{ img: string; alt: string; tag: string; h: any; p: string; cls?: string; cost: "free" | "contribution" }> = [
   { img: "fruit_fiesta.webp", alt: "A child placing fresh fruits as an offering for Lord Jagannātha", tag: "Jagannātha's Fruit Fiesta", h: "Offer fresh fruits to the Lord", p: "Every offering made with devotion brings us closer to Kṛṣṇa. Place a fruit on the altar with your child.", cost: "contribution" },
   { img: "govindas_cool_corner.webp", alt: "Cold drinks stall at Govinda's Cool Corner", tag: "Govinda's Cool Corner", h: <>The kids' <em>drinks corner</em></>, p: "Refreshing rose-milk, lemonade and devotional treats at the festival's cool corner — perfect for a Singapore evening.", cost: "contribution" },
   { img: "bhakti_hub.webp", alt: "Children with flower baskets gathered for the procession", tag: "Little Souls Bhakti Hub", h: <>Where families step into <em>Kṛṣṇa consciousness</em></>, p: "Explore devotional books, meet our children's KC class teachers, and find out how your little soul can grow in bhakti.", cls: "img-top", cost: "contribution" },
