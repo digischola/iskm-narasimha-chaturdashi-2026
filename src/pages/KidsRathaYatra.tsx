@@ -133,11 +133,11 @@ const FAQS = [
   { q: "What ages is this suitable for?", a: "All ages — but the festival is especially designed with children aged 3–13 in mind. Toddlers, teens and grandparents are all warmly welcome. The whole family can take part." },
   { q: "Is there a dress code?", a: "No strict dress code — modest, comfortable clothing is perfect. Traditional Indian attire is lovely but not required. Children participating in kīrtana or dance may wish to wear traditional dress. Please remove shoes before entering the temple hall." },
   { q: "Will food be provided?", a: "Yes! A full vegetarian prasādam feast is offered free of charge from 9:15 PM. Throughout the evening you can also enjoy fresh samosas, cupcakes, cool drinks and other treats at the festival stalls." },
-  { q: "Is there parking at the venue?", a: "Limited parking is available at ISKM Singapore. We recommend using public transport. We'll send detailed directions in your confirmation email." },
 ];
 
 const ATTRACTIONS = [
   { img: "kirtan_04_devotee.webp", alt: "Children singing kīrtana together — drum, karatāls and voices", tag: "Bhakti Beats Corner", h: <>Vibrant <em>kīrtana</em> led by little voices</>, p: "Experience the sweetness of the Holy Name as the children lead joyful kīrtana throughout the festival." },
+  { img: "pulling_01_rope.webp", alt: "Children holding the white rope as the chariot rolls", tag: "Pull the Chariot", h: "Every family takes a turn on the rope", p: "From 7:40 PM the chariot of Lord Jagannātha rolls — every child and grown-up is welcome to take the rope." },
   { img: "bhakti_hub.webp", alt: "Children with flower baskets gathered for the procession", tag: "Little Souls Bhakti Hub", h: <>Where families step into <em>Kṛṣṇa consciousness</em></>, p: "Explore devotional books, meet our children's KC class teachers, and find out how your little soul can grow in bhakti.", cls: "img-top" },
   { img: "fruit_fiesta.webp", alt: "A child placing fresh fruits as an offering for Lord Jagannātha", tag: "Jagannātha's Fruit Fiesta", h: "Offer fresh fruits to the Lord", p: "Every offering made with devotion brings us closer to Kṛṣṇa. Place a fruit on the altar with your child." },
   { img: "govindas_cool_corner.webp", alt: "Cold drinks stall at Govinda's Cool Corner", tag: "Govinda's Cool Corner", h: <>The kids' <em>drinks corner</em></>, p: "Refreshing rose-milk, lemonade and devotional treats at the festival's cool corner — perfect for a Singapore evening." },
@@ -145,13 +145,12 @@ const ATTRACTIONS = [
   { img: "prasadam_01_thali.webp", alt: "Sanctified vegetarian prasādam thali with multiple offerings", tag: "Mahāprasādam Mercy Corner", h: "Sweet mercy for the whole family", p: "Cupcakes, sweet treats, snacks and more — taste the Lord's mercy through specially prepared prasādam." },
   { img: "samosa_seva_stop.webp", alt: "Fresh samosas at the Samosa Seva Stop stall", tag: "Samosa Seva Stop", h: "Crispy, hot, prepared with love", p: "Fresh samosas at the festival's samosa stall — golden brown triangles, prepared with devotion." },
   { img: "pizza_stall.webp", alt: "Freshly baked vegetarian pizza on a steel tray at the festival pizza stall", tag: "Pizza Stall", h: "Hot slices for the whole family", p: "A festival favourite — freshly baked vegetarian pizza for the little ones (and the grown-ups too)." },
-  { img: "pulling_01_rope.webp", alt: "Children holding the white rope as the chariot rolls", tag: "Pull the Chariot", h: "Every family takes a turn on the rope", p: "From 7:40 PM the chariot of Lord Jagannātha rolls — every child and grown-up is welcome to take the rope." },
 ];
 
 const SCHEDULE = [
   { time: "6:30 – 7:00 PM", h: <>Ārati in the temple hall <span className="tl-tag">Opening</span></>, d: "Evening ārati and darśana of Their Lordships before the procession begins.", icon: <i className="fas fa-fire"></i>, hl: true },
-  { time: "7:00 – 7:10 PM", h: <>Deities brought down to the chariot <span className="tl-tag">Conch Call</span></>, d: "Lord Jagannātha, Baladev and Subhadrā are placed on the chariot.", icon: <i className="fas fa-shield-alt"></i>, hl: true },
-  { time: "7:10 – 7:20 PM", h: "Speech by HG Visvambhar Prabhu", d: "A short opening address to set the spirit of the evening.", icon: <i className="fas fa-microphone"></i> },
+  { time: "7:00 – 7:10 PM", h: "Speech by HG Visvambhar Prabhu", d: "A short opening address to set the spirit of the evening.", icon: <i className="fas fa-microphone"></i> },
+  { time: "7:10 – 7:20 PM", h: <>Deities brought down to the chariot <span className="tl-tag">Conch Call</span></>, d: "Lord Jagannātha, Baladev and Subhadrā are placed on the chariot.", icon: <i className="fas fa-shield-alt"></i>, hl: true },
   { time: "7:20 – 7:25 PM", h: <>Dance by Kṛṣṇa Class Bhaktins <span className="tl-tag">Performance</span></>, d: "Young Kṛṣṇa Class Bhaktins offer a devotional dance.", icon: <i className="fas fa-music"></i>, hl: true },
   { time: "7:25 – 7:40 PM", h: <>Ārati, kīrtana, coconut breaking &amp; sweeping by HG Mahāprabhu</>, d: "Lamp offering, congregational chanting, breaking of the coconut and ceremonial sweeping of the chariot path.", icon: <i className="fas fa-fire"></i> },
   { time: "7:40 – 8:45 PM", h: <>Pulling of the chariot <span className="tl-tag">Peak Moment</span></>, d: "Over an hour of joyful chariot-pulling, kīrtana and stalls. Every family takes a turn on the rope.", icon: <i className="fas fa-truck"></i>, hl: true },
