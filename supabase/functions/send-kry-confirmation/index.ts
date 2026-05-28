@@ -268,7 +268,7 @@ Deno.serve(async (req) => {
 
     html = addClickTracking(html, trackBase, registration_id, "kry-confirm", email);
 
-    const text = `Thank you, ${firstName}. Your seat is reserved for Kids Ratha Yatra 2026.\n\nSaturday, 27 June 2026\n6:30 PM - 9:15 PM\nISKM Singapore, 9 Lorong 29 Geylang, Singapore 388062\n\nChildren-led kirtana, joyful stalls, the chariot procession, and free prasadam for the whole family.\n\nWe'll send you two short reminders as the date gets closer.\n\nTell your family and friends. Entry is free, all are welcome.\n\nView event page: ${EVENT_URL}\n\nUnsubscribe: ${unsubscribeUrl}`;
+    const text = `Thank you, ${firstName}. Your seat is reserved for Kids Ratha Yatra 2026.\n\nSaturday, 27 June 2026\n6:30 PM - 9:15 PM\nISKM Singapore, 9 Lorong 29 Geylang, Singapore 388062\n\nChildren-led kirtana, joyful stalls, the chariot procession, and free prasadam for the whole family.\n\nMahaprasadam is free for everyone. A few stalls (snacks, souvenirs, cool drinks) run on a small contribution.\n\nWe'll send you two short reminders as the date gets closer.\n\nTell your family and friends. Entry is free, all are welcome.\n\nView event page: ${EVENT_URL}\n\nUnsubscribe: ${unsubscribeUrl}`;
 
     const messageId = "kry-confirm-" + registration_id;
 
