@@ -211,7 +211,18 @@
 
 /* Attractions subhead — splits stalls from festival-wide experiences */
 .kry-page .attr-subhead { text-align: center; margin: 8px auto 22px; max-width: 720px; }
-.kry-page .attr-subhead-experiences { margin-top: 56px; }
+.kry-page .attr-subhead-experiences,
+.kry-page .attr-subhead-stalls { margin-top: 56px; }
+
+/* Stalls — fixed 3-column grid on desktop so 7th card centers in last row */
+@media (min-width: 981px) {
+  .kry-page .attr-grid-stalls { grid-template-columns: repeat(3, 1fr); }
+  .kry-page .attr-grid-stalls > .attr-card:nth-child(7) { grid-column: 2 / 3; }
+}
+@media (min-width: 641px) and (max-width: 980px) {
+  .kry-page .attr-grid-stalls { grid-template-columns: repeat(2, 1fr); }
+}
+
 .kry-page .attr-subhead-title { font-family: var(--font-display); font-size: clamp(20px, 2.4vw, 26px); font-weight: 600; color: var(--navy); margin: 0 0 10px; line-height: 1.25; }
 .kry-page .attr-subhead-title em { color: var(--gold-dark); font-style: italic; }
 .kry-page .attr-subhead .gold-divider { margin: 10px auto 12px; }
