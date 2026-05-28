@@ -88,8 +88,11 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 
       <!-- BODY -->
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
-        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#444444;">
+        <p style="margin:0 0 12px;font-size:16px;line-height:1.7;color:#444444;">
           Children-led k&#x12B;rtana, joyful stalls, the chariot procession, and free pras&#x101;dam for the whole family.
+        </p>
+        <p style="margin:0;font-size:14px;line-height:1.6;color:#666666;">
+          Mah&#x101;pras&#x101;dam is free for everyone. A few stalls (snacks, souvenirs, cool drinks) run on a small contribution.
         </p>
       </td></tr>
 
