@@ -513,14 +513,17 @@ export default function KidsRathaYatra() {
           <div className="attr-subhead attr-subhead-stalls">
             <h3 className="attr-subhead-title">Visit the <em>Stalls</em></h3>
             <div className="gold-divider"></div>
-            <p className="attr-subhead-p">​</p>
+            <p className="attr-subhead-p">Mahāprasādam is offered free to everyone. A few stalls run on a small contribution that supports the festival.</p>
           </div>
           <div className="attr-grid attr-grid-stalls">
             {STALLS.map((a, i) => (
               <div key={`s-${i}`} className={`attr-card fade-in ${a.cls || ""}`}>
                 <img className="attr-card-img" src={`${IMG}/${a.img}`} alt={a.alt} loading="lazy" />
                 <div className="attr-card-body">
-                  <div className="attr-tag">{a.tag}</div>
+                  <div className="attr-card-meta">
+                    <span className="attr-tag">{a.tag}</span>
+                    <span className={`stall-cost stall-cost-${a.cost}`}>{a.cost === "free" ? "Free seva" : "By contribution"}</span>
+                  </div>
                   <h3>{a.h}</h3>
                   <p>{a.p}</p>
                 </div>
