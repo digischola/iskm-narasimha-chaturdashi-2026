@@ -492,9 +492,14 @@ export default function KidsRathaYatra() {
             <div className="gold-divider"></div>
             <p>Wander, sip, taste, sing. Every corner of the festival is something the kids have prepared with love.</p>
           </div>
+          <div className="attr-subhead">
+            <h3 className="attr-subhead-title">Visit the <em>Stalls</em></h3>
+            <div className="gold-divider"></div>
+            <p className="attr-subhead-p">Seven physical corners families can walk up to throughout the evening.</p>
+          </div>
           <div className="attr-grid">
-            {ATTRACTIONS.map((a, i) => (
-              <div key={i} className={`attr-card fade-in ${a.cls || ""}`}>
+            {STALLS.map((a, i) => (
+              <div key={`s-${i}`} className={`attr-card fade-in ${a.cls || ""}`}>
                 <img className="attr-card-img" src={`${IMG}/${a.img}`} alt={a.alt} loading="lazy" />
                 <div className="attr-card-body">
                   <div className="attr-tag">{a.tag}</div>
@@ -504,6 +509,25 @@ export default function KidsRathaYatra() {
               </div>
             ))}
           </div>
+
+          <div className="attr-subhead attr-subhead-experiences">
+            <h3 className="attr-subhead-title">Happening <em>Throughout the Evening</em></h3>
+            <div className="gold-divider"></div>
+            <p className="attr-subhead-p">Two festival-wide experiences that fill the hall — not stalls, but the heartbeat of the evening.</p>
+          </div>
+          <div className="attr-grid attr-grid-experiences">
+            {EXPERIENCES.map((a, i) => (
+              <div key={`e-${i}`} className="attr-card attr-card-experience fade-in">
+                <img className="attr-card-img" src={`${IMG}/${a.img}`} alt={a.alt} loading="lazy" />
+                <div className="attr-card-body">
+                  <div className="attr-tag attr-tag-experience">{a.tag} · All evening</div>
+                  <h3>{a.h}</h3>
+                  <p>{a.p}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
