@@ -495,7 +495,7 @@ export default function KidsRathaYatra() {
           <div className="attr-subhead">
             <h3 className="attr-subhead-title">Happening <em>Throughout the Evening</em></h3>
             <div className="gold-divider"></div>
-            <p className="attr-subhead-p">Two festival-wide experiences that fill the hall — not stalls, but the heartbeat of the evening.</p>
+            <p className="attr-subhead-p">Two festival-wide experiences - the heartbeat of the evening.</p>
           </div>
           <div className="attr-grid attr-grid-experiences">
             {EXPERIENCES.map((a, i) => (
@@ -513,7 +513,7 @@ export default function KidsRathaYatra() {
           <div className="attr-subhead attr-subhead-stalls">
             <h3 className="attr-subhead-title">Visit the <em>Stalls</em></h3>
             <div className="gold-divider"></div>
-            <p className="attr-subhead-p">Seven physical corners families can walk up to throughout the evening.</p>
+            <p className="attr-subhead-p">​</p>
           </div>
           <div className="attr-grid attr-grid-stalls">
             {STALLS.map((a, i) => (
