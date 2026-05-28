@@ -88,8 +88,11 @@ const CONFIRMATION_HTML = `<!DOCTYPE html>
 
       <!-- BODY -->
       <tr><td style="padding:0 32px 24px;" class="p-mobile">
-        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#444444;">
+        <p style="margin:0 0 12px;font-size:16px;line-height:1.7;color:#444444;">
           Children-led k&#x12B;rtana, joyful stalls, the chariot procession, and free pras&#x101;dam for the whole family.
+        </p>
+        <p style="margin:0;font-size:14px;line-height:1.6;color:#666666;">
+          Mah&#x101;pras&#x101;dam is free for everyone. A few stalls (snacks, souvenirs, cool drinks) run on a small contribution.
         </p>
       </td></tr>
 
@@ -265,7 +268,7 @@ Deno.serve(async (req) => {
 
     html = addClickTracking(html, trackBase, registration_id, "kry-confirm", email);
 
-    const text = `Thank you, ${firstName}. Your seat is reserved for Kids Ratha Yatra 2026.\n\nSaturday, 27 June 2026\n6:30 PM - 9:15 PM\nISKM Singapore, 9 Lorong 29 Geylang, Singapore 388062\n\nChildren-led kirtana, joyful stalls, the chariot procession, and free prasadam for the whole family.\n\nWe'll send you two short reminders as the date gets closer.\n\nTell your family and friends. Entry is free, all are welcome.\n\nView event page: ${EVENT_URL}\n\nUnsubscribe: ${unsubscribeUrl}`;
+    const text = `Thank you, ${firstName}. Your seat is reserved for Kids Ratha Yatra 2026.\n\nSaturday, 27 June 2026\n6:30 PM - 9:15 PM\nISKM Singapore, 9 Lorong 29 Geylang, Singapore 388062\n\nChildren-led kirtana, joyful stalls, the chariot procession, and free prasadam for the whole family.\n\nMahaprasadam is free for everyone. A few stalls (snacks, souvenirs, cool drinks) run on a small contribution.\n\nWe'll send you two short reminders as the date gets closer.\n\nTell your family and friends. Entry is free, all are welcome.\n\nView event page: ${EVENT_URL}\n\nUnsubscribe: ${unsubscribeUrl}`;
 
     const messageId = "kry-confirm-" + registration_id;
 

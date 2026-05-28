@@ -204,7 +204,11 @@
 .kry-page .attr-card.img-25 .attr-card-img { object-position: center 25%; }
 .kry-page .attr-card.img-bottom .attr-card-img { object-position: center bottom; }
 .kry-page .attr-card-body { padding: 22px 22px 24px; }
-.kry-page .attr-tag { display: inline-block; font: 700 10px var(--font-body); letter-spacing: 1.8px; text-transform: uppercase; color: var(--gold-dark); margin-bottom: 8px; }
+.kry-page .attr-card-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.kry-page .attr-tag { display: inline-block; font: 700 10px var(--font-body); letter-spacing: 1.8px; text-transform: uppercase; color: var(--gold-dark); }
+.kry-page .stall-cost { display: inline-block; font: 700 9.5px var(--font-body); letter-spacing: 1.2px; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; flex-shrink: 0; }
+.kry-page .stall-cost-free { color: var(--navy); background: rgba(244,201,107,.28); }
+.kry-page .stall-cost-contribution { color: var(--text-muted); background: rgba(30,58,110,.06); border: 1px solid rgba(30,58,110,.1); }
 .kry-page .attr-card h3 { font-family: var(--font-display); font-size: 18px; color: var(--navy); font-weight: 600; margin: 0 0 8px; line-height: 1.25; }
 .kry-page .attr-card h3 em { color: var(--gold-dark); font-style: italic; }
 .kry-page .attr-card p { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin: 0; }
