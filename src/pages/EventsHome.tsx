@@ -150,25 +150,24 @@ export default function EventsHome() {
                 </a>
               </div>
             </div>
-            <div className="eh-hero-art">
-              <img
-                src="/images/events-home-hero-radha-main.jpg"
-                alt="Ratha Yātrā chariot festival"
-                className="eh-hero-art-main object-cover"
-                loading="eager"
-              />
-              <img
-                src="/images/events-home-hero-radha.jpg"
-                alt="Temple deities"
-                className="eh-hero-art-card eh-hero-art-card-1"
-                loading="lazy"
-              />
-              <img
-                src="/images/ratha-yatra/g5.webp"
-                alt="Devotees in kīrtana"
-                className="eh-hero-art-card eh-hero-art-card-2"
-                loading="lazy"
-              />
+            <div className="eh-hero-art eh-hero-art-solo">
+              <span className="eh-hero-mandala eh-hero-mandala-bg" aria-hidden="true" />
+              <span className="eh-hero-mandala eh-hero-mandala-tl" aria-hidden="true" />
+              <span className="eh-hero-mandala eh-hero-mandala-br" aria-hidden="true" />
+              <span className="eh-hero-corner eh-hero-corner-tl" aria-hidden="true" />
+              <span className="eh-hero-corner eh-hero-corner-tr" aria-hidden="true" />
+              <span className="eh-hero-corner eh-hero-corner-bl" aria-hidden="true" />
+              <span className="eh-hero-corner eh-hero-corner-br" aria-hidden="true" />
+              <div className="eh-hero-frame">
+                <div className="eh-hero-frame-inner">
+                  <img
+                    src="/images/events-home-hero-radha-main.jpg"
+                    alt="Ratha Yātrā chariot festival"
+                    className="eh-hero-art-main object-cover"
+                    loading="eager"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </section>
