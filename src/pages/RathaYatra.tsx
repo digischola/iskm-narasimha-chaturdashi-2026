@@ -380,7 +380,7 @@ function Hero() {
         {/* Framed hero painting */}
         <div className="hero-painting" ref={parallaxRef}>
           <img
-            src="/images/ratha-yatra/hero.svg"
+            src="/images/ratha-yatra-2026-featured.jpg"
             alt="Lord Jagannāth atop the Ratha chariot"
             fetchPriority="high"
             decoding="async"
@@ -1667,13 +1667,13 @@ function LandingPage() {
           property="og:description"
           content="Pull the rope. Sing the kirtan. Take home the blessing. Free entry, 5 July 2026, Clementi Stadium."
         />
-        <meta property="og:image" content="https://events.srikrishnamandir.org/images/ratha-yatra/hero.svg" />
+        <meta property="og:image" content="https://events.srikrishnamandir.org/images/ratha-yatra-2026-featured.jpg" />
         <meta property="og:url" content="https://events.srikrishnamandir.org/ratha-yatra-2026" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Ratha Yātrā 2026 — Sri Krishna Mandir Singapore" />
-        <meta name="twitter:image" content="https://events.srikrishnamandir.org/images/ratha-yatra/hero.svg" />
-        <link rel="preload" as="image" href="/images/ratha-yatra/hero.svg" />
+        <meta name="twitter:image" content="https://events.srikrishnamandir.org/images/ratha-yatra-2026-featured.jpg" />
+        <link rel="preload" as="image" href="/images/ratha-yatra-2026-featured.jpg" />
         <link rel="canonical" href="https://events.srikrishnamandir.org/ratha-yatra-2026" />
       </Helmet>
       <div className="scroll-progress" style={{ transform: `scaleX(${progress})` }}></div>
