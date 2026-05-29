@@ -89,17 +89,17 @@ export default function EventsHome() {
   return (
     <>
       <Helmet>
-        <title>Events at Sri Krishna Mandir — ISKM Singapore</title>
+        <title>Events at International Sri Krishna Mandir — ISKM Singapore</title>
         <meta
           name="description"
           content="Discover upcoming festivals, kīrtana gatherings and temple celebrations at ISKM Singapore — and revisit sacred moments from past events."
         />
-        <meta property="og:title" content="Events at Sri Krishna Mandir — ISKM Singapore" />
+        <meta property="og:title" content="Events at International Sri Krishna Mandir — ISKM Singapore" />
         <meta
           property="og:description"
           content="Upcoming festivals, cultural programmes and temple celebrations at ISKM Singapore."
         />
-        <meta property="og:image" content="https://events.srikrishnamandir.org/images/ratha-yatra/hero.webp" />
+        <meta property="og:image" content="https://events.srikrishnamandir.org/images/events-home-hero-jagan.jpg" />
         <meta property="og:url" content="https://events.srikrishnamandir.org/" />
         <link rel="canonical" href="https://events.srikrishnamandir.org/" />
       </Helmet>
@@ -111,7 +111,7 @@ export default function EventsHome() {
             <img src="/images/logo.webp" alt="ISKM Singapore" width={36} height={36} />
             <span>
               <strong>ISKM Singapore</strong>
-              <em>Sri Krishna Mandir</em>
+              <em>International Sri Krishna Mandir</em>
             </span>
           </a>
           <nav className="eh-nav-links">
@@ -135,7 +135,7 @@ export default function EventsHome() {
               <span className="eh-hero-bar" aria-hidden="true" />
               <h1>
                 Events at <br />
-                Sri Krishna Mandir
+                International Sri Krishna Mandir
               </h1>
               <p>
                 Discover upcoming festivals, cultural programmes, kīrtana gatherings and temple
@@ -152,13 +152,13 @@ export default function EventsHome() {
             </div>
             <div className="eh-hero-art">
               <img
-                src="/images/ratha-yatra/hero.webp"
+                src="/images/events-home-hero-jagan.jpg"
                 alt="Ratha Yātrā chariot festival"
                 className="eh-hero-art-main"
                 loading="eager"
               />
               <img
-                src="/images/hero-image.webp"
+                src="/images/events-home-hero-radha.jpg"
                 alt="Temple deities"
                 className="eh-hero-art-card eh-hero-art-card-1"
                 loading="lazy"
