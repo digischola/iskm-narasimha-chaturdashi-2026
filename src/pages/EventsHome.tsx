@@ -99,7 +99,7 @@ export default function EventsHome() {
           property="og:description"
           content="Upcoming festivals, cultural programmes and temple celebrations at ISKM Singapore."
         />
-        <meta property="og:image" content="https://events.srikrishnamandir.org/images/events-home-hero-jagan.jpg" />
+        <meta property="og:image" content="https://events.srikrishnamandir.org/images/events-home-hero-radha-main.jpg" />
         <meta property="og:url" content="https://events.srikrishnamandir.org/" />
         <link rel="canonical" href="https://events.srikrishnamandir.org/" />
       </Helmet>
@@ -152,7 +152,7 @@ export default function EventsHome() {
             </div>
             <div className="eh-hero-art">
               <img
-                src="/images/events-home-hero-jagan.jpg"
+                src="/images/events-home-hero-radha-main.jpg"
                 alt="Ratha Yātrā chariot festival"
                 className="eh-hero-art-main object-cover"
                 loading="eager"
