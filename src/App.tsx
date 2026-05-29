@@ -9,6 +9,7 @@ const WeekendLoveFeast = lazy(() => import("@/pages/WeekendLoveFeast"));
 const FreePrasadamProgram = lazy(() => import("@/pages/FreePrasadamProgram"));
 const RathaYatra = lazy(() => import("@/pages/RathaYatra"));
 const KidsRathaYatra = lazy(() => import("@/pages/KidsRathaYatra"));
+const EventsHome = lazy(() => import("@/pages/EventsHome"));
 
 
 /* ═══ HOOKS ═══ */
@@ -876,7 +877,7 @@ export default function App() {
     <HelmetProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><EventsHome /></Suspense>} />
           <Route path="/nrsimha-caturdasi-2026" element={<LandingPage />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/weekend-love-feast" element={<Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>Loading…</div>}><WeekendLoveFeast /></Suspense>} />
