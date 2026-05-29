@@ -152,7 +152,7 @@ export default function EventsHome() {
             </div>
             <div className="eh-hero-art">
               <img
-                src="/images/events-home-hero-jagan.jpg"
+                src="/images/events-home-hero-radha-main.jpg"
                 alt="Ratha Yātrā chariot festival"
                 className="eh-hero-art-main object-cover"
                 loading="eager"
