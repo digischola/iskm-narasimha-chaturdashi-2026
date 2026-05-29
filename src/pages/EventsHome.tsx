@@ -25,7 +25,7 @@ const UPCOMING: UpcomingEvent[] = [
     dateLabel: "Sunday, 5 July 2026",
     description:
       "Lord Jagannātha, Baladeva and Subhadrā take a joyous journey through the streets in Their grand chariot. Kīrtana, prasādam and blessings for all.",
-    image: "/images/ratha-yatra/hero.webp",
+    image: "/images/ratha-yatra-2026-featured.jpg",
     href: "/ratha-yatra-2026",
     featured: true,
   },
