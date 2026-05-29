@@ -561,8 +561,11 @@ export default function WeekendLoveFeast() {
       {/* Sticky Nav */}
       <nav className={`sticky-nav${navScrolled ? " scrolled" : ""}`} ref={navRef}>
         <a href="#slf-home" className="nav-brand" onClick={e => { e.preventDefault(); scrollTo("slf-home"); }}>
-          <img src={`${IMG}/logo.webp`} alt="ISKM Logo" width="32" height="32" />
-          ISKM Singapore
+          <img src={`${IMG}/logo.webp`} alt="ISKM Singapore" width="36" height="36" />
+          <span style={{ display: "inline-flex", flexDirection: "column", lineHeight: 1.15 }}>
+            <strong>ISKM Singapore</strong>
+            <em style={{ fontSize: "0.72em", opacity: 0.8, fontStyle: "normal", fontWeight: 400 }}>International Sri Krishna Mandir</em>
+          </span>
         </a>
         <div className="nav-links">
           <a href="#slf-schedule" className="desk-link" onClick={e => { e.preventDefault(); scrollTo("slf-schedule"); }}>Schedule</a>

@@ -372,8 +372,11 @@ export default function FreePrasadamProgram() {
       {/* Nav */}
       <nav className={`sticky-nav${scrolled ? " scrolled" : ""}`} aria-label="Main navigation">
         <a href="#" className="nav-brand">
-          <img src="/images/logo.webp" alt="ISKM Logo" width={32} height={32} />
-          <span>ISKM Singapore</span>
+          <img src="/images/logo.webp" alt="ISKM Singapore" width={36} height={36} />
+          <span style={{ display: "inline-flex", flexDirection: "column", lineHeight: 1.15 }}>
+            <strong>ISKM Singapore</strong>
+            <em style={{ fontSize: "0.72em", opacity: 0.8, fontStyle: "normal", fontWeight: 400 }}>International Sri Krishna Mandir</em>
+          </span>
         </a>
         <div className="nav-links">
           <a href="#how" className="desk-link">How It Works</a>

@@ -295,8 +295,11 @@ export default function KidsRathaYatra() {
 
       <nav className={`kry-nav${scrolled ? " scrolled" : ""}`}>
         <a href="https://srikrishnamandir.org" target="_blank" rel="noopener noreferrer" className="nav-brand">
-          <img src="/images/logo.webp" alt="ISKM Singapore" width={28} height={28} />
-          <span>ISKM Singapore</span>
+          <img src="/images/logo.webp" alt="ISKM Singapore" width={36} height={36} />
+          <span style={{ display: "inline-flex", flexDirection: "column", lineHeight: 1.15 }}>
+            <strong>ISKM Singapore</strong>
+            <em style={{ fontSize: "0.72em", opacity: 0.8, fontStyle: "normal", fontWeight: 400 }}>International Sri Krishna Mandir</em>
+          </span>
         </a>
         <div className="nav-links">
           <a href="#about" className="desk-link">About</a>
