@@ -154,7 +154,7 @@ export default function EventsHome() {
               <img
                 src="/images/events-home-hero-jagan.jpg"
                 alt="Ratha Yātrā chariot festival"
-                className="eh-hero-art-main"
+                className="eh-hero-art-main object-cover"
                 loading="eager"
               />
               <img
